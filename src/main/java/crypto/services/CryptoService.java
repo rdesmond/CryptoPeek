@@ -5,7 +5,10 @@ package crypto.services;
  */
 
 import crypto.exceptions.APIUnavailableException;
-import crypto.model.CryptoModel;
+import crypto.exceptions.ExchangeNotFoundException;
+import crypto.model.cryptoCompareModels.CryptoAverage;
+import crypto.model.cryptoCompareModels.CryptoModel;
+import crypto.model.cryptoCompareModels.Exchanges;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -45,5 +48,97 @@ public class CryptoService {
     @CacheEvict("CryptoCache")
     public void evictCryptoCache(){
         // we don't have to do anything in here - this method just needs to be called
+    }
+
+    public Exchanges getCoinSnapshotByExchange(String fsym, String tsym, String exchange) throws ExchangeNotFoundException {
+
+        String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
+        CryptoModel cryptoModel;
+        try {
+            System.out.println("Cryptoservice running");
+            cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
+
+            if (cryptoModel.getData().getExchanges().length < 1){
+                throw new APIUnavailableException();
+            }
+
+            // get all the exchanges into an array we can loop through
+            Exchanges[] ex = cryptoModel.getData().getExchanges();
+
+            for (Exchanges val : ex){
+                if (val.getMarket().equalsIgnoreCase(exchange)){
+                    return val;
+                }
+            }
+            throw new ExchangeNotFoundException();
+        } catch (Exception e){
+            throw new ExchangeNotFoundException();
+        }
+    }
+
+    public Exchanges getCoinSnapshotByHighestExchange(String fsym, String tsym) throws ExchangeNotFoundException {
+
+        String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
+        CryptoModel cryptoModel;
+        try {
+            System.out.println("Cryptoservice running");
+            cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
+
+            if (cryptoModel.getData().getExchanges().length < 1){
+                throw new APIUnavailableException();
+            }
+
+            // get all the exchanges into an array we can loop through
+            Exchanges[] ex = cryptoModel.getData().getExchanges();
+            Exchanges highestExchange = ex[0];
+
+            for (Exchanges val : ex){
+                //this exchange higher than previous highest exchange return it
+                if (Double.parseDouble(val.getPrice()) > Double.parseDouble(highestExchange.getPrice())){
+                        highestExchange = val;
+                }
+
+            }
+            return highestExchange;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ExchangeNotFoundException();
+        }
+    }
+
+    public CryptoAverage getAveragePrice(String currency_1, String currency_2) throws ExchangeNotFoundException {
+
+        String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + currency_1 + "&tsym=" + currency_2;
+        // iterate through each exchange and sum up the price from each, after all exchanges - divide by total number of exchanges
+        // them create a CryptoAverage object and set the currency_1, currency_2 and average price
+        // then return that object to the controller which will return a view that displays that data
+        CryptoAverage cryptoAverage = new CryptoAverage();
+        try {
+            CryptoModel cryptoModel= restTemplate.getForObject(url, CryptoModel.class);
+
+            double sum = 0;
+            int count = 0;
+            for (int i=0; i< cryptoModel.getData().getExchanges().length; i++){
+                System.out.println(Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice()));
+                if ((Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice())) < ((sum /i)*.5)){
+                    System.out.println("IN if - SUM = " + sum +"and sum/i is"+(sum/i));
+                    count++;
+                    continue;
+                } else {
+                    sum += Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice());
+                }
+
+            }
+            double n = sum / (cryptoModel.getData().getExchanges().length-count);
+            cryptoAverage.setAvg_price(n);
+            cryptoAverage.setFrom_currency(currency_1);
+            cryptoAverage.setTo_currency(currency_2);
+            return cryptoAverage;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new ExchangeNotFoundException();
+        }
+
     }
 }

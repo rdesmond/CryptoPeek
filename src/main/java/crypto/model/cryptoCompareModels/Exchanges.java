@@ -1,32 +1,32 @@
-package crypto.model;
+package crypto.model.cryptoCompareModels;
 
-/**
- * Created by aaron on 8/10/17.
- */
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
+ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+ /**
  * Created by aaron on 8/8/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AggregatedData {
+public class Exchanges {
 
-    String type; //: "5",
-    String market; //: "CCCAGG",
+    String type; //: "2",
+    String market; //: "Cexio",
     String fromsymbol; //: "BTC",
     String tosymbol; //: "USD",
     String flags; //: "1",
-    String price; //: "3359.71",
-    String lastupdate; //: "1502208902",
-    String lastvolume; //: "0.00022521",
-    String lastvolumeto; //: "0.74274788",
-    String lasttradeid; //: "17080515",
-    String volume24hour; //: "105056.82282044677",
-    String volume24hourto; //: "358315533.41489124",
-    String open24hour; //: "3389.44",
-    String high24hour; //: "3498.92",
-    String low24hour; //: "3329.97",
-    String lastmarket; //: "Exmo"
+    String price; //: "3411.0572",
+    String lastupdate; //: "1502208866",
+    String lastvolume; //: "0.012",
+    String lastvolumeto; //: "40.9326864",
+    String lasttradeid; //: "2799686",
+    String volume24hour; //: "978.9186601000001",
+    String volume24hourto; //: "3387137.435645728",
+    String open24hour; //: "3404.3482",
+    String high24hour; //: "3549.0544",
+    String low24hour; //: "3365.0001"
+
 
     public String getType() {
         return type;
@@ -146,13 +146,5 @@ public class AggregatedData {
 
     public void setLow24hour(String low24hour) {
         this.low24hour = low24hour;
-    }
-
-    public String getLastmarket() {
-        return lastmarket;
-    }
-
-    public void setLastmarket(String lastmarket) {
-        this.lastmarket = lastmarket;
     }
 }

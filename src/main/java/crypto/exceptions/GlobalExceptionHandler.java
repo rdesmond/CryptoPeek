@@ -11,11 +11,20 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)  // 409
     @ExceptionHandler(APIUnavailableException.class)
-    public @ResponseBody CustomError handleConflict() {
+    public @ResponseBody CustomError handle404() {
         CustomError error = new CustomError();
         error.setMessage("Apologies, it appears the CryptoCompare API is currently offline. We are not able" +
                 " to process your request. Please try again later.");
         error.setError_code(503);
+        return error;
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)  // 409
+    @ExceptionHandler(ExchangeNotFoundException.class)
+    public @ResponseBody CustomError handleNotFound() {
+        CustomError error = new CustomError();
+        error.setMessage("Unfortunately, you're requested exchange was not found. Please try again with a valid crypto currency.");
+        error.setError_code(500);
         return error;
     }
 }

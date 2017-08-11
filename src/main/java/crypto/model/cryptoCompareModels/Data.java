@@ -1,4 +1,4 @@
-package crypto.model;
+package crypto.model.cryptoCompareModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

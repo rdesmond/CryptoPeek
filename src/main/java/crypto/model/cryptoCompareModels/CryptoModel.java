@@ -1,4 +1,4 @@
-package crypto.model;
+package crypto.model.cryptoCompareModels;
 
 /**
  * Created by aaron on 8/10/17.
