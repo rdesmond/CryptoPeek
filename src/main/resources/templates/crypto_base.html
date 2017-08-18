@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>CryptoCurrency R' Us</title>
 </head>
-<body>
-$END$
-</body>
+<style>
+td {
+color:red;
+text-align:
+}
+tr {
+color: black;
+text-align: center;
+}
+</style>
+<div>
+
+    <table class="table table-striped" width="10%" border="5" cellspacing="5" cellpadding="0">
+        <thead>
+        <tr>
+            <th>TYPE</th>
+            <th>MARKET</th>
+            <th>FROMSYMBOL</th>
+            <th>TOSYMBOL</th>
+            <th>FLAGS</th>
+            <th>PRICE</th>
+            <th>LASTUPDATE</th>
+            <th>LASTVOLUME</th>
+            <th>LASTVOLUMETO</th>
+            <th>LASTTRADEID</th>
+            <th>VOLUME24HOUR</th>
+            <th>VOLUME24HOURTO</th>
+            <th>OPEN24HOUR</th>
+            <th>HIGH24HOUR</th>
+            <th>LOW24HOUR</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="exchange : ${exchanges}">
+            <td th:text="${exchange.type}">TYPE</td>
+            <td th:text="${exchange.market}">MARKET</td>
+            <td th:text="${exchange.fromsymbol}">FROMSYMBOL</td>
+            <td th:text="${exchange.tosymbol}">TOSYMBOL</td>
+            <td th:text="${exchange.flags}">FLAGS</td>
+            <td th:text="${exchange.price}">PRICE</td>
+            <td th:text="${exchange.lastupdate}">LASTUPDATE</td>
+            <td th:text="${exchange.lastvolume}">LASTVOLUME</td>
+            <td th:text="${exchange.lastvolumeto}">LASTVOLUMETO</td>
+            <td th:text="${exchange.lasttradeid}">LASTTRADEID</td>
+            <td th:text="${exchange.volume24hour}">VOLUME24HOUR</td>
+            <td th:text="${exchange.volume24hourto}">VOLUME24HOURTO</td>
+            <td th:text="${exchange.open24hour}">OPEN24HOUR</td>
+            <td th:text="${exchange.high24hour}">HIGH24HOUR</td>
+            <td th:text="${exchange.low24hour}">LOW24HOUR</td>
+            <br/>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
 </html>

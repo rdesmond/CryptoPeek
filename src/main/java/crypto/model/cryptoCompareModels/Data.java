@@ -12,7 +12,7 @@ public class Data {
     String proofType; //: "PoW",
     int blockNumber; //: 479694,
     double netHashesPerSecond; //: 6157802778.035059,
-    int totalCoinsMined; //: 16496162,
+    double totalCoinsMined; //: 16496162,
     double blockReward; //: 12.5,
     AggregatedData aggregatedData; //: {},
     Exchanges[] exchanges; //: []
@@ -50,11 +50,11 @@ public class Data {
         this.netHashesPerSecond = netHashesPerSecond;
     }
 
-    public int getTotalCoinsMined() {
+    public double getTotalCoinsMined() {
         return totalCoinsMined;
     }
 
-    public void setTotalCoinsMined(int totalCoinsMined) {
+    public void setTotalCoinsMined(double totalCoinsMined) {
         this.totalCoinsMined = totalCoinsMined;
     }
 

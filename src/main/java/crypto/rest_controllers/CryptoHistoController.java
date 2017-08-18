@@ -2,6 +2,7 @@ package crypto.rest_controllers;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.model.historicalModels.Historical;
+import crypto.model.historicalModels.ThirtyDayAverage;
 import crypto.services.CryptoHistoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +23,12 @@ public class CryptoHistoController {
                                    @RequestParam(value ="tsym")String tsym,
                                    @RequestParam(value ="e")String e) throws APIUnavailableException {
         return cryptoHistoService.getHistoricalCryptoData(fsym,tsym,e);
+    }
+
+    @RequestMapping("/crypto/historical/30day")
+    public ThirtyDayAverage thirtyDayAverage(@RequestParam(value ="fsym")String fsym,
+                                             @RequestParam(value ="tsym")String tsym,
+                                             @RequestParam(value ="e")String e) throws APIUnavailableException {
+        return cryptoHistoService.getThirtyDayMovingAverage(fsym,tsym,e);
     }
 }

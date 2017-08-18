@@ -76,12 +76,11 @@ public class CryptoService {
         }
     }
 
-    public Exchanges getCoinSnapshotByHighestExchange(String fsym, String tsym) throws ExchangeNotFoundException {
+    public Exchanges[] getCoinSnapshotByHighestAndLowestExchange(String fsym, String tsym) throws ExchangeNotFoundException {
 
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;
         try {
-            System.out.println("Cryptoservice running");
             cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
 
             if (cryptoModel.getData().getExchanges().length < 1){
@@ -90,22 +89,49 @@ public class CryptoService {
 
             // get all the exchanges into an array we can loop through
             Exchanges[] ex = cryptoModel.getData().getExchanges();
+            Exchanges[] result = new Exchanges[2];
+
             Exchanges highestExchange = ex[0];
+            Exchanges lowestExchange = ex[0];
+            if (ex[0].getMarket().equalsIgnoreCase("BTCE") || ex[0].getMarket().equalsIgnoreCase("Cryptsy")
+                    || ex[0].getMarket().equalsIgnoreCase("Yobit")) {
+                lowestExchange = ex[1];
+                highestExchange = ex[1];
+            }
+
 
             for (Exchanges val : ex){
                 //this exchange higher than previous highest exchange return it
                 if (Double.parseDouble(val.getPrice()) > Double.parseDouble(highestExchange.getPrice())){
+
                         highestExchange = val;
                 }
 
             }
-            return highestExchange;
+            result[0] = highestExchange;
+
+            for (Exchanges val : ex){
+                if (val.getMarket().equalsIgnoreCase("Cryptsy") || val.getMarket().equalsIgnoreCase("BTCE")
+                        ||  val.getMarket().equalsIgnoreCase("Yobit")){
+                    System.out.println("val = " + val.getMarket().toString());
+                    continue;
+                }
+                //this exchange higher than previous highest exchange return it
+                if (Double.parseDouble(val.getPrice()) < Double.parseDouble(lowestExchange.getPrice())){
+
+                    lowestExchange = val;
+                }
+
+            }
+            result[1] = lowestExchange;
+            return result;
 
         } catch (Exception e){
             e.printStackTrace();
             throw new ExchangeNotFoundException();
         }
     }
+
 
     public CryptoAverage getAveragePrice(String currency_1, String currency_2) throws ExchangeNotFoundException {
 

@@ -33,10 +33,9 @@ public class CryptoController {
     }
 
     @RequestMapping("/crypto/exchange/highest")
-    public Exchanges getCoinSnapshotByHighestExchange (@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
+    public Exchanges[] getCoinSnapshotByHighestExchange (@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
             throws ExchangeNotFoundException {
-        System.out.println("requestmapping");
-        return cryptoService.getCoinSnapshotByHighestExchange(fsym, tsym);
+        return cryptoService.getCoinSnapshotByHighestAndLowestExchange(fsym, tsym);
     }
 
     @RequestMapping("/crypto/average")

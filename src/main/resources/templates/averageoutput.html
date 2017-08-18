@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>CryptoCurrency R' Us</title>
 </head>
-<body>
-$END$
-</body>
+<style>
+td {
+color:red;
+text-align:
+}
+tr {
+color: black;
+text-align: center;
+}
+</style>
+<div>
+
+    <table class="table table-striped" width="50%" border="10" cellspacing="10" cellpadding="10">
+        <thead>
+        <tr>
+            <th>Curreny_1</th>
+            <th>Currency_2</th>
+            <th>Average</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+            <td th:text="${average.from_currency}">Cryptocurrency (Three digit code)</td>
+            <td th:text="${average.to_currency}">Listed in Currency (Three digit code)</td>
+            <td th:text="${average.avg_price}">Average</td>
+        </tbody>
+    </table>
+</div>
+
+
 </html>
