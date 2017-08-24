@@ -65,6 +65,11 @@
             <artifactId>jjwt</artifactId>
             <version>0.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.cloudfoundry</groupId>
+            <artifactId>cloudfoundry-client-lib</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
     <properties>
