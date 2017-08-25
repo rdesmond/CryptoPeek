@@ -5,6 +5,8 @@ import crypto.exceptions.ExchangeNotFoundException;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
+import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
+import crypto.model.socialStatsModels.SocialStatsMain;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +44,17 @@ public class CryptoController {
     public CryptoAverage getCryptoAverage (@RequestParam(value="currency_1")String currency_1,
                                            @RequestParam(value="currency_2")String currency_2)throws ExchangeNotFoundException {
         return cryptoService.getAveragePrice(currency_1,currency_2);
+    }
+
+    @RequestMapping("/socialstats")
+    public SocialStatsMain getSocialStats(@RequestParam(value="id")int id)
+            throws APIUnavailableException {
+        return cryptoService.getSocialStats(id);
+    }
+
+    @RequestMapping("/snapshotfullbyid")
+    public CoinSnapshotFullByIdMain getSnapShotFull(@RequestParam(value="id")int id)
+            throws APIUnavailableException {
+        return cryptoService.getCoinSnapshotFull(id);
     }
 }

@@ -9,6 +9,8 @@ import crypto.exceptions.ExchangeNotFoundException;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
+import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
+import crypto.model.socialStatsModels.SocialStatsMain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -42,6 +44,39 @@ public class CryptoService {
 
 
         return cryptoModel;
+    }
+
+    public CoinSnapshotFullByIdMain getCoinSnapshotFull(int id) throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=" + id;
+        CoinSnapshotFullByIdMain coinSnapshotFullByIdMain;
+        try {
+            coinSnapshotFullByIdMain = restTemplate.getForObject(url, CoinSnapshotFullByIdMain.class);
+
+            if (coinSnapshotFullByIdMain.getData().getStreamerDataRaw().length < 1){
+                throw new APIUnavailableException();
+            }
+        } catch (Exception e){
+            throw new APIUnavailableException();
+        }
+
+        return coinSnapshotFullByIdMain;
+    }
+
+    public SocialStatsMain getSocialStats(int id) throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/socialstats/?id=" + id;
+        SocialStatsMain socialStatsMain;
+        try {
+            socialStatsMain = restTemplate.getForObject(url, SocialStatsMain.class);
+
+            if (socialStatsMain.getData().getCryptoCompare().getSimilarItems().length < 1){
+
+                throw new APIUnavailableException();
+            }
+        } catch (Exception e){
+            throw new APIUnavailableException();
+        }
+
+        return socialStatsMain;
     }
 
     // example of how to evict cache - it's just the annotation we need
