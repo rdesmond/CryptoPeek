@@ -78,5 +78,5 @@ public class Application { //extends SpringBootServletInitializer {
         return cacheManager;
     }
 
-    
+
 }
