@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Created by aaron on 8/24/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SocialStatsMain {
+public class SocialStats {
 
     String response; //: "Success",
     String message; //: "Social data successfully returned",

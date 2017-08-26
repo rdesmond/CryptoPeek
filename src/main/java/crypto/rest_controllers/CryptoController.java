@@ -6,10 +6,12 @@ import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
 import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
-import crypto.model.socialStatsModels.SocialStatsMain;
+import crypto.model.socialStatsModels.SocialStats;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 public class CryptoController {
@@ -47,7 +49,7 @@ public class CryptoController {
     }
 
     @RequestMapping("/socialstats")
-    public SocialStatsMain getSocialStats(@RequestParam(value="id")int id)
+    public SocialStats getSocialStats(@RequestParam(value="id")int id)
             throws APIUnavailableException {
         return cryptoService.getSocialStats(id);
     }
@@ -56,5 +58,11 @@ public class CryptoController {
     public CoinSnapshotFullByIdMain getSnapShotFull(@RequestParam(value="id")int id)
             throws APIUnavailableException {
         return cryptoService.getCoinSnapshotFull(id);
+    }
+
+    @RequestMapping("/socialstatscoins")
+    public ArrayList<SocialStats> getSocialStatsForFollowedCoins()
+            throws APIUnavailableException {
+        return cryptoService.getSocialStatsForFollowedCoins();
     }
 }
