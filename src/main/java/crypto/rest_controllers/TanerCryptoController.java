@@ -6,6 +6,7 @@ import crypto.model.miningEquipment.MiningEquipment;
 import crypto.model.topPairs.TopPairs;
 import crypto.services.BackloadHistoDataService;
 import crypto.services.CryptoService;
+import crypto.services.EmailSendingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,9 @@ public class TanerCryptoController {
 
     @Autowired
     BackloadHistoDataService backloadHistoDataService;
+
+    @Autowired
+    EmailSendingService emailSendingService;
 
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
@@ -56,6 +60,11 @@ public class TanerCryptoController {
 
         backloadHistoDataService.backloadHistoricalData(fsym, tsym, exchange);
 
+    }
+
+    @RequestMapping("/sendemail")
+    public void sendEmail() throws Exception {
+        emailSendingService.sendEmail();
     }
 
 }
