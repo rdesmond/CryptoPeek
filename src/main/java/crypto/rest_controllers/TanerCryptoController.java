@@ -4,6 +4,7 @@ import crypto.exceptions.APIUnavailableException;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
 import crypto.model.topPairs.TopPairs;
+import crypto.services.BackloadHistoDataService;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ public class TanerCryptoController {
 
     @Autowired
     CryptoService cryptoService;
+
+    @Autowired
+    BackloadHistoDataService backloadHistoDataService;
 
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
@@ -42,6 +46,16 @@ public class TanerCryptoController {
             throws APIUnavailableException {
 
         return cryptoService.getMiningEquipment();
+    }
+
+    @RequestMapping("/backload/data")
+    public void backloadHistoData (@RequestParam(value="fsym")String fsym,
+                                   @RequestParam(value="tsym")String tsym,
+                                   @RequestParam(value="exchange")String exchange)
+            throws APIUnavailableException {
+
+        backloadHistoDataService.backloadHistoricalData(fsym, tsym, exchange);
+
     }
 
 }

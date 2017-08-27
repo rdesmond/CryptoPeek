@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Created by aaron on 8/11/17.
  */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Data {
 

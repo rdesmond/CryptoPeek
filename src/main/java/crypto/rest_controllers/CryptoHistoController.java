@@ -22,7 +22,7 @@ public class CryptoHistoController {
     public Historical get30Records(@RequestParam(value ="fsym")String fsym,
                                    @RequestParam(value ="tsym")String tsym,
                                    @RequestParam(value ="e")String e) throws APIUnavailableException {
-        return cryptoHistoService.getHistoricalCryptoData(fsym,tsym,e);
+        return cryptoHistoService.getDailyHistoricalCryptoData(fsym,tsym,e);
     }
 
     @RequestMapping("/crypto/historical/30day")

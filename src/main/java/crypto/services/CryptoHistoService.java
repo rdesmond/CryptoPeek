@@ -20,7 +20,8 @@ public class CryptoHistoService {
     @Autowired
     RestTemplate restTemplate;
 
-    public Historical getHistoricalCryptoData (String fsym, String tsym, String exchange) throws APIUnavailableException {
+    public Historical getDailyHistoricalCryptoData(String fsym, String tsym, String exchange)
+            throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
         Historical historical;
@@ -37,7 +38,10 @@ public class CryptoHistoService {
         return historical;
     }
 
-    public ThirtyDayAverage getThirtyDayMovingAverage (String fsym, String tsym, String exchange) throws APIUnavailableException {
+
+
+    public ThirtyDayAverage getThirtyDayMovingAverage (String fsym, String tsym, String exchange)
+            throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
         Historical historical;
