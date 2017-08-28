@@ -5,18 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class CryptoPrice {
+public class BTC {
 
-    String response;
-    String message;
-    int type;
-    boolean aggregated;
-    Data data;
-    Raw raw;
-    Display display;
-    ConversionType conversionType;
     double usd;
-    double btc;
     double eth;
     double bch;
     double xrp;
@@ -47,87 +38,12 @@ public class CryptoPrice {
     double icn;
     double xlm;
 
-    public CryptoPrice() {
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public boolean isAggregated() {
-        return aggregated;
-    }
-
-    public void setAggregated(boolean aggregated) {
-        this.aggregated = aggregated;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    public Raw getRaw() {
-        return raw;
-    }
-
-    public void setRaw(Raw raw) {
-        this.raw = raw;
-    }
-
-    public Display getDisplay() {
-        return display;
-    }
-
-    public void setDisplay(Display display) {
-        this.display = display;
-    }
-
-    public ConversionType getConversionType() {
-        return conversionType;
-    }
-
-    public void setConversionType(ConversionType conversionType) {
-        this.conversionType = conversionType;
-    }
-
     public double getUsd() {
         return usd;
     }
 
     public void setUsd(double usd) {
         this.usd = usd;
-    }
-
-    public double getBtc() {
-        return btc;
-    }
-
-    public void setBtc(double btc) {
-        this.btc = btc;
     }
 
     public double getEth() {
