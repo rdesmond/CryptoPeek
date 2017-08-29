@@ -1,4 +1,4 @@
-package crypto.model.topcoins;
+package crypto.model.topCoins;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

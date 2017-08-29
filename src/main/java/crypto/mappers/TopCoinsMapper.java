@@ -1,6 +1,6 @@
 package crypto.mappers;
 
-import crypto.model.topcoins.TopCoins;
+import crypto.model.topCoins.TopCoins;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 

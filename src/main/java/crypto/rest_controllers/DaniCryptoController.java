@@ -1,7 +1,7 @@
 package crypto.rest_controllers;
 
 import crypto.exceptions.ExchangeNotFoundException;
-import crypto.model.topcoins.TopCoins;
+import crypto.model.topCoins.TopCoins;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

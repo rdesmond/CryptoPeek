@@ -11,7 +11,15 @@ import crypto.mappers.TopCoinsMapper;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.topcoins.TopCoins;
+import crypto.model.miningContracts.MiningContracts;
+import crypto.model.miningEquipment.MiningEquipment;
+import crypto.model.topPairs.TopPairs;
+import crypto.model.topCoins.TopCoins;
+import crypto.mappers.SocialStatsMapper;
+import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
+import crypto.model.socialStatsModels.SocialStats;
+import crypto.model.socialStatsModels.SocialStatsCoins;
+import crypto.model.socialStatsModels.SocialStatsForDbInsert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URL;
+
+import java.util.ArrayList;
 
 /**
  * Created by aaron on 8/8/17.
@@ -31,6 +41,9 @@ public class CryptoService {
 
     @Autowired
     TopCoinsMapper topCoinsMapper;
+
+    @Autowired
+    SocialStatsMapper socialStatsMapper;
 
     @Cacheable("CryptoCache")
     public CryptoModel getCoinSnapshot(String fsym, String tsym) throws APIUnavailableException {
@@ -50,6 +63,71 @@ public class CryptoService {
 
 
         return cryptoModel;
+    }
+
+    public CoinSnapshotFullByIdMain getCoinSnapshotFull(int id) throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=" + id;
+        CoinSnapshotFullByIdMain coinSnapshotFullByIdMain;
+        try {
+            coinSnapshotFullByIdMain = restTemplate.getForObject(url, CoinSnapshotFullByIdMain.class);
+
+            if (coinSnapshotFullByIdMain.getData().getStreamerDataRaw().length < 1){
+                throw new APIUnavailableException();
+            }
+        } catch (Exception e){
+            throw new APIUnavailableException();
+        }
+
+        return coinSnapshotFullByIdMain;
+    }
+
+    public SocialStats getSocialStats(int id) throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/socialstats/?id=" + id;
+        SocialStats socialStats;
+        try {
+            socialStats = restTemplate.getForObject(url, SocialStats.class);
+
+            if (socialStats.getData().getCryptoCompare().getSimilarItems().length < 1){
+
+                throw new APIUnavailableException();
+            }
+        } catch (Exception e){
+            throw new APIUnavailableException();
+        }
+
+        return socialStats;
+    }
+
+    public ArrayList<SocialStats> getSocialStatsForFollowedCoins() throws APIUnavailableException {
+
+        ArrayList<SocialStatsCoins> socialStatsCoinsArrayList = socialStatsMapper.getSocialStatsCoins();
+
+        ArrayList<SocialStats> socialStatsArrayList = new ArrayList<>();
+
+
+        for (int i = 0; i < socialStatsCoinsArrayList.size(); i++) {
+            String url = "https://www.cryptocompare.com/api/data/socialstats/?id=" + socialStatsCoinsArrayList.get(i).getCoin_id();
+            SocialStats socialStats;
+            try {
+                socialStats = restTemplate.getForObject(url, SocialStats.class);
+
+                if (socialStats.getData().getCryptoCompare().getSimilarItems().length < 1) {
+
+                    throw new APIUnavailableException();
+                }
+            } catch (Exception e) {
+                throw new APIUnavailableException();
+            }
+
+            socialStatsArrayList.add(socialStats);
+
+            SocialStatsForDbInsert socialStatsForDbInsert = new SocialStatsForDbInsert(socialStats);
+
+            socialStatsMapper.addSocialStatsToDb(socialStatsForDbInsert);
+
+        }
+
+        return socialStatsArrayList;
     }
 
     // example of how to evict cache - it's just the annotation we need
@@ -197,5 +275,62 @@ public class CryptoService {
             throw new ExchangeNotFoundException();
         }
 
+    }
+
+    public TopPairs getTopPairs(String fsym, String tsym, Integer limit, boolean sign)
+            throws APIUnavailableException {
+
+        String url = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ fsym+ "&tsym="+ tsym+
+                "&limit="+ limit+ "&sign="+ sign;
+        String url2 = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ fsym+ "&tsym="+ tsym;
+
+        //if user has specified limit and sign parameters, then use this call;
+        //necessary since omitting the limit param results in error if using
+        //call with all params included
+        if (limit != null) {
+
+            try {
+                TopPairs topPairs = restTemplate.getForObject(url, TopPairs.class);
+                return topPairs;
+            } catch (Exception e) {
+                throw new APIUnavailableException();
+            }
+
+            //if user has specified only fsym and tsym, then use this call
+        } else {
+
+            try {
+                TopPairs topPairs = restTemplate.getForObject(url2, TopPairs.class);
+                return topPairs;
+            } catch (Exception e) {
+                throw new APIUnavailableException();
+            }
+        }
+
+    }
+
+
+    public MiningContracts getMiningContracts() throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/miningcontracts";
+
+        try {
+            MiningContracts miningContracts= restTemplate.getForObject(url, MiningContracts.class);
+            return miningContracts;
+
+        } catch (Exception e) {
+            throw new APIUnavailableException();
+        }
+    }
+
+    public MiningEquipment getMiningEquipment() throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/miningequipment";
+
+//        try {
+        MiningEquipment miningEquipment = restTemplate.getForObject(url, MiningEquipment.class);
+        return miningEquipment;
+
+//        } catch (Exception e) {
+//            throw new APIUnavailableException();
+//        }
     }
 }
