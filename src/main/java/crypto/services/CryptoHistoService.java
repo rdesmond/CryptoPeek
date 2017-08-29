@@ -1,11 +1,9 @@
 package crypto.services;
 
 import crypto.exceptions.APIUnavailableException;
-import crypto.exceptions.ExchangeNotFoundException;
-import crypto.model.cryptoCompareModels.CryptoModel;
-import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.historicalModels.Data;
-import crypto.model.historicalModels.Historical;
+import crypto.model.historicalModels.HistoDay;
+import crypto.model.historicalModels.HistoHour;
+import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.ThirtyDayAverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +18,12 @@ public class CryptoHistoService {
     @Autowired
     RestTemplate restTemplate;
 
-    public Historical getDailyHistoricalCryptoData(String fsym, String tsym, String exchange)
-            throws APIUnavailableException {
+    public HistoDay getHistoricalDailyData(String fsym, String tsym, String exchange) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
-        Historical historical;
+        HistoDay historical;
         try {
-            historical = restTemplate.getForObject(url, Historical.class);
+            historical = restTemplate.getForObject(url, HistoDay.class);
 
             if (historical.getData().length < 1){
                 throw new APIUnavailableException();
@@ -38,17 +35,48 @@ public class CryptoHistoService {
         return historical;
     }
 
+    public HistoHour getHistoricalHourlyData(String fsym, String tsym, String exchange) throws APIUnavailableException {
 
+        String url = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
+        HistoHour historical;
+        try {
+            historical = restTemplate.getForObject(url, HistoHour.class);
 
-    public ThirtyDayAverage getThirtyDayMovingAverage (String fsym, String tsym, String exchange)
-            throws APIUnavailableException {
+            if (historical.getData().length < 1){
+                throw new APIUnavailableException();
+            }
+
+        } catch (Exception e){
+            throw new APIUnavailableException();
+        }
+        return historical;
+    }
+
+    public HistoMinute getHistoricalMinutelyData(String fsym, String tsym, String exchange) throws APIUnavailableException {
+
+        String url = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
+        HistoMinute historical;
+        try {
+            historical = restTemplate.getForObject(url, HistoMinute.class);
+
+            if (historical.getData().length < 1){
+                throw new APIUnavailableException();
+            }
+
+        } catch (Exception e){
+            throw new APIUnavailableException();
+        }
+        return historical;
+    }
+
+    public ThirtyDayAverage  getThirtyDayMovingAverage (String fsym, String tsym, String exchange) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
-        Historical historical;
+        HistoDay historical;
         ThirtyDayAverage thirtyDayAverage = new ThirtyDayAverage();
 
         try {
-            historical = restTemplate.getForObject(url, Historical.class);
+            historical = restTemplate.getForObject(url, HistoDay.class);
 
             if (historical.getData().length < 1){
                 throw new APIUnavailableException();

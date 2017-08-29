@@ -5,10 +5,13 @@ import crypto.exceptions.ExchangeNotFoundException;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.topPairs.TopPairs;
+import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
+import crypto.model.socialStatsModels.SocialStats;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 public class CryptoController {
@@ -34,8 +37,7 @@ public class CryptoController {
     }
 
     @RequestMapping("/crypto/exchange/highest")
-    public Exchanges[] getCoinSnapshotByHighestExchange (@RequestParam(value="fsym")String fsym,
-                                                         @RequestParam(value="tsym")String tsym)
+    public Exchanges[] getCoinSnapshotByHighestExchange (@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
             throws ExchangeNotFoundException {
         return cryptoService.getCoinSnapshotByHighestAndLowestExchange(fsym, tsym);
     }
@@ -46,6 +48,21 @@ public class CryptoController {
         return cryptoService.getAveragePrice(currency_1,currency_2);
     }
 
+    @RequestMapping("/socialstats")
+    public SocialStats getSocialStats(@RequestParam(value="id")int id)
+            throws APIUnavailableException {
+        return cryptoService.getSocialStats(id);
+    }
 
+    @RequestMapping("/snapshotfullbyid")
+    public CoinSnapshotFullByIdMain getSnapShotFull(@RequestParam(value="id")int id)
+            throws APIUnavailableException {
+        return cryptoService.getCoinSnapshotFull(id);
+    }
 
+    @RequestMapping("/socialstatscoins")
+    public ArrayList<SocialStats> getSocialStatsForFollowedCoins()
+            throws APIUnavailableException {
+        return cryptoService.getSocialStatsForFollowedCoins();
+    }
 }
