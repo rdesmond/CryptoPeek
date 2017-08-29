@@ -25,8 +25,6 @@ public class TanerCryptoController {
     @Autowired
     BackloadHistoDataService backloadHistoDataService;
 
-    @Autowired
-    EmailSendingService emailSendingService;
 
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
