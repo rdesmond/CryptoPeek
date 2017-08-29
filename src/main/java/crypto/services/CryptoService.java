@@ -4,7 +4,6 @@ package crypto.services;
  * Created by aaron on 8/10/17.
  */
 
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
 import crypto.mappers.SocialStatsMapper;
@@ -20,8 +19,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -244,4 +241,6 @@ public class CryptoService {
         }
 
     }
+
+
 }

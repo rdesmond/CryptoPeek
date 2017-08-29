@@ -2,15 +2,14 @@ package crypto.services;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.mappers.BackloadHistoDataMapper;
-import crypto.model.historicalModels.Historical;
+import crypto.model.historicalModels.HistoDay;
+import crypto.model.historicalModels.HistoHour;
+import crypto.model.historicalModels.HistoMinute;
 import crypto.model.tablePOJOs.HistoDataDB;
 import crypto.util.DateUnix;
-import org.omg.CORBA.portable.ValueOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
 
 /**
  * Created by tanerali on 26/08/2017.
@@ -41,9 +40,9 @@ public class BackloadHistoDataService {
 
         String url = "https://min-api.cryptocompare.com/data/histominute?fsym=" + fsym + "&tsym=" + tsym
                 +"&limit=2000&e="+exchange;
-        Historical historical;
+        HistoMinute historical;
         try {
-            historical = restTemplate.getForObject(url, Historical.class);
+            historical = restTemplate.getForObject(url, HistoMinute.class);
 
             if (historical.getData().length < 1){
                 throw new APIUnavailableException();
@@ -77,9 +76,9 @@ public class BackloadHistoDataService {
 
         String url = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=" + tsym
                 +"&limit=2000&e="+exchange;
-        Historical historical;
+        HistoHour historical;
         try {
-            historical = restTemplate.getForObject(url, Historical.class);
+            historical = restTemplate.getForObject(url, HistoHour.class);
 
             if (historical.getData().length < 1){
                 throw new APIUnavailableException();
@@ -113,9 +112,9 @@ public class BackloadHistoDataService {
 
         String url = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym
                 +"&limit=2000&e="+exchange;
-        Historical historical;
+        HistoDay historical;
         try {
-            historical = restTemplate.getForObject(url, Historical.class);
+            historical = restTemplate.getForObject(url, HistoDay.class);
 
             if (historical.getData().length < 1){
                 throw new APIUnavailableException();

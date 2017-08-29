@@ -1,4 +1,4 @@
-package crypto.model.CoinListModels;
+package crypto.model.coinListModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
