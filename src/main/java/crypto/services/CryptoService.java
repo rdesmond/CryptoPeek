@@ -4,10 +4,11 @@ package crypto.services;
  * Created by aaron on 8/10/17.
  */
 
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
+import com.google.gson.Gson;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
 import crypto.mappers.SocialStatsMapper;
+import crypto.model.CoinLIst.Coins;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
@@ -21,8 +22,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by aaron on 8/8/17.
@@ -241,6 +243,20 @@ public class CryptoService {
         } catch (Exception e){
             e.printStackTrace();
             throw new ExchangeNotFoundException();
+        }
+
+    }
+
+    public Coins coinsTest(){
+        Gson gson = new Gson();
+        try {
+            String out = new Scanner(new URL("https://www.cryptocompare.com/api/data/coinlist/").openStream(), "UTF-8").useDelimiter("\\a").next();
+            System.out.println(out);
+            Coins coinsObject = gson.fromJson(out, Coins.class);
+            return coinsObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
 
     }

@@ -18,14 +18,14 @@ public class CryptoHistoController {
     @Autowired
     CryptoHistoService cryptoHistoService;
 
-    @RequestMapping("/crypto/historical")
+    @RequestMapping("/api/historical")
     public Historical get30Records(@RequestParam(value ="fsym")String fsym,
                                    @RequestParam(value ="tsym")String tsym,
                                    @RequestParam(value ="e")String e) throws APIUnavailableException {
         return cryptoHistoService.getHistoricalCryptoData(fsym,tsym,e);
     }
 
-    @RequestMapping("/crypto/historical/30day")
+    @RequestMapping("/api/historical/30day")
     public ThirtyDayAverage thirtyDayAverage(@RequestParam(value ="fsym")String fsym,
                                              @RequestParam(value ="tsym")String tsym,
                                              @RequestParam(value ="e")String e) throws APIUnavailableException {
