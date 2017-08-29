@@ -51,7 +51,7 @@ public class EmailSendingService {
             " for <a href='https://www.java.com'>Java</a>."
     );
 
-    public void sendEmail() throws Exception {
+    public void sendEmail(String from, String to, String subject, String body) throws Exception {
 
         // Create a Properties object to contain connection configuration information.
         Properties props = System.getProperties();
@@ -65,10 +65,10 @@ public class EmailSendingService {
 
         // Create a message with the specified information.
         MimeMessage msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(FROM));
-        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(TO));
-        msg.setSubject(SUBJECT);
-        msg.setContent(BODY,"text/html");
+        msg.setFrom(new InternetAddress(from));
+        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        msg.setSubject(subject);
+        msg.setContent(body,"text/html");
 
         // Add a configuration set header. Comment or delete the
         // next line if you are not using a configuration set

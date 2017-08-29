@@ -62,9 +62,4 @@ public class TanerCryptoController {
 
     }
 
-    @RequestMapping("/sendemail")
-    public void sendEmail() throws Exception {
-        emailSendingService.sendEmail();
-    }
-
 }
