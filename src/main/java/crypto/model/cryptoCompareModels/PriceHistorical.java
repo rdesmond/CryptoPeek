@@ -13,6 +13,24 @@ public class PriceHistorical {
     int type;
     boolean aggregated;
     Data data;
+    String Warning;
+    boolean hasWarning;
+
+    public String getWarning() {
+        return Warning;
+    }
+
+    public void setWarning(String warning) {
+        Warning = warning;
+    }
+
+    public boolean isHasWarning() {
+        return hasWarning;
+    }
+
+    public void setHasWarning(boolean hasWarning) {
+        this.hasWarning = hasWarning;
+    }
 
     public BTC getBtc() {
         return btc;

@@ -26,30 +26,30 @@ public class NicolaService {
         return cryptoPrice;
     }
 
-    public CryptoPrice getPriceMulti (String fsyms, String tsyms) throws APIUnavailableException {
+    public PriceHistorical getPriceMulti (String tsyms) throws APIUnavailableException {
 
-        String url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=" + fsyms + "&tsyms=" + tsyms;
-        CryptoPrice cryptoPrice;
+        String url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=" + tsyms;
+        PriceHistorical priceHistorical;
         try{
-            cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
+            priceHistorical=restTemplate.getForObject(url, PriceHistorical.class);
 
         } catch (Exception e){
             throw new APIUnavailableException();
         }
-        return cryptoPrice;
+        return priceHistorical;
     }
-    public CryptoPrice getPriceMultiFull (String fsyms, String tsyms) throws APIUnavailableException {
-
-        String url = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + fsyms + "&tsyms=" + tsyms;
-        CryptoPrice cryptoPrice;
-        try{
-            cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
-
-        } catch (Exception e){
-            throw new APIUnavailableException();
-        }
-        return cryptoPrice;
-    }
+//    public CryptoPrice getPriceMultiFull (String fsyms, String tsyms) throws APIUnavailableException {
+//
+//        String url = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + fsyms + "&tsyms=" + tsyms;
+//        CryptoPrice cryptoPrice;
+//        try{
+//            cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
+//
+//        } catch (Exception e){
+//            throw new APIUnavailableException();
+//        }
+//        return cryptoPrice;
+//    }
     public CryptoPrice getGenerateAvg (String fsym, String tsym, String markets) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/generateAvg?fsym=" + fsym + "&tsym=" + tsym +

@@ -25,16 +25,15 @@ public class NicolaController {
     }
 
     @RequestMapping("/pricemulti")
-    public CryptoPrice getPriceMulti(@RequestParam(value ="fsyms")String fsyms,
-                                @RequestParam(value ="tsyms")String tsyms) throws APIUnavailableException {
-        return nicolaService.getPriceMulti(fsyms,tsyms);
+    public PriceHistorical getPriceMulti(@RequestParam(value ="tsyms")String tsyms) throws APIUnavailableException {
+        return nicolaService.getPriceMulti(tsyms);
     }
-
-    @RequestMapping("/pricemultifull")
-    public CryptoPrice getPriceMultiFull(@RequestParam(value ="fsyms")String fsyms,
-                                     @RequestParam(value ="tsyms")String tsyms) throws APIUnavailableException {
-        return nicolaService.getPriceMultiFull(fsyms,tsyms);
-    }
+//    need to decide if we want to use this featur before creating the pojos for every coin that would be called with it.
+//    @RequestMapping("/pricemultifull")
+//    public CryptoPrice getPriceMultiFull(@RequestParam(value ="fsyms")String fsyms,
+//                                     @RequestParam(value ="tsyms")String tsyms) throws APIUnavailableException {
+//        return nicolaService.getPriceMultiFull(fsyms,tsyms);
+//    }
 
     @RequestMapping("/generateAvg")
     public CryptoPrice getGenerateAvg(@RequestParam(value ="fsym")String fsym,

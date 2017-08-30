@@ -15,6 +15,8 @@ public class CryptoPrice {
     Raw raw;
     Display display;
     ConversionType conversionType;
+    String Warning;
+    boolean hasWarning;
     double usd;
     double btc;
     double eth;
@@ -112,6 +114,22 @@ public class CryptoPrice {
 
     public void setConversionType(ConversionType conversionType) {
         this.conversionType = conversionType;
+    }
+
+    public String getWarning() {
+        return Warning;
+    }
+
+    public void setWarning(String warning) {
+        Warning = warning;
+    }
+
+    public boolean isHasWarning() {
+        return hasWarning;
+    }
+
+    public void setHasWarning(boolean hasWarning) {
+        this.hasWarning = hasWarning;
     }
 
     public double getUsd() {
