@@ -28,7 +28,7 @@ public class NicolaController {
     public PriceHistorical getPriceMulti(@RequestParam(value ="tsyms")String tsyms) throws APIUnavailableException {
         return nicolaService.getPriceMulti(tsyms);
     }
-//    need to decide if we want to use this featur before creating the pojos for every coin that would be called with it.
+//    need to decide if we want to use this feature before creating the pojos for every coin that would be called with it.
 //    @RequestMapping("/pricemultifull")
 //    public CryptoPrice getPriceMultiFull(@RequestParam(value ="fsyms")String fsyms,
 //                                     @RequestParam(value ="tsyms")String tsyms) throws APIUnavailableException {
