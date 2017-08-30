@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
  */
 public class DateUnix {
 
+    //Taner
     public static String secondsToSpecificTime (long timeInSecs) {
 
 //        Date dateOb = new Date(timeInSecs*1000);
@@ -25,4 +26,17 @@ public class DateUnix {
         return time;
     }
 
+    //Aaron
+    public static String currentTimeToString(){
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+
+        df.setCalendar(calendar);
+
+        String time = df.format(calendar.getTime());
+
+        return time;
+    }
 }
