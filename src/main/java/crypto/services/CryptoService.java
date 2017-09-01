@@ -277,6 +277,8 @@ public class CryptoService {
 
     }
 
+
+    //Taner
     public TopPairs getTopPairs(String fsym, String tsym, Integer limit, boolean sign)
             throws APIUnavailableException {
 
@@ -309,7 +311,7 @@ public class CryptoService {
 
     }
 
-
+    //Taner
     public MiningContracts getMiningContracts() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningcontracts";
 
@@ -322,6 +324,7 @@ public class CryptoService {
         }
     }
 
+    //Taner
     public MiningEquipment getMiningEquipment() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningequipment";
 
