@@ -1,11 +1,18 @@
 package crypto.model.tablePOJOs;
 
 
+import javax.persistence.*;
+
 /**
  * Created by tanerali on 27/08/2017.
  */
+@Entity
+@Table(name = "raw_histo_minute")
 public class HistoDataDB {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id;
     String time;
     double close;
     double high;
@@ -32,6 +39,15 @@ public class HistoDataDB {
 //
 //        return histoDataDBs;
 //    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTime() {
         return time;

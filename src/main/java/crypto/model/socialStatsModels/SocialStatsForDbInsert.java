@@ -1,6 +1,6 @@
 package crypto.model.socialStatsModels;
 
-import crypto.util.DateConverter;
+import crypto.util.DateUnix;
 
 /**
  * Created by aaron on 8/26/17.
@@ -23,7 +23,6 @@ public class SocialStatsForDbInsert {
 
 
     public SocialStatsForDbInsert(SocialStats socialStats) {
-        DateConverter dateConverter = new DateConverter();
         this.name = socialStats.getData().general.getName();
         this.coin_name = socialStats.getData().general.getCoinName();
         //this.coin_id = socialStats.getData().general.get
@@ -34,7 +33,7 @@ public class SocialStatsForDbInsert {
         this.reddit_points = socialStats.getData().reddit.getPoints();
         this.facebook_likes = socialStats.getData().facebook.getLikes();
         this.facebook_points = socialStats.getData().facebook.getPoints();
-        this.time = dateConverter.currentTimeToString();
+        this.time = DateUnix.currentTimeToString();
     }
 
 //    public int getId() {

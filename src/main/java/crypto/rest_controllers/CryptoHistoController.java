@@ -20,21 +20,21 @@ public class CryptoHistoController {
     @Autowired
     CryptoHistoService cryptoHistoService;
 
-    @RequestMapping("/crypto/historical/daily")
+    @RequestMapping("/api/historical/daily")
     public HistoDay getHistoDaily(@RequestParam(value ="fsym")String fsym,
                                   @RequestParam(value ="tsym")String tsym,
                                   @RequestParam(value ="e")String e) throws APIUnavailableException {
         return cryptoHistoService.getHistoricalDailyData(fsym,tsym,e);
     }
 
-    @RequestMapping("/crypto/historical/hourly")
+    @RequestMapping("/api/historical/hourly")
     public HistoHour getHistoHourly(@RequestParam(value ="fsym")String fsym,
                                     @RequestParam(value ="tsym")String tsym,
                                     @RequestParam(value ="e")String e) throws APIUnavailableException {
         return cryptoHistoService.getHistoricalHourlyData(fsym,tsym,e);
     }
 
-    @RequestMapping("/crypto/historical/minutely")
+    @RequestMapping("/api/historical/minutely")
     public HistoMinute getHistoMinutely(@RequestParam(value ="fsym")String fsym,
                                         @RequestParam(value ="tsym")String tsym,
                                         @RequestParam(value ="e")String e) throws APIUnavailableException {
@@ -43,7 +43,7 @@ public class CryptoHistoController {
 
 
 
-    @RequestMapping("/crypto/historical/30day")
+    @RequestMapping("/api/historical/30day")
     public ThirtyDayAverage thirtyDayAverage(@RequestParam(value ="fsym")String fsym,
                                              @RequestParam(value ="tsym")String tsym,
                                              @RequestParam(value ="e")String e) throws APIUnavailableException {

@@ -25,6 +25,8 @@ public class TanerCryptoController {
     @Autowired
     BackloadHistoDataService backloadHistoDataService;
 
+    @Autowired
+    EmailSendingService emailSendingService;
 
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
@@ -57,7 +59,20 @@ public class TanerCryptoController {
             throws APIUnavailableException {
 
         backloadHistoDataService.backloadHistoricalData(fsym, tsym, exchange);
+    }
 
+    @RequestMapping("/backload")
+    public void backloadSpecificMinutesHistoData
+            (@RequestParam(value="fsym")String fsym,
+             @RequestParam(value="tsym")String tsym,
+             @RequestParam(value="exchange")String exchange,
+             @RequestParam(value="minutes", required = false, defaultValue = "0")int minutes,
+             @RequestParam(value="hours", required = false, defaultValue = "0")int hours,
+             @RequestParam(value="days", required = false, defaultValue = "0")int days)
+
+            throws APIUnavailableException {
+
+        backloadHistoDataService.backloadSpecificHistoData(fsym, tsym, exchange, minutes, hours, days);
     }
 
 }

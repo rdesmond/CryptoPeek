@@ -5,7 +5,7 @@ import crypto.exceptions.ExchangeNotFoundException;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
+import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ public class CryptoController {
     @Autowired
     CryptoService cryptoService;
 
-    @RequestMapping("/crypto")
+    @RequestMapping("/api")
     public CryptoModel getSnapShot(@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
             throws APIUnavailableException {
         System.out.println("requestmapping");
         return cryptoService.getCoinSnapshot(fsym, tsym);
     }
 
-    @RequestMapping("/crypto/exchange")
+    @RequestMapping("/api/exchange")
     public Exchanges getSnapShot(
             @RequestParam(value="fsym")String fsym,
             @RequestParam(value="tsym")String tsym,
@@ -36,13 +36,13 @@ public class CryptoController {
         return cryptoService.getCoinSnapshotByExchange(fsym, tsym, exchange);
     }
 
-    @RequestMapping("/crypto/exchange/highest")
+    @RequestMapping("/api/exchange/highest")
     public Exchanges[] getCoinSnapshotByHighestExchange (@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
             throws ExchangeNotFoundException {
         return cryptoService.getCoinSnapshotByHighestAndLowestExchange(fsym, tsym);
     }
 
-    @RequestMapping("/crypto/average")
+    @RequestMapping("/api/average")
     public CryptoAverage getCryptoAverage (@RequestParam(value="currency_1")String currency_1,
                                            @RequestParam(value="currency_2")String currency_2)throws ExchangeNotFoundException {
         return cryptoService.getAveragePrice(currency_1,currency_2);

@@ -13,7 +13,6 @@ import org.springframework.data.gemfire.CacheFactoryBean;
 import org.springframework.data.gemfire.LocalRegionFactoryBean;
 import org.springframework.data.gemfire.support.GemfireCacheManager;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.Properties;
 
 @EnableCaching

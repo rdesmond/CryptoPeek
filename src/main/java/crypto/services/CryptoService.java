@@ -4,24 +4,30 @@ package crypto.services;
  * Created by aaron on 8/10/17.
  */
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
-import crypto.mappers.SocialStatsMapper;
+import crypto.mappers.TopCoinsMapper;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
+import crypto.model.topPairs.TopPairs;
+import crypto.model.topCoins.TopCoins;
+import crypto.mappers.SocialStatsMapper;
+import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.model.socialStatsModels.SocialStatsCoins;
 import crypto.model.socialStatsModels.SocialStatsForDbInsert;
-import crypto.model.topPairs.TopPairs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.io.IOException;
+import java.net.URL;
+
 import java.util.ArrayList;
 
 /**
@@ -32,6 +38,9 @@ public class CryptoService {
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    TopCoinsMapper topCoinsMapper;
 
     @Autowired
     SocialStatsMapper socialStatsMapper;
@@ -209,6 +218,29 @@ public class CryptoService {
         }
     }
 
+    public TopCoins[] getTop30() throws ExchangeNotFoundException  {
+
+        String url = "https://api.coinmarketcap.com/v1/ticker/?limit=30";
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            TopCoins[] topCoins = mapper.readValue(new URL(url), TopCoins[].class);
+            populateTop30ToDB(topCoins);
+            return topCoins;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void populateTop30ToDB (TopCoins[] topCoins){
+
+        for (int i=0; i<topCoins.length; i++){
+            topCoinsMapper.addNewTop(topCoins[i]);
+        }
+
+        return;
+    }
 
     public CryptoAverage getAveragePrice(String currency_1, String currency_2) throws ExchangeNotFoundException {
 
@@ -246,6 +278,7 @@ public class CryptoService {
     }
 
 
+    //Taner
     public TopPairs getTopPairs(String fsym, String tsym, Integer limit, boolean sign)
             throws APIUnavailableException {
 
@@ -278,7 +311,7 @@ public class CryptoService {
 
     }
 
-
+    //Taner
     public MiningContracts getMiningContracts() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningcontracts";
 
@@ -291,6 +324,7 @@ public class CryptoService {
         }
     }
 
+    //Taner
     public MiningEquipment getMiningEquipment() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningequipment";
 
@@ -302,5 +336,4 @@ public class CryptoService {
 //            throw new APIUnavailableException();
 //        }
     }
-
 }
