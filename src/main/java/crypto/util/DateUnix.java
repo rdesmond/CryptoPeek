@@ -1,7 +1,10 @@
 package crypto.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -39,4 +42,19 @@ public class DateUnix {
 
         return time;
     }
+
+    // Author: Nicola
+    public static long currentTimeToSecs(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        Date curDate;
+
+        long currentSecs = 0;
+
+        currentSecs = date.getTime()/1000;
+
+        return currentSecs;
+
+    }
 }
+
