@@ -17,9 +17,9 @@ public interface PersistData {
 
     String GET_COIN_FROM_DB = "SELECT id,symbol FROM `cryptopeek`.coins WHERE following = 0 AND symbol != 'BTC'";
     String INSERT_HISTO_MINUTE_DATA = "INSERT INTO `cryptopeek`.raw_histo_minute (close, high, low, open, time, " +
-            "volumefrom, volumeto, coin_id, coin_symbol) " +
+            "volumefrom, volumeto, coin_id) " +
             "VALUES (#{close}, #{high}, #{low}, #{open}, #{time}, #{volumefrom}, #{volumeto}, " +
-            "#{coinId}, #{coinSymbol})"  ;
+            "#{coinId})"  ;
     String GET_MOST_RECENT_TIME = "SELECT time FROM `cryptopeek`.raw_histo_minute ORDER BY time desc LIMIT 1";
     String GET_MOST_RECENT_TIME_BTC = "SELECT time FROM `cryptopeek`.raw_histo_minute WHERE coin_id = '1' " +
             "ORDER BY time desc LIMIT 1";

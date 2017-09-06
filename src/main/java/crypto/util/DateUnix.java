@@ -1,5 +1,7 @@
 package crypto.util;
 
+import org.springframework.stereotype.Component;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +12,7 @@ import java.util.GregorianCalendar;
 /**
  * Created by tanerali on 27/08/2017.
  */
+@Component
 public class DateUnix {
 
     //Taner
