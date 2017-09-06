@@ -24,6 +24,7 @@ import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.model.socialStatsModels.SocialStatsCoins;
 import crypto.model.socialStatsModels.SocialStatsForDbInsert;
+import crypto.util.CryptoCallsUtil;
 import crypto.util.DateUnix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,6 +53,9 @@ public class CryptoService {
 
     @Autowired
     PersistData persistData;
+
+    @Autowired
+    CryptoCallsUtil cryptoCallsUtil;
 
     @Cacheable("CryptoCache")
     public CryptoModel getCoinSnapshot(String fsym, String tsym) throws APIUnavailableException {
@@ -416,7 +420,6 @@ public class CryptoService {
                         persistHistoMinute.setVolumefrom(histoMinute.getData()[x].getVolumefrom());
                         persistHistoMinute.setVolumeto(histoMinute.getData()[x].getVolumeto());
                         persistHistoMinute.setCoinId(coin.getId());
-                        persistHistoMinute.setCoinSymbol(coin.getSymbol());
                         responses.add(persistHistoMinute);
 
                         persistData.insertHistoMinuteData(persistHistoMinute);
@@ -431,6 +434,7 @@ public class CryptoService {
         return responses;
     }
 
+    // Author: Nicola
     public ArrayList<PersistHistoMinute> getHistoMinuteDataBTC() throws APIUnavailableException {
 
         ArrayList<PersistHistoMinute> responses = new ArrayList<>();
@@ -440,6 +444,7 @@ public class CryptoService {
             histoMinute = restTemplate.getForObject(
                     "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&" +
                             "limit=5&aggregate=1&e=CCCAGG", HistoMinute.class);
+           
             PersistHistoMinute persistHistoMinute;
             int x = 0;
             for (x = 0; x < histoMinute.getData().length; x++) {
