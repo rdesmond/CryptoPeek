@@ -6,8 +6,7 @@ package crypto.configuration;
 public class EmailConfig {
 
     public static final String FROM = "cryptopeek@gmail.com";
-//
-//    private final String TO = "recipient@example.com";
+
 
     // Replace smtp_username with your Amazon SES SMTP user name.
     // NEVER UPLOAD TO GITHUB

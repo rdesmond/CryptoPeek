@@ -56,7 +56,7 @@ public class TanerCryptoController {
         return cryptoService.getMiningEquipment();
     }
 
-    @RequestMapping("/backload/data")
+    @RequestMapping("/backload/alldata")
     public void backloadHistoData (@RequestParam(value="fsym")String fsym,
                                    @RequestParam(value="tsym")String tsym,
                                    @RequestParam(value="exchange")String exchange)
@@ -85,5 +85,7 @@ public class TanerCryptoController {
 
         emailSendingService.sendEmail(toAddress, emailMessageRepository.findBySubject("BTC price alert"));
     }
+
+
 
 }

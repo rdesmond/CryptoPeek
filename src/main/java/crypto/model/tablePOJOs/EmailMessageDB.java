@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "email_messages")
-public class EmailMessage {
+public class EmailMessageDB {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

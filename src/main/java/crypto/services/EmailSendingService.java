@@ -1,7 +1,7 @@
 package crypto.services;
 
-import crypto.model.tablePOJOs.EmailLog;
-import crypto.model.tablePOJOs.EmailMessage;
+import crypto.model.tablePOJOs.EmailLogDB;
+import crypto.model.tablePOJOs.EmailMessageDB;
 import crypto.repository.EmailLogRepository;
 import crypto.util.DateUnix;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class EmailSendingService {
     EmailLogRepository emailLogRepository;
 
 
-    public void sendEmail(String to, EmailMessage emailMessage) throws Exception {
+    public void sendEmail(String to, EmailMessageDB emailMessageDB) throws Exception {
 
         // Create a Properties object to contain connection configuration information.
         Properties props = System.getProperties();
@@ -42,8 +42,8 @@ public class EmailSendingService {
         MimeMessage msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(FROM));
         msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-        msg.setSubject(emailMessage.getSubject());
-        msg.setContent(emailMessage.getMessage(),"text/html");
+        msg.setSubject(emailMessageDB.getSubject());
+        msg.setContent(emailMessageDB.getMessage(),"text/html");
 
         // Add a configuration set header. Comment or delete the
         // next line if you are not using a configuration set
@@ -74,14 +74,14 @@ public class EmailSendingService {
             transport.close();
         }
 
-        logEmailSent (to, emailMessage.getId());
+        logEmailSent (to, emailMessageDB.getId());
     }
 
     private void logEmailSent(String to, int email_message_id) {
 
-        EmailLog emailLog = new EmailLog(to, DateUnix.currentTimeToString(), email_message_id);
+        EmailLogDB emailLogDB = new EmailLogDB(to, DateUnix.currentTimeToString(), email_message_id);
 
-        emailLogRepository.save(emailLog);
+        emailLogRepository.save(emailLogDB);
     }
 
 }

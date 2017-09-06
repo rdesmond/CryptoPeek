@@ -1,17 +1,26 @@
 package crypto.model.tablePOJOs;
 
-
 import javax.persistence.*;
 
 /**
  * Created by tanerali on 27/08/2017.
  */
+
+/*
+The following can be used if using Hibernate for backloading historical data.
+For now myBatis is used for inserting HistoDataDB objects into DB
+
 @Entity
 @Table(name = "raw_histo_minute")
+@Table(name = "raw_histo_hour")
+@Table(name = "raw_histo_day")
+*/
+
 public class HistoDataDB {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+
     int id;
     long time;
     double close;
@@ -20,6 +29,7 @@ public class HistoDataDB {
     double open;
     double volumefrom;
     double volumeto;
+    int coin_id;
 
     //method that takes the results from the Data field from the histo API response
     //and then puts them into an array of HistoDataDB objects that can be inserted into the database;
@@ -103,5 +113,13 @@ public class HistoDataDB {
 
     public void setVolumeto(double volumeto) {
         this.volumeto = volumeto;
+    }
+
+    public int getCoin_id() {
+        return coin_id;
+    }
+
+    public void setCoin_id(int coin_id) {
+        this.coin_id = coin_id;
     }
 }

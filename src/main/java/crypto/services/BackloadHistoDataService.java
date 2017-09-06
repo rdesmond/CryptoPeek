@@ -6,8 +6,7 @@ import crypto.model.historicalModels.HistoDay;
 import crypto.model.historicalModels.HistoHour;
 import crypto.model.historicalModels.HistoMinute;
 import crypto.model.tablePOJOs.HistoDataDB;
-import crypto.repository.BackloadHistoDataRepository;
-import crypto.util.DateUnix;
+import crypto.repository.CoinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,8 +26,12 @@ public class BackloadHistoDataService {
 //    @Autowired
 //    SessionFactory sessionFactory;
 
+    //if going to use hibernate to upload data to DB
+//    @Autowired
+//    BackloadHistoDataRepository backloadHistoDataRepository;
+
     @Autowired
-    BackloadHistoDataRepository backloadHistoDataRepository;
+    CoinRepository coinRepository;
 
 
     public void backloadHistoricalData (String fsym, String tsym, String exchange)
@@ -52,6 +55,7 @@ public class BackloadHistoDataService {
         String urlDays = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym
                 +"&limit="+ days+ "&e="+exchange;
 
+        int coin_id = coinRepository.findBySymbol(fsym).getId();
 
         if (minutes > 0) {
 
@@ -81,7 +85,7 @@ public class BackloadHistoDataService {
                 histoDataDB.setOpen( histoMinute.getData()[i].getOpen() );
                 histoDataDB.setVolumefrom( histoMinute.getData()[i].getVolumefrom() );
                 histoDataDB.setVolumeto( histoMinute.getData()[i].getVolumeto() );
-
+                histoDataDB.setCoin_id( coin_id );
 
                 backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
             }
@@ -110,7 +114,7 @@ public class BackloadHistoDataService {
                 histoDataDB.setOpen( histoHour.getData()[i].getOpen() );
                 histoDataDB.setVolumefrom( histoHour.getData()[i].getVolumefrom() );
                 histoDataDB.setVolumeto( histoHour.getData()[i].getVolumeto() );
-
+                histoDataDB.setCoin_id( coin_id );
 
                 backloadHistoDataMapper.insertHistoHourIntoDB(histoDataDB);
             }
@@ -140,7 +144,7 @@ public class BackloadHistoDataService {
                 histoDataDB.setOpen( histoDay.getData()[i].getOpen() );
                 histoDataDB.setVolumefrom( histoDay.getData()[i].getVolumefrom() );
                 histoDataDB.setVolumeto( histoDay.getData()[i].getVolumeto() );
-
+                histoDataDB.setCoin_id( coin_id );
 
                 backloadHistoDataMapper.insertHistoDayIntoDB(histoDataDB);
             }
@@ -168,6 +172,8 @@ public class BackloadHistoDataService {
             throw new APIUnavailableException();
         }
 
+        int coin_id = coinRepository.findBySymbol(fsym).getId();
+
         for (int i =0; i < historical.getData().length; i++) {
 
             HistoDataDB histoDataDB = new HistoDataDB();
@@ -179,6 +185,7 @@ public class BackloadHistoDataService {
             histoDataDB.setOpen( historical.getData()[i].getOpen() );
             histoDataDB.setVolumefrom( historical.getData()[i].getVolumefrom() );
             histoDataDB.setVolumeto( historical.getData()[i].getVolumeto() );
+            histoDataDB.setCoin_id( coin_id );
 
 
             backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
@@ -186,7 +193,7 @@ public class BackloadHistoDataService {
 
 
         //batch insert attempt 1
-        //mybatis seems cannot insert an ArrayList into DB
+        //seems hibernate cannot insert an ArrayList into DB
 
 //        ArrayList<HistoDataDB> histoDataDBArrayList = new ArrayList<>();
 //
@@ -255,6 +262,8 @@ public class BackloadHistoDataService {
             throw new APIUnavailableException();
         }
 
+        int coin_id = coinRepository.findBySymbol(fsym).getId();
+
         for (int i =0; i < historical.getData().length; i++) {
 
             HistoDataDB histoDataDB = new HistoDataDB();
@@ -266,6 +275,7 @@ public class BackloadHistoDataService {
             histoDataDB.setOpen( historical.getData()[i].getOpen() );
             histoDataDB.setVolumefrom( historical.getData()[i].getVolumefrom() );
             histoDataDB.setVolumeto( historical.getData()[i].getVolumeto() );
+            histoDataDB.setCoin_id( coin_id );
 
 
             backloadHistoDataMapper.insertHistoHourIntoDB(histoDataDB);
@@ -291,6 +301,8 @@ public class BackloadHistoDataService {
             throw new APIUnavailableException();
         }
 
+        int coin_id = coinRepository.findBySymbol(fsym).getId();
+
         for (int i =0; i < historical.getData().length; i++) {
 
             HistoDataDB histoDataDB = new HistoDataDB();
@@ -302,7 +314,7 @@ public class BackloadHistoDataService {
             histoDataDB.setOpen( historical.getData()[i].getOpen() );
             histoDataDB.setVolumefrom( historical.getData()[i].getVolumefrom() );
             histoDataDB.setVolumeto( historical.getData()[i].getVolumeto() );
-
+            histoDataDB.setCoin_id( coin_id );
 
             backloadHistoDataMapper.insertHistoDayIntoDB(histoDataDB);
         }

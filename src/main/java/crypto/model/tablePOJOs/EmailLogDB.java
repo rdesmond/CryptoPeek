@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "email_logs")
-public class EmailLog {
+public class EmailLogDB {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,7 +16,7 @@ public class EmailLog {
     String date;
     int email_message_id;
 
-    public EmailLog(String to_address, String date, int email_message_id) {
+    public EmailLogDB(String to_address, String date, int email_message_id) {
         this.to_address = to_address;
         this.date = date;
         this.email_message_id = email_message_id;
