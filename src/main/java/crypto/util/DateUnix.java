@@ -31,7 +31,9 @@ public class DateUnix {
 
         Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+        //this specific format necessary if DATETIME data type going to
+        //be used in MySQL DB
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
 
         df.setCalendar(calendar);
 

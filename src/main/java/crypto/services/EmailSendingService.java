@@ -1,13 +1,19 @@
 package crypto.services;
 
+import crypto.model.tablePOJOs.EmailLog;
+import crypto.model.tablePOJOs.EmailMessage;
+import crypto.repository.EmailLogRepository;
+import crypto.util.DateUnix;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
+
+import static crypto.configuration.EmailConfig.*;
 
 
 /**
@@ -16,42 +22,11 @@ import java.util.Properties;
 @Service
 public class EmailSendingService {
 
-    // Replace recipient@example.com with a "To" address. If your account
-    // is still in the sandbox, this address must be verified.
-    static final String FROM = "recipient@example.com";
+    @Autowired
+    EmailLogRepository emailLogRepository;
 
-    // Replace sender@example.com with your "From" address.
-    // This address must be verified.
-    static final String TO = "sender@example.com";
 
-    // Replace smtp_username with your Amazon SES SMTP user name.
-    static final String SMTP_USERNAME = "smtp_username";
-
-    // Replace smtp_password with your Amazon SES SMTP password.
-    static final String SMTP_PASSWORD = "smtp_password";
-
-    // The name of the Configuration Set to use for this message.
-    // If you comment out or remove this variable, you will also need to
-    // comment out or remove the header on line 65.
-//    static final String CONFIGSET = "ConfigSet";
-
-    // Amazon SES SMTP host name. This example uses the US West (Oregon) Region.
-    static final String HOST = "email-smtp.us-west-2.amazonaws.com";
-
-    // The port you will connect to on the Amazon SES SMTP endpoint.
-    static final int PORT = 465;
-
-    static final String SUBJECT = "Amazon SES test (SMTP interface accessed using Java)";
-
-    static final String BODY = String.join(
-            System.getProperty("line.separator"),
-            "<h1>Amazon SES SMTP Email Test</h1>",
-            "<p>This email was sent with Amazon SES using the ",
-            "<a href='https://github.com/javaee/javamail'>Javamail Package</a>",
-            " for <a href='https://www.java.com'>Java</a>."
-    );
-
-    public void sendEmail(String from, String to, String subject, String body) throws Exception {
+    public void sendEmail(String to, EmailMessage emailMessage) throws Exception {
 
         // Create a Properties object to contain connection configuration information.
         Properties props = System.getProperties();
@@ -65,10 +40,10 @@ public class EmailSendingService {
 
         // Create a message with the specified information.
         MimeMessage msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(from));
+        msg.setFrom(new InternetAddress(FROM));
         msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-        msg.setSubject(subject);
-        msg.setContent(body,"text/html");
+        msg.setSubject(emailMessage.getSubject());
+        msg.setContent(emailMessage.getMessage(),"text/html");
 
         // Add a configuration set header. Comment or delete the
         // next line if you are not using a configuration set
@@ -98,6 +73,15 @@ public class EmailSendingService {
             // Close and terminate the connection.
             transport.close();
         }
+
+        logEmailSent (to, emailMessage.getId());
+    }
+
+    private void logEmailSent(String to, int email_message_id) {
+
+        EmailLog emailLog = new EmailLog(to, DateUnix.currentTimeToString(), email_message_id);
+
+        emailLogRepository.save(emailLog);
     }
 
 }

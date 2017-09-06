@@ -4,6 +4,7 @@ import crypto.exceptions.APIUnavailableException;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
 import crypto.model.topPairs.TopPairs;
+import crypto.repository.EmailMessageRepository;
 import crypto.services.BackloadHistoDataService;
 import crypto.services.CryptoService;
 import crypto.services.EmailSendingService;
@@ -27,6 +28,9 @@ public class TanerCryptoController {
 
     @Autowired
     EmailSendingService emailSendingService;
+
+    @Autowired
+    EmailMessageRepository emailMessageRepository;
 
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
@@ -73,6 +77,13 @@ public class TanerCryptoController {
             throws APIUnavailableException {
 
         backloadHistoDataService.backloadSpecificHistoData(fsym, tsym, exchange, minutes, hours, days);
+    }
+
+    @RequestMapping("/sendemail")
+    public void sendEmail (@RequestParam(value="toAddress")String toAddress)
+            throws Exception {
+
+        emailSendingService.sendEmail(toAddress, emailMessageRepository.findBySubject("BTC price alert"));
     }
 
 }

@@ -71,7 +71,10 @@ public class BackloadHistoDataService {
 
                 HistoDataDB histoDataDB = new HistoDataDB();
 
-                histoDataDB.setTime( DateUnix.secondsToSpecificTime( histoMinute.getData()[i].getTime() ) );
+//                can be used to convert time in seconds from API call to specific date and time
+//                histoDataDB.setTime( DateUnix.secondsToSpecificTime( histoMinute.getData()[i].getTime() ) );
+
+                histoDataDB.setTime( histoMinute.getData()[i].getTime() );
                 histoDataDB.setClose( histoMinute.getData()[i].getClose() );
                 histoDataDB.setHigh( histoMinute.getData()[i].getHigh() );
                 histoDataDB.setLow( histoMinute.getData()[i].getLow() );
@@ -100,7 +103,7 @@ public class BackloadHistoDataService {
 
                 HistoDataDB histoDataDB = new HistoDataDB();
 
-                histoDataDB.setTime( DateUnix.secondsToSpecificTime( histoHour.getData()[i].getTime() ) );
+                histoDataDB.setTime( histoHour.getData()[i].getTime() );
                 histoDataDB.setClose( histoHour.getData()[i].getClose() );
                 histoDataDB.setHigh( histoHour.getData()[i].getHigh() );
                 histoDataDB.setLow( histoHour.getData()[i].getLow() );
@@ -130,7 +133,7 @@ public class BackloadHistoDataService {
 
                 HistoDataDB histoDataDB = new HistoDataDB();
 
-                histoDataDB.setTime( DateUnix.secondsToSpecificTime( histoDay.getData()[i].getTime() ) );
+                histoDataDB.setTime( histoDay.getData()[i].getTime() );
                 histoDataDB.setClose( histoDay.getData()[i].getClose() );
                 histoDataDB.setHigh( histoDay.getData()[i].getHigh() );
                 histoDataDB.setLow( histoDay.getData()[i].getLow() );
@@ -169,7 +172,7 @@ public class BackloadHistoDataService {
 
             HistoDataDB histoDataDB = new HistoDataDB();
 
-            histoDataDB.setTime( DateUnix.secondsToSpecificTime( historical.getData()[i].getTime() ) );
+            histoDataDB.setTime( historical.getData()[i].getTime() );
             histoDataDB.setClose( historical.getData()[i].getClose() );
             histoDataDB.setHigh( historical.getData()[i].getHigh() );
             histoDataDB.setLow( historical.getData()[i].getLow() );
@@ -181,8 +184,10 @@ public class BackloadHistoDataService {
             backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
         }
 
+
         //batch insert attempt 1
         //mybatis seems cannot insert an ArrayList into DB
+
 //        ArrayList<HistoDataDB> histoDataDBArrayList = new ArrayList<>();
 //
 //        for (int i =0; i < historical.getData().length; i++) {
@@ -203,8 +208,10 @@ public class BackloadHistoDataService {
 //        backloadHistoDataRepository.save(histoDataDBArrayList);
 
 
+
         //batch insert attempt 2
         //errors: cant create sessionFactoryBean properly
+
 //        Session session = sessionFactory.openSession();
 //        Transaction tx = session.beginTransaction();
 //        for ( int i=0; i<historical.getData().length; i++ ) {
@@ -252,7 +259,7 @@ public class BackloadHistoDataService {
 
             HistoDataDB histoDataDB = new HistoDataDB();
 
-            histoDataDB.setTime( DateUnix.secondsToSpecificTime( historical.getData()[i].getTime() ) );
+            histoDataDB.setTime( historical.getData()[i].getTime() );
             histoDataDB.setClose( historical.getData()[i].getClose() );
             histoDataDB.setHigh( historical.getData()[i].getHigh() );
             histoDataDB.setLow( historical.getData()[i].getLow() );
@@ -288,7 +295,7 @@ public class BackloadHistoDataService {
 
             HistoDataDB histoDataDB = new HistoDataDB();
 
-            histoDataDB.setTime( DateUnix.secondsToSpecificTime( historical.getData()[i].getTime() ) );
+            histoDataDB.setTime( historical.getData()[i].getTime() );
             histoDataDB.setClose( historical.getData()[i].getClose() );
             histoDataDB.setHigh( historical.getData()[i].getHigh() );
             histoDataDB.setLow( historical.getData()[i].getLow() );

@@ -4,8 +4,6 @@ import crypto.model.tablePOJOs.HistoDataDB;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.ArrayList;
-
 /**
  * Created by tanerali on 27/08/2017.
  */
