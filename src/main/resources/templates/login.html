@@ -3,11 +3,32 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Spring Security Tutorial</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login</title>
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/static/vendor/bootstrap/css/bootstrap.css}" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+
+    <!-- MetisMenu CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/static/vendor/metisMenu/metisMenu.css}" href="../static/vendor/metisMenu/metisMenu.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/static/dist/css/sb-admin-2.css}" href="../static/dist/css/sb-admin-2.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/static/vendor/font-awesome/css/font-awesome.css}" href="../static/vendor/font-awesome/css/font-awesome.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" th:src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script type="text/javascript" th:src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
 
 <body>
@@ -15,22 +36,68 @@
     <button class="btn btn-md btn-warning btn-block" type="Submit">Go To Registration Page</button>
 </form>
 
+<!--<div class="container">-->
+    <!--<img th:src="@{/images/login.jpg}" class="img-responsive center-block" width="300" height="300" alt="Logo" />-->
+    <!--<form th:action="@{/login}" method="POST" class="form-signin">-->
+        <!--<h3 class="form-signin-heading" th:text="Welcome"></h3>-->
+        <!--<br/>-->
+
+        <!--<input type="text" id="email" name="email"  th:placeholder="Email"-->
+               <!--class="form-control" /> <br/>-->
+        <!--<input type="password"  th:placeholder="Password"-->
+               <!--id="password" name="password" class="form-control" /> <br />-->
+
+        <!--<div align="center" th:if="${param.error}">-->
+            <!--<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>-->
+        <!--</div>-->
+        <!--<button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>-->
+    <!--</form>-->
+<!--</div>-->
+
 <div class="container">
-    <img th:src="@{/images/login.jpg}" class="img-responsive center-block" width="300" height="300" alt="Logo" />
-    <form th:action="@{/login}" method="POST" class="form-signin">
-        <h3 class="form-signin-heading" th:text="Welcome"></h3>
-        <br/>
-
-        <input type="text" id="email" name="email"  th:placeholder="Email"
-               class="form-control" /> <br/>
-        <input type="password"  th:placeholder="Password"
-               id="password" name="password" class="form-control" /> <br />
-
-        <div align="center" th:if="${param.error}">
-            <p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Please Sign In</h3>
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/login}" method="POST" class="form-signin" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <input type="email" id="email" name="email"  th:placeholder="Email"
+                                       class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <input type="password"  th:placeholder="Password"
+                                       id="password" name="password" class="form-control" /> <br />
+                            </div>
+                            <div align="center" th:if="${param.error}">
+                                <p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                                </label>
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>
-    </form>
+    </div>
 </div>
+<!-- jQuery -->
+<script type="text/javascript" th:src="@{/vendor/jquery/jquery.min.js}"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script type="text/javascript" th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script type="text/javascript" th:src="@{/vendor/metisMenu/metisMenu.min.js}"></script>
+
+<!-- Custom Theme JavaScript -->
+<script type="text/javascript" th:src="@{/dist/js/sb-admin-2.js}"></script>
 </body>
 </html>

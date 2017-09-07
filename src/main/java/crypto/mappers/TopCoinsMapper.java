@@ -3,6 +3,9 @@ package crypto.mappers;
 import crypto.model.topCoins.TopCoins;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.ArrayList;
 
 /**
  * Created by daniel on 27.08.17.
@@ -10,12 +13,17 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TopCoinsMapper {
 
-    final String INSERT_NEW_TOP30 = "INSERT INTO top_30 (id, name, symbol, rank, price_usd, price_btc, percent_change_1h, " +
+    String INSERT_NEW_TOP30 = "INSERT INTO top_30 (id, name, symbol, rank, price_usd, price_btc, percent_change_1h, " +
             "percent_change_24h, percent_change_7d, last_updated, market_cap_usd) " +
             "values (#{id}, #{name} , #{symbol}, #{rank}, #{price_usd}, #{price_btc}, #{percent_change_1h}, " +
             "#{percent_change_24h}, #{percent_change_7d}, #{last_updated}, #{market_cap_usd})";
 
+    String GET_MOST_RECENT_TOP30 = "SELECT * FROM top_30 ORDER BY `entry_id` DESC LIMIT 30";
+
     @Insert(INSERT_NEW_TOP30)
     public void addNewTop (TopCoins t);
+
+    @Select(GET_MOST_RECENT_TOP30)
+    public ArrayList<TopCoins> getMostRecentTop ();
 
 }

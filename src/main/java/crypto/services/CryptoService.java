@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
 import crypto.mappers.TopCoinsMapper;
+import crypto.model.coinList.Coin;
+import crypto.model.coinList.Coins;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
@@ -26,6 +28,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 
 import java.util.ArrayList;
@@ -238,6 +241,12 @@ public class CryptoService {
         for (int i=0; i<topCoins.length; i++){
             topCoinsMapper.addNewTop(topCoins[i]);
         }
+        //TODO: created a new thread that is to be inserted here when finished
+        //the thread is going to populate the top30 table with the CryptoCompare coin IDs in the background
+
+//        CryptoID c = new CryptoID();
+//        Thread t = new Thread(c);
+//        t.start();
 
         return;
     }
@@ -332,5 +341,25 @@ public class CryptoService {
 //        } catch (Exception e) {
 //            throw new APIUnavailableException();
 //        }
+    }
+
+    public Coins getAllCoins() throws APIUnavailableException {
+        String url="https://www.cryptocompare.com/api/data/coinlist/";
+        Coins coins = restTemplate.getForObject(url, Coins.class);
+        Field[] fields = coins.getData().getClass().getDeclaredFields();
+        for (Field f : fields) {
+            f.setAccessible(true);
+            Coin c = new Coin();
+            Object obj = new Object();
+            try {
+                String name=f.getName();
+                c=(Coin)f.get(name);
+                System.out.println(c.getCoinName());
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return coins;
     }
 }
