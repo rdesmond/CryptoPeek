@@ -3,9 +3,12 @@ package crypto.model.cryptoCompareModels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Author: Nicola
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class BTC {
+public class BTC extends CryptoCompare{
 
     double usd;
     double eth;

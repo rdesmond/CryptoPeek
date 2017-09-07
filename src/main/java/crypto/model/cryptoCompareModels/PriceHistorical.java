@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class PriceHistorical {
+public class PriceHistorical extends CryptoCompare{
 
     BTC btc;
     String response;

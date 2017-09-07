@@ -15,46 +15,32 @@ import java.util.ArrayList;
 public class CryptoCallsUtil {
 
     @Autowired
-    RestTemplate restTemplate;
-
-    @Autowired
     CryptoCallsMapper cryptoCallsMapper;
 
     // Author: Nicola
-    public boolean getCurrentCalls() throws NullPointerException{
+    // This method checks to make sure we have mad no more than 4000 calls within the last hour
+    public boolean haveCallsRemaining() throws NullPointerException{
 
-        try {
-            if (cryptoCallsMapper.getLastCallLastHour() - cryptoCallsMapper.getFirstCallLastHour() <= 4000) {
-                return true;
-            }
-        }catch (NullPointerException e){
+        if (cryptoCallsMapper.getLastCallLastHour() - cryptoCallsMapper.getFirstCallLastHour() <= 4000) {
             return true;
+        }else {
+            return false;
         }
-        return true;
     }
-    public ArrayList<CryptoCalls> logCryptoCalls(String urlRequest){
+
+    // This method logs every call we make or try to make to the cryptoCompare API
+    public void logCryptoCalls(String urlRequest, boolean underLimit){
 
         CryptoCalls cryptoCalls;
         ArrayList<CryptoCalls> responses = new ArrayList<>();
-        if (getCurrentCalls()) {
-
-            cryptoCalls = new CryptoCalls();
-            cryptoCalls.setUnderLimit(true);
-            responses.add(cryptoCalls);
-
-        }else {
-            cryptoCalls = new CryptoCalls();
-            cryptoCalls.setUnderLimit(false);
-            responses.add(cryptoCalls);
-        }
 
         cryptoCalls = new CryptoCalls();
         cryptoCalls.setUrlRequest(urlRequest);
+        cryptoCalls.setUnderLimit(underLimit);
         responses.add(cryptoCalls);
 
         cryptoCallsMapper.insertCryptoCalls(cryptoCalls);
 
-        return responses;
     }
 
 }

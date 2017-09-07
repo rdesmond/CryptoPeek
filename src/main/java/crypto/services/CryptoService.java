@@ -24,7 +24,6 @@ import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.model.socialStatsModels.SocialStatsCoins;
 import crypto.model.socialStatsModels.SocialStatsForDbInsert;
-import crypto.util.CryptoCallsUtil;
 import crypto.util.DateUnix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -55,7 +54,9 @@ public class CryptoService {
     PersistData persistData;
 
     @Autowired
-    CryptoCallsUtil cryptoCallsUtil;
+    CryptoCompareService cryptoCompareService;
+
+
 
     @Cacheable("CryptoCache")
     public CryptoModel getCoinSnapshot(String fsym, String tsym) throws APIUnavailableException {
@@ -366,6 +367,7 @@ public class CryptoService {
         } else return true;
     }
 
+    // Author: Nicola
     private boolean missing5MinBTC() {
         long currentDate;
         long lastDate;
@@ -379,6 +381,7 @@ public class CryptoService {
 
         lastDate = Long.parseLong(persistData.getMostRecentTime());
         System.out.println("last date: " + lastDate);
+        System.out.println(currentDate - lastDate);
 
         if (currentDate - lastDate < 300) {
             return false;
@@ -400,35 +403,38 @@ public class CryptoService {
                 System.out.println("we are in the " + i + " iteration");
                 coin = coinArrayList.get(i);
 
-                HistoMinute histoMinute;
+                HistoMinute histoMinute = new HistoMinute();
                 try {
-                    histoMinute = restTemplate.getForObject(
+                    histoMinute = (HistoMinute) cryptoCompareService.callCryptoCompareAPI(
                             "https://min-api.cryptocompare.com/data/histominute?fsym=" + coin.getSymbol() + "&tsym=BTC&" +
-                                    "limit=5&aggregate=1&e=CCCAGG", HistoMinute.class);
-                    PersistHistoMinute persistHistoMinute;
-                    int x = 0;
-                    for (x = 0; x < histoMinute.getData().length; x++) {
-                        System.out.println(x);
+                                    "limit=5&aggregate=1&e=CCCAGG", histoMinute);
+                    if (histoMinute != null) {
+                        PersistHistoMinute persistHistoMinute;
+                        int x = 0;
+                        for (x = 0; x < histoMinute.getData().length; x++) {
+                            System.out.println(x);
 
-                        persistHistoMinute = new PersistHistoMinute();
+                            persistHistoMinute = new PersistHistoMinute();
 
-                        persistHistoMinute.setClose(histoMinute.getData()[x].getClose());
-                        persistHistoMinute.setHigh(histoMinute.getData()[x].getHigh());
-                        persistHistoMinute.setLow(histoMinute.getData()[x].getLow());
-                        persistHistoMinute.setOpen(histoMinute.getData()[x].getOpen());
-                        persistHistoMinute.setTime(histoMinute.getData()[x].getTime());
-                        persistHistoMinute.setVolumefrom(histoMinute.getData()[x].getVolumefrom());
-                        persistHistoMinute.setVolumeto(histoMinute.getData()[x].getVolumeto());
-                        persistHistoMinute.setCoinId(coin.getId());
-                        responses.add(persistHistoMinute);
+                            persistHistoMinute.setClose(histoMinute.getData()[x].getClose());
+                            persistHistoMinute.setHigh(histoMinute.getData()[x].getHigh());
+                            persistHistoMinute.setLow(histoMinute.getData()[x].getLow());
+                            persistHistoMinute.setOpen(histoMinute.getData()[x].getOpen());
+                            persistHistoMinute.setTime(histoMinute.getData()[x].getTime());
+                            persistHistoMinute.setVolumefrom(histoMinute.getData()[x].getVolumefrom());
+                            persistHistoMinute.setVolumeto(histoMinute.getData()[x].getVolumeto());
+                            persistHistoMinute.setCoinId(coin.getId());
+                            responses.add(persistHistoMinute);
 
-                        persistData.insertHistoMinuteData(persistHistoMinute);
+                            persistData.insertHistoMinuteData(persistHistoMinute);
+                        }
                     }
 
                     throw new APIUnavailableException();
                 } catch (APIUnavailableException e) {
                     e.toString();
                 }
+
             }
         }
         return responses;
@@ -439,11 +445,11 @@ public class CryptoService {
 
         ArrayList<PersistHistoMinute> responses = new ArrayList<>();
 
-        if (missing5Min()) {
-            HistoMinute histoMinute;
-            histoMinute = restTemplate.getForObject(
+        if (missing5MinBTC()) {
+            HistoMinute histoMinute = new HistoMinute();
+            histoMinute = (HistoMinute) cryptoCompareService.callCryptoCompareAPI(
                     "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&" +
-                            "limit=5&aggregate=1&e=CCCAGG", HistoMinute.class);
+                            "limit=5&aggregate=1&e=CCCAGG", histoMinute);
            
             PersistHistoMinute persistHistoMinute;
             int x = 0;

@@ -13,12 +13,15 @@ public class NicolaService {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    CryptoCompareService cryptoCompareService;
+
     public CryptoPrice getPrice (String fsym, String tsyms) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/price?fsym=" + fsym + "&tsyms=" + tsyms;
-        CryptoPrice cryptoPrice;
+        CryptoPrice cryptoPrice = new CryptoPrice();
         try{
-                cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
+                cryptoPrice= (CryptoPrice) cryptoCompareService.callCryptoCompareAPI(url, cryptoPrice);
 
         } catch (Exception e){
             throw new APIUnavailableException();
@@ -29,9 +32,9 @@ public class NicolaService {
     public PriceHistorical getPriceMulti (String tsyms) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=" + tsyms;
-        PriceHistorical priceHistorical;
+        PriceHistorical priceHistorical = new PriceHistorical();
         try{
-            priceHistorical=restTemplate.getForObject(url, PriceHistorical.class);
+            priceHistorical=(PriceHistorical) cryptoCompareService.callCryptoCompareAPI(url, priceHistorical);
 
         } catch (Exception e){
             throw new APIUnavailableException();
@@ -41,9 +44,9 @@ public class NicolaService {
 //    public CryptoPrice getPriceMultiFull (String fsyms, String tsyms) throws APIUnavailableException {
 //
 //        String url = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + fsyms + "&tsyms=" + tsyms;
-//        CryptoPrice cryptoPrice;
+//        CryptoPrice cryptoPrice = new CryptoPrice;
 //        try{
-//            cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
+//            cryptoPrice=(HistoMinute) cryptoCompareService.callCryptoCompareAPI(url, cryptoPrice);
 //
 //        } catch (Exception e){
 //            throw new APIUnavailableException();
@@ -54,9 +57,9 @@ public class NicolaService {
 
         String url = "https://min-api.cryptocompare.com/data/generateAvg?fsym=" + fsym + "&tsym=" + tsym +
                         "&markets=" + markets;
-        CryptoPrice cryptoPrice;
+        CryptoPrice cryptoPrice = new CryptoPrice();
         try{
-            cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
+            cryptoPrice = (CryptoPrice) cryptoCompareService.callCryptoCompareAPI(url, cryptoPrice);
 
         } catch (Exception e){
             throw new APIUnavailableException();
@@ -66,9 +69,9 @@ public class NicolaService {
     public CryptoPrice getDayAvg (String fsym, String tsym) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/dayAvg?fsym=" + fsym + "&tsym=" + tsym;
-        CryptoPrice cryptoPrice;
+        CryptoPrice cryptoPrice = new CryptoPrice();
         try{
-            cryptoPrice=restTemplate.getForObject(url, CryptoPrice.class);
+            cryptoPrice = (CryptoPrice) cryptoCompareService.callCryptoCompareAPI(url, cryptoPrice);
 
         } catch (Exception e){
             throw new APIUnavailableException();
@@ -78,9 +81,9 @@ public class NicolaService {
     public PriceHistorical getPriceHistorical (String tsyms, String ts) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=" + tsyms + "&ts=" + ts;
-        PriceHistorical priceHistorical;
+        PriceHistorical priceHistorical = new PriceHistorical();
         try{
-            priceHistorical=restTemplate.getForObject(url, PriceHistorical.class);
+            priceHistorical = (PriceHistorical) cryptoCompareService.callCryptoCompareAPI(url, priceHistorical);
 
         } catch (Exception e){
             throw new APIUnavailableException();
