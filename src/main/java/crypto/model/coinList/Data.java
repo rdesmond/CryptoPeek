@@ -2,6 +2,7 @@ package crypto.model.coinList;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by daniel on 06.09.17.
@@ -211,6 +212,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin XDE2;
         Coin VEC2;
         Coin GSY;
+        @JsonProperty(value="TKN*")
         Coin TKNstar;
         Coin LIR;
         Coin MMNXT;
@@ -247,6 +249,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin EXB;
         Coin CDX;
         Coin RBIT;
+        @JsonProperty(value="DCS.")
         Coin DCS;
         Coin GB;
         Coin ANC;
@@ -437,6 +440,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin PNC;
         Coin BRDD;
         Coin BIP;
+        @JsonProperty(value="XNC\t")
         Coin XNC;
         Coin EMB;
         Coin BTTF;
@@ -616,6 +620,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin KEY;
         Coin KGC;
         Coin LAB;
+        @JsonProperty(value="LGD*")
         Coin LGDstar;
         Coin LK7;
         Coin LKY;
@@ -881,6 +886,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin XCE;
         Coin ACP;
         Coin DRZ;
+        @JsonProperty(value="BUCKS*")
         Coin BUCKSstar;
         Coin BSC;
         Coin DRKT;
@@ -923,6 +929,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin ZNY;
         Coin BTQ;
         Coin PKB;
+        @JsonProperty(value="STR*")
         Coin STRstar;
         Coin SNRG;
         Coin GHOUL;
@@ -962,7 +969,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin XCP;
         Coin WINGS;
         Coin CAT;
-        Coin ARC;
         Coin BNT;
         Coin REP;
         Coin DCT;
@@ -996,6 +1002,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin CJC;
         Coin AMY;
         Coin QBT;
+        @JsonProperty(value="SRC*")
         Coin SRCstar;
         Coin EB3;
         Coin XVE;
@@ -1126,6 +1133,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin coin4CHN;
         Coin CMP;
         Coin HRB;
+    @JsonProperty(value="NET*")
         Coin NETstar;
         @JsonProperty(value="8BT")
         Coin coin8BT;
@@ -1193,6 +1201,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin ETB;
         Coin CVCOIN;
         Coin DRP;
+        @JsonProperty(value="ARC*")
         Coin ARCstar;
         Coin BOG;
         Coin NDC;
@@ -1228,6 +1237,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin ICE;
         Coin XID;
         Coin GCN;
+        @JsonProperty(value="ATOM*")
         Coin ATOMstar;
         Coin ICOO;
         Coin TME;
@@ -1421,7 +1431,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin PLANET;
         Coin HGT;
         Coin DMARKET;
-        Coin Litra;
         Coin OPT;
         Coin MANA;
         Coin EQ;
@@ -1431,31 +1440,45 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin SCOR;
         Coin BRO;
         Coin MINEX;
+        @JsonProperty(value="BTM*")
         Coin BTMstar;
         Coin KEX;
         Coin ZRX;
         Coin BCCOIN;
         Coin RCC;
         Coin SIGT;
+        @JsonProperty(value="CASH*")
         Coin CASHstar;
-        Coin KCstar;
+        @JsonProperty(value="XAI*")
         Coin XAIstar;
+        @JsonProperty(value="AHT*")
         Coin AHTstar;
+        @JsonProperty(value="CAT*")
         Coin CATstar;
+        @JsonProperty(value="BET*")
         Coin BETstar;
+        @JsonProperty(value="BNB*")
         Coin BNBstar;
+        @JsonProperty(value="XNC*")
         Coin XNCstar;
+        @JsonProperty(value="STA*")
         Coin STAstar;
+        @JsonProperty(value="STAR*")
         Coin STARstar;
+        @JsonProperty(value="XID*")
         Coin XIDstar;
+        @JsonProperty(value="HIRE*")
         Coin HIREstar;
+        @JsonProperty(value="ZRC*")
         Coin ZRCstar;
+        @JsonProperty(value="BTX*")
         Coin BTXstar;
         Coin UTK;
         Coin PQT;
         Coin KCN;
         Coin MNY;
         Coin AUTH;
+        @JsonProperty(value="ARI*")
         Coin ARIstar;
         Coin MLS;
         Coin SOJ;
@@ -1469,12 +1492,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin HDG;
         Coin WAN;
         Coin DFT;
+        @JsonProperty(value="MYST*")
         Coin MYSTstar;
         Coin COB;
         Coin TIE;
         Coin ALTC;
         Coin MNT;
-        Coin CREDO;
         Coin ATL;
         Coin SQP;
         Coin BLX;
@@ -1489,6 +1512,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
         Coin FIL;
         Coin RVT;
         Coin VNT;
+        @JsonProperty(value="SUB*")
         Coin SUBstar;
         Coin CSNO;
         Coin LAT;
@@ -5261,10 +5285,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
             return CAT;
         }
 
-        public Coin getARC() {
-            return ARC;
-        }
-
         public Coin getBNT() {
             return BNT;
         }
@@ -7085,10 +7105,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
             return DMARKET;
         }
 
-        public Coin getLitra() {
-            return Litra;
-        }
-
         public Coin getOPT() {
             return OPT;
         }
@@ -7151,10 +7167,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
         public Coin getCASHstar() {
             return CASHstar;
-        }
-
-        public Coin getKCstar() {
-            return KCstar;
         }
 
         public Coin getXAIstar() {
@@ -7295,10 +7307,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
         public Coin getMNT() {
             return MNT;
-        }
-
-        public Coin getCREDO() {
-            return CREDO;
         }
 
         public Coin getATL() {
@@ -11173,10 +11181,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
             this.CAT = CAT;
         }
 
-        public void setARC(Coin ARC) {
-            this.ARC = ARC;
-        }
-
         public void setBNT(Coin BNT) {
             this.BNT = BNT;
         }
@@ -12997,10 +13001,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
             this.DMARKET = DMARKET;
         }
 
-        public void setLitra(Coin litra) {
-            Litra = litra;
-        }
-
         public void setOPT(Coin OPT) {
             this.OPT = OPT;
         }
@@ -13063,10 +13063,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
         public void setCASHstar(Coin CASHstar) {
             this.CASHstar = CASHstar;
-        }
-
-        public void setKCstar(Coin KCstar) {
-            this.KCstar = KCstar;
         }
 
         public void setXAIstar(Coin XAIstar) {
@@ -13207,10 +13203,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
         public void setMNT(Coin MNT) {
             this.MNT = MNT;
-        }
-
-        public void setCREDO(Coin CREDO) {
-            this.CREDO = CREDO;
         }
 
         public void setATL(Coin ATL) {

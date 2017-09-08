@@ -18,7 +18,7 @@ public class Coin {
     String fullyPremined; //"0",
     String totalCoinSupply; //"42",
     String preMinedValue; //"N/A",
-    String ttalCoinsFreeFloat; //"N/A",
+    String totalCoinsFreeFloat; //"N/A",
     String sortOrder; //"34"
 
     public String getId() {
@@ -109,12 +109,12 @@ public class Coin {
         this.preMinedValue = preMinedValue;
     }
 
-    public String getTtalCoinsFreeFloat() {
-        return ttalCoinsFreeFloat;
+    public String getTotalCoinsFreeFloat() {
+        return totalCoinsFreeFloat;
     }
 
-    public void setTtalCoinsFreeFloat(String ttalCoinsFreeFloat) {
-        this.ttalCoinsFreeFloat = ttalCoinsFreeFloat;
+    public void setTotalCoinsFreeFloat(String ttalCoinsFreeFloat) {
+        this.totalCoinsFreeFloat = ttalCoinsFreeFloat;
     }
 
     public String getSortOrder() {

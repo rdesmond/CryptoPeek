@@ -7,6 +7,7 @@ package crypto.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.mappers.CoinsMapper;
 import crypto.mappers.TopCoinsMapper;
 import crypto.model.coinList.Coin;
 import crypto.model.coinList.Coins;
@@ -22,6 +23,7 @@ import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.model.socialStatsModels.SocialStatsCoins;
 import crypto.model.socialStatsModels.SocialStatsForDbInsert;
+import crypto.services.threads.CryptoID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -47,6 +49,9 @@ public class CryptoService {
 
     @Autowired
     SocialStatsMapper socialStatsMapper;
+
+    @Autowired
+    CoinsMapper coinsMapper;
 
     @Cacheable("CryptoCache")
     public CryptoModel getCoinSnapshot(String fsym, String tsym) throws APIUnavailableException {
@@ -244,9 +249,9 @@ public class CryptoService {
         //TODO: created a new thread that is to be inserted here when finished
         //the thread is going to populate the top30 table with the CryptoCompare coin IDs in the background
 
-//        CryptoID c = new CryptoID();
-//        Thread t = new Thread(c);
-//        t.start();
+        CryptoID c = new CryptoID();
+        Thread t = new Thread(c);
+        t.start();
 
         return;
     }
@@ -343,18 +348,18 @@ public class CryptoService {
 //        }
     }
 
+
+    //Method to populate all of the coins from CryptoCompare to our database.
     public Coins getAllCoins() throws APIUnavailableException {
         String url="https://www.cryptocompare.com/api/data/coinlist/";
         Coins coins = restTemplate.getForObject(url, Coins.class);
         Field[] fields = coins.getData().getClass().getDeclaredFields();
         for (Field f : fields) {
             f.setAccessible(true);
-            Coin c = new Coin();
-            Object obj = new Object();
+
             try {
-                String name=f.getName();
-                c=(Coin)f.get(name);
-                System.out.println(c.getCoinName());
+                Coin c = (Coin)f.get(coins.getData());
+                coinsMapper.insertCoin(c);
 
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
