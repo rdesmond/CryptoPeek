@@ -52,6 +52,9 @@ public class CryptoService {
 
     @Autowired
     CoinsMapper coinsMapper;
+    
+    @Autowired
+    CryptoID cryptoID;
 
     @Cacheable("CryptoCache")
     public CryptoModel getCoinSnapshot(String fsym, String tsym) throws APIUnavailableException {
@@ -246,11 +249,9 @@ public class CryptoService {
         for (int i=0; i<topCoins.length; i++){
             topCoinsMapper.addNewTop(topCoins[i]);
         }
-        //TODO: created a new thread that is to be inserted here when finished
-        //the thread is going to populate the top30 table with the CryptoCompare coin IDs in the background
 
-        CryptoID c = new CryptoID();
-        Thread t = new Thread(c);
+        //this thread is going to populate the top30 table with the CryptoCompare coin IDs in the background
+        Thread t = new Thread(cryptoID);
         t.start();
 
         return;
