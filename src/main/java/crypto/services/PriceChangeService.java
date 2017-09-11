@@ -17,13 +17,15 @@ public class PriceChangeService {
     TopCoinsMapper topCoinsMapper;
 
 
-    /* % increase = Increase ÷ Original Number × 100.
-    if negative number, then this is a percentage decrease
+    /*
     method for calculating percentage change between opening and closing prices of a given coin
     turns out not necessary since CoinMarketCap has an API call that returns percentage changes
     for most recent period (be it hour, day, week); will be necessary if we want to calculate
     which were the top 5 movers in some period in the past
     */
+
+    //% increase = Increase ÷ Original Number × 100.
+    //if negative number, then this is a percentage decrease
 //    public void getHourlyPriceChange (int coin_id) {
 //
 //        //get all the open and close historical prices for all coins
