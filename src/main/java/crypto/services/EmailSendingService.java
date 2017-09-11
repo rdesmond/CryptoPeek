@@ -19,13 +19,25 @@ import static crypto.configuration.EmailConfig.*;
 /**
  * Created by tanerali on 27/08/2017.
  */
+
+//Taner
 @Service
 public class EmailSendingService {
 
     @Autowired
     EmailLogRepository emailLogRepository;
 
+    //Taner
 
+    /**
+     * Sends email using Amazon SES. Configuration file is in crypto.configuration.EmailConfig
+     * @param to address to which email will be sent
+     * @param emailMessageDB specifies which email message will be sent since there are
+     *                       predefined messages in the DB; argument will be passed by
+     *                       accessing DB and retrieving one of predefined messages which contains
+     *                       both the subject and the message
+     * @throws Exception
+     */
     public void sendEmail(String to, EmailMessageDB emailMessageDB) throws Exception {
 
         // Create a Properties object to contain connection configuration information.
@@ -77,6 +89,9 @@ public class EmailSendingService {
         logEmailSent (to, emailMessageDB.getId());
     }
 
+    //Taner
+    //method will log each email sent and specify to whom it was sent and what
+    //the message was
     private void logEmailSent(String to, int email_message_id) {
 
         EmailLogDB emailLogDB = new EmailLogDB(to, DateUnix.currentTimeToString(), email_message_id);

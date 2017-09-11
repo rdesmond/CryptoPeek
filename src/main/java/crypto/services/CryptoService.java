@@ -1,9 +1,5 @@
 package crypto.services;
 
-/**
- * Created by aaron on 8/10/17.
- */
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
@@ -32,6 +28,8 @@ import java.util.ArrayList;
 
 /**
  * Created by aaron on 8/8/17.
+ *
+ *
  */
 @Service
 public class CryptoService {
@@ -60,7 +58,6 @@ public class CryptoService {
         } catch (Exception e){
             throw new APIUnavailableException();
         }
-
 
         return cryptoModel;
     }
@@ -136,7 +133,8 @@ public class CryptoService {
         // we don't have to do anything in here - this method just needs to be called
     }
 
-    public Exchanges getCoinSnapshotByExchange(String fsym, String tsym, String exchange) throws ExchangeNotFoundException {
+    public Exchanges getCoinSnapshotByExchange(String fsym, String tsym, String exchange)
+            throws ExchangeNotFoundException {
 
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;
@@ -162,7 +160,8 @@ public class CryptoService {
         }
     }
 
-    public Exchanges[] getCoinSnapshotByHighestAndLowestExchange(String fsym, String tsym) throws ExchangeNotFoundException {
+    public Exchanges[] getCoinSnapshotByHighestAndLowestExchange(String fsym, String tsym)
+            throws ExchangeNotFoundException {
 
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;

@@ -2,9 +2,11 @@ package crypto.configuration;
 
 /**
  * Created by tanerali on 05/09/2017.
+ * Contains configuration for sending emails with Amazon SES
  */
 public class EmailConfig {
 
+    //create this address
     public static final String FROM = "cryptopeek@gmail.com";
 
 
