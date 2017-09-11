@@ -6,6 +6,8 @@ import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
 import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
+import crypto.model.historicalModels.HistoMinute;
+import crypto.model.historicalModels.PersistHistoMinute;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +66,17 @@ public class CryptoController {
     public ArrayList<SocialStats> getSocialStatsForFollowedCoins()
             throws APIUnavailableException {
         return cryptoService.getSocialStatsForFollowedCoins();
+    }
+
+    // Author: Nicola
+    @RequestMapping("/api/loadData")
+    public ArrayList<PersistHistoMinute> getHistoMinuteData2() throws APIUnavailableException {
+        return cryptoService.getHistoMinuteData2();
+    }
+
+    // Author: Nicola
+    @RequestMapping("/api/loadDataBTC")
+    public ArrayList<PersistHistoMinute> getHistoMinuteDataBTC() throws APIUnavailableException {
+        return cryptoService.getHistoMinuteDataBTC();
     }
 }

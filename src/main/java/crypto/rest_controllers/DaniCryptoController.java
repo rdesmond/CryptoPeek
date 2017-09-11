@@ -1,6 +1,8 @@
 package crypto.rest_controllers;
 
+import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.model.coinList.Coins;
 import crypto.model.topCoins.TopCoins;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,4 +23,8 @@ public class DaniCryptoController {
         return cryptoService.getTop30();
     }
 
+    @RequestMapping("/api/allcoins")
+    public Coins getAllCoins() throws APIUnavailableException {
+        return cryptoService.getAllCoins();
+    }
 }

@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CryptoModel {
 
-    String response; //: "Success",
-    String message; //: "Coin snapshot succesfully returned",
-    Data data; //: {},
-    int type; //: 100
+    String response;
+    String message;
+    Data data;
+    int type;
 
 
     public String getResponse() {

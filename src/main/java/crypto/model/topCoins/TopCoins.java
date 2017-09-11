@@ -18,6 +18,24 @@ public class TopCoins {
     double percent_change_24h;
     double percent_change_7d;
     String last_updated;
+    int entry_id;
+    int coin_id;
+
+    public int getEntry_id() {
+        return entry_id;
+    }
+
+    public void setEntry_id(int entry_id) {
+        this.entry_id = entry_id;
+    }
+
+    public int getCoin_id() {
+        return coin_id;
+    }
+
+    public void setCoin_id(int coin_id) {
+        this.coin_id = coin_id;
+    }
 
     public String getId() {
         return id;
