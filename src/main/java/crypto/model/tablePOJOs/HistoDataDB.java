@@ -1,44 +1,35 @@
 package crypto.model.tablePOJOs;
 
-
 import javax.persistence.*;
 
 /**
  * Created by tanerali on 27/08/2017.
  */
+
+/*
+The following can be used if using Hibernate for backloading historical data.
+For now myBatis is used for inserting HistoDataDB objects into DB
+
 @Entity
 @Table(name = "raw_histo_minute")
+@Table(name = "raw_histo_hour")
+@Table(name = "raw_histo_day")
+*/
+
 public class HistoDataDB {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+
     int id;
-    String time;
+    long time;
     double close;
     double high;
     double low;
     double open;
     double volumefrom;
     double volumeto;
-
-    //method that takes the results from the Data field from the histo API response
-    //and then puts them into an array of HistoDataDB objects that can be inserted into the database;
-    //time is modified from int to String with the utility method secondsToSpecificTime()
-//    public static HistoDataDB[] convertToHistoDataDB (Data[] data) {
-//        HistoDataDB[] histoDataDBs = new HistoDataDB[data.length];
-//
-//        for (int i =0; i < data.length; i++) {
-//            histoDataDBs[i].setTime( DateUnix.secondsToSpecificTime( data[i].getTime() ) );
-//            histoDataDBs[i].setClose( data[i].getClose() );
-//            histoDataDBs[i].setHigh( data[i].getHigh() );
-//            histoDataDBs[i].setLow( data[i].getLow() );
-//            histoDataDBs[i].setOpen( data[i].getOpen() );
-//            histoDataDBs[i].setVolumefrom( data[i].getVolumefrom() );
-//            histoDataDBs[i].setVolumeto( data[i].getVolumeto() );
-//        }
-//
-//        return histoDataDBs;
-//    }
+    int coin_id;
 
 
     public int getId() {
@@ -49,11 +40,11 @@ public class HistoDataDB {
         this.id = id;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -103,5 +94,13 @@ public class HistoDataDB {
 
     public void setVolumeto(double volumeto) {
         this.volumeto = volumeto;
+    }
+
+    public int getCoin_id() {
+        return coin_id;
+    }
+
+    public void setCoin_id(int coin_id) {
+        this.coin_id = coin_id;
     }
 }

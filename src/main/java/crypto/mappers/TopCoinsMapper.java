@@ -2,6 +2,9 @@ package crypto.mappers;
 
 import crypto.model.topCoins.TopCoins;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.ArrayList;
 
@@ -31,4 +34,27 @@ public interface TopCoinsMapper {
     @Update(ADD_COIN_ID)
     public void addCoinId (@Param("coin_id")int coin_id, @Param("entry_id") int entry_id);
 
+
+    String TOP5_HOURLY_MOVERS = "SELECT percent_change_1h, symbol " +
+            "FROM cryptopeek.top_30 ORDER BY percent_change_1h DESC LIMIT 5";
+
+    String TOP5_DAILY_MOVERS = "SELECT percent_change_24h, symbol " +
+            "FROM cryptopeek.top_30 ORDER BY percent_change_24h DESC LIMIT 5";
+
+    String TOP5_WEEKLY_MOVERS = "SELECT percent_change_7d, symbol " +
+            "FROM cryptopeek.top_30 ORDER BY percent_change_7d DESC LIMIT 5";
+
+    @Select(TOP5_HOURLY_MOVERS)
+    ArrayList<TopCoins> getTop5HourlyMovers ();
+
+    @Select(TOP5_DAILY_MOVERS)
+    ArrayList<TopCoins> getTop5DailyMovers ();
+
+    @Select(TOP5_WEEKLY_MOVERS)
+    ArrayList<TopCoins> getTop5WeeklyMovers ();
+
+    String GET_SYMBOLS = "SELECT symbol FROM cryptopeek.top_30";
+
+    @Select(GET_SYMBOLS)
+    ArrayList<TopCoins> getAllSymbols();
 }

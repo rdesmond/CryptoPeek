@@ -11,6 +11,9 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by aaron on 8/11/17.
+ *
+ * Contains straight-through API calls to the historical data and
+ * a method calculating the 30 day moving average
  */
 @Service
 public class CryptoHistoService {
@@ -54,7 +57,9 @@ public class CryptoHistoService {
 
     public HistoMinute getHistoricalMinutelyData(String fsym, String tsym, String exchange) throws APIUnavailableException {
 
-        String url = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;
+        String url = "https://min-api.cryptocompare.com/data/histominute?fsym=" +
+                fsym + "&tsym=" + tsym +"&e="+exchange;
+
         HistoMinute historical;
         try {
             historical = restTemplate.getForObject(url, HistoMinute.class);
