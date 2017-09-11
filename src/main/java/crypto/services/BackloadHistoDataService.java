@@ -78,6 +78,7 @@ public class BackloadHistoDataService {
 
         String url = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=" + tsym
                 +"&limit=2000&e="+exchange;
+
         HistoHour historical;
         try {
             historical = restTemplate.getForObject(url, HistoHour.class);

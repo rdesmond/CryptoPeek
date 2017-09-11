@@ -3,22 +3,14 @@ package crypto.model.cryptoCompareModels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Author: Nicola
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class CryptoPrice extends CryptoCompare{
+public class BTC extends CryptoCompare{
 
-    String response;
-    String message;
-    int type;
-    boolean aggregated;
-    Data data;
-    Raw raw;
-    Display display;
-    ConversionType conversionType;
-    String Warning;
-    boolean hasWarning;
     double usd;
-    double btc;
     double eth;
     double bch;
     double xrp;
@@ -49,103 +41,12 @@ public class CryptoPrice extends CryptoCompare{
     double icn;
     double xlm;
 
-    public CryptoPrice() {
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public boolean isAggregated() {
-        return aggregated;
-    }
-
-    public void setAggregated(boolean aggregated) {
-        this.aggregated = aggregated;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
-    public Raw getRaw() {
-        return raw;
-    }
-
-    public void setRaw(Raw raw) {
-        this.raw = raw;
-    }
-
-    public Display getDisplay() {
-        return display;
-    }
-
-    public void setDisplay(Display display) {
-        this.display = display;
-    }
-
-    public ConversionType getConversionType() {
-        return conversionType;
-    }
-
-    public void setConversionType(ConversionType conversionType) {
-        this.conversionType = conversionType;
-    }
-
-    public String getWarning() {
-        return Warning;
-    }
-
-    public void setWarning(String warning) {
-        Warning = warning;
-    }
-
-    public boolean isHasWarning() {
-        return hasWarning;
-    }
-
-    public void setHasWarning(boolean hasWarning) {
-        this.hasWarning = hasWarning;
-    }
-
     public double getUsd() {
         return usd;
     }
 
     public void setUsd(double usd) {
         this.usd = usd;
-    }
-
-    public double getBtc() {
-        return btc;
-    }
-
-    public void setBtc(double btc) {
-        this.btc = btc;
     }
 
     public double getEth() {

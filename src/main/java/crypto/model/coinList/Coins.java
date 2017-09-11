@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Coins {
 
     String Response; //"Success",
-    String Message; //"Coin list succesfully returned!",
+    String Message; //"CoinPojo list succesfully returned!",
     String BaseImageUrl; //"https://www.cryptocompare.com",
     String BaseLinkUrl; //"https://www.cryptocompare.com",
     Data Data; //;

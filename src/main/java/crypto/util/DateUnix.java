@@ -1,12 +1,17 @@
 package crypto.util;
 
+import org.springframework.stereotype.Component;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
  * Created by tanerali on 27/08/2017.
  */
+@Component
 public class DateUnix {
 
     //Taner
@@ -39,4 +44,19 @@ public class DateUnix {
 
         return time;
     }
+
+    // Author: Nicola
+    public static long currentTimeToSecs(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        Date curDate;
+
+        long currentSecs = 0;
+
+        currentSecs = date.getTime()/1000;
+
+        return currentSecs;
+
+    }
 }
+
