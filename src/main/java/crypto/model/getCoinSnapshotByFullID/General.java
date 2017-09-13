@@ -1,4 +1,4 @@
-package crypto.model.getcoinsnapshotbyfullID;
+package crypto.model.getCoinSnapshotByFullID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

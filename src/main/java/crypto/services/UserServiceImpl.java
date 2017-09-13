@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import crypto.model.cryptoCompareModels.Role;
 import crypto.model.cryptoCompareModels.User;
-import crypto.Repository.RoleRepository;
-import crypto.Repository.UserRepository;
+import crypto.repository.RoleRepository;
+import crypto.repository.UserRepository;
 
 @Service("userService")
 public class UserServiceImpl implements UserService{

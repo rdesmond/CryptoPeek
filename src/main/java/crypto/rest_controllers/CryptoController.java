@@ -2,12 +2,15 @@ package crypto.rest_controllers;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
-import crypto.model.CoinLIst.Coins;
+import crypto.model.CoinLIst.Coinslist;
+import crypto.model.arbitrageModels.ArbitrageModel;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
+import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
+import crypto.model.arbitrageModels.SymbolList;
+import crypto.services.ArbitrageService;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,9 @@ public class CryptoController {
     @Autowired
     CryptoService cryptoService;
 
+    @Autowired
+    ArbitrageService arbitrageService;
+
     @RequestMapping("/api")
     public CryptoModel getSnapShot(@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
             throws APIUnavailableException {
@@ -31,7 +37,7 @@ public class CryptoController {
     public Exchanges getSnapShot(
             @RequestParam(value="fsym")String fsym,
             @RequestParam(value="tsym")String tsym,
-            @RequestParam(value="exch") String exchange)
+            @RequestParam(value="exch")String exchange)
             throws ExchangeNotFoundException {
         System.out.println("requestmapping");
         return cryptoService.getCoinSnapshotByExchange(fsym, tsym, exchange);
@@ -68,7 +74,23 @@ public class CryptoController {
     }
 
     @RequestMapping("/api/test")
-    public Coins getCoinsTest(){
+    public Coinslist getCoinsTest(){
         return cryptoService.coinsTest();
+    }
+
+//    @RequestMapping("/api/pricedifference")
+//    public Double coinDif(@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
+//            throws ExchangeNotFoundException {
+//        return arbitrageService.getDifferenceHighestandLowest(fsym, tsym);
+//    }
+//
+//    @RequestMapping(value = "/topcoinslist", method = RequestMethod.GET)
+//    public ArrayList<SymbolList> arbitrageModels(){
+//        return arbitrageService.getTopCoinsArrayList();
+//    }
+
+    @RequestMapping("api/getTopArbitrage")
+    public ArrayList<ArbitrageModel> getTopArb() {
+        return arbitrageService.getTopArbitrageOps();
     }
 }

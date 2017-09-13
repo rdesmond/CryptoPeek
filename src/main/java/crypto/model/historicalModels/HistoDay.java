@@ -2,11 +2,14 @@ package crypto.model.historicalModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * Created by aaron on 8/11/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Historical {
+public class HistoDay {
 
     String response; //: "Success",
     int type; //: 100,

@@ -4,15 +4,29 @@ package crypto.services;
  * Created by aaron on 8/10/17.
  */
 
+import crypto.exceptions.APIUnavailableException;
+import crypto.model.CoinLIst.Coinslist;
+import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import com.google.gson.Gson;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
 import crypto.mappers.SocialStatsMapper;
-import crypto.model.CoinLIst.Coins;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import crypto.exceptions.APIUnavailableException;
+import crypto.exceptions.ExchangeNotFoundException;
+import crypto.mappers.TopCoinsMapper;
+
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.getcoinsnapshotbyfullID.CoinSnapshotFullByIdMain;
+import crypto.model.miningContracts.MiningContracts;
+import crypto.model.miningEquipment.MiningEquipment;
+import crypto.model.topPairs.TopPairs;
+import crypto.model.topCoins.TopCoins;
+import crypto.mappers.SocialStatsMapper;
+import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.model.socialStatsModels.SocialStatsCoins;
 import crypto.model.socialStatsModels.SocialStatsForDbInsert;
@@ -21,6 +35,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URL;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,6 +52,9 @@ public class CryptoService {
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    TopCoinsMapper topCoinsMapper;
 
     @Autowired
     SocialStatsMapper socialStatsMapper;
@@ -192,7 +213,7 @@ public class CryptoService {
             for (Exchanges val : ex){
                 if (val.getMarket().equalsIgnoreCase("Cryptsy") || val.getMarket().equalsIgnoreCase("BTCE")
                         ||  val.getMarket().equalsIgnoreCase("Yobit")){
-                    System.out.println("val = " + val.getMarket().toString());
+
                     continue;
                 }
                 //this exchange higher than previous highest exchange return it
@@ -210,6 +231,31 @@ public class CryptoService {
             throw new ExchangeNotFoundException();
         }
     }
+
+    public TopCoins[] getTop30() throws ExchangeNotFoundException  {
+
+        String url = "https://api.coinmarketcap.com/v1/ticker/?limit=30";
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            TopCoins[] topCoins = mapper.readValue(new URL(url), TopCoins[].class);
+            populateTop30ToDB(topCoins);
+            return topCoins;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void populateTop30ToDB (TopCoins[] topCoins){
+
+        for (int i=0; i<topCoins.length; i++){
+            topCoinsMapper.addNewTop(topCoins[i]);
+        }
+
+        return;
+    }
+
 
 
     public CryptoAverage getAveragePrice(String currency_1, String currency_2) throws ExchangeNotFoundException {
@@ -247,17 +293,77 @@ public class CryptoService {
 
     }
 
-    public Coins coinsTest(){
+
+    public Coinslist coinsTest() {
+        ObjectMapper mapper = new ObjectMapper();
         Gson gson = new Gson();
         try {
-            String out = new Scanner(new URL("https://www.cryptocompare.com/api/data/coinlist/").openStream(), "UTF-8").useDelimiter("\\a").next();
-            System.out.println(out);
-            Coins coinsObject = gson.fromJson(out, Coins.class);
-            return coinsObject;
+            String gsonToString = new Scanner(new URL("https://www.cryptocompare.com/api/data/coinlist/").openStream(), "UTF-8").useDelimiter("\\A").next();
+            System.out.println(gsonToString);
+            Coinslist coins1 = gson.fromJson(gsonToString, Coinslist.class);
+            return coins1;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    public TopPairs getTopPairs(String fsym, String tsym, Integer limit, boolean sign)
+            throws APIUnavailableException {
+
+        String url = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ fsym+ "&tsym="+ tsym+
+                "&limit="+ limit+ "&sign="+ sign;
+        String url2 = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ fsym+ "&tsym="+ tsym;
+
+        //if user has specified limit and sign parameters, then use this call;
+        //necessary since omitting the limit param results in error if using
+        //call with all params included
+        if (limit != null) {
+
+            try {
+                TopPairs topPairs = restTemplate.getForObject(url, TopPairs.class);
+                return topPairs;
+            } catch (Exception e) {
+                throw new APIUnavailableException();
+            }
+
+            //if user has specified only fsym and tsym, then use this call
+        } else {
+
+            try {
+                TopPairs topPairs = restTemplate.getForObject(url2, TopPairs.class);
+                return topPairs;
+            } catch (Exception e) {
+                throw new APIUnavailableException();
+            }
+        }
+
+    }
+
+
+    public MiningContracts getMiningContracts() throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/miningcontracts";
+
+        try {
+            MiningContracts miningContracts= restTemplate.getForObject(url, MiningContracts.class);
+            return miningContracts;
+
+        } catch (Exception e) {
+            throw new APIUnavailableException();
+        }
+    }
+
+    public MiningEquipment getMiningEquipment() throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/miningequipment";
+
+//        try {
+        MiningEquipment miningEquipment = restTemplate.getForObject(url, MiningEquipment.class);
+        return miningEquipment;
+
+//        } catch (Exception e) {
+//            throw new APIUnavailableException();
+//        }
 
     }
 }
