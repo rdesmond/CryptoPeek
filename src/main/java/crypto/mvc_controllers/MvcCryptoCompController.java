@@ -3,6 +3,7 @@ package crypto.mvc_controllers;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
 import crypto.model.cryptoCompareModels.*;
+import crypto.model.topCoins.CoinExchanges;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,5 +80,12 @@ public class MvcCryptoCompController {
             return null;
         }
 
+    }
+
+    @RequestMapping("/homepage")
+    public String homePage (Model model) {
+        CoinExchanges[] coinExchanges = cryptoService.getAllCoinsAllExchanges();
+        model.addAttribute("coinExchanges", coinExchanges);
+        return "homepage";
     }
 }

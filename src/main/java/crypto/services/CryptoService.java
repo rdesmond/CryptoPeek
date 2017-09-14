@@ -16,6 +16,7 @@ import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.PersistHistoMinute;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
+import crypto.model.topCoins.CoinExchanges;
 import crypto.model.topPairs.TopPairs;
 import crypto.model.topCoins.TopCoins;
 import crypto.mappers.SocialStatsMapper;
@@ -71,14 +72,14 @@ public class CryptoService {
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;
         try {
-            System.out.println("Cryptoservice running");
-            cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
 
-            if (cryptoModel.getData().getExchanges().length < 1) {
-                throw new APIUnavailableException();
-            }
+            cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
+//            if (cryptoModel.getData().getExchanges().length < 0) {
+//                throw new APIUnavailableException();
+//            }
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new APIUnavailableException();
         }
 
@@ -510,4 +511,64 @@ public class CryptoService {
             }
         }return responses;
     }
+
+    //Dani
+    //This method gets the top30 coins from the database and creates a new CoinExchange object for each coin
+    //which contains the coin name and its prices in our top 5 exchanges
+    public CoinExchanges[] getAllCoinsAllExchanges () {
+        //get our top 30 coins (in reverse order)
+        ArrayList<TopCoins> t = topCoinsMapper.getMostRecentTop();
+        //create a new empty array of CoinExchanges objects that will hold our new objects
+        CoinExchanges[] coinExchanges = new CoinExchanges[30];
+        int count = 29;
+        //for every TopCoin object we have do the following
+        for (TopCoins top : t) {
+
+            //create a new CoinExchanges object
+            CoinExchanges c = new CoinExchanges();
+
+            //the default pricing will be in BitCoin
+            String tsym="BTC";
+
+            //get the coin snapshot of a coin using its symbol
+            try {
+                //if the coin is BitCoin, change price to USD
+                if (top.getSymbol().equalsIgnoreCase("BTC")){
+                    tsym = "USD";
+                }
+                CryptoModel cryptoModel = getCoinSnapshot(top.getSymbol(), tsym);
+                //set the name
+                c.setCoin_name(top.getName());
+                //some coins don't have any exchanges listed for them in the CryptoCompare API response
+                //in order to avoid nullpointer exceptions this if statements sets all of the prices to 0 if that's the case
+                if (cryptoModel.getData().getExchanges()==null){
+                    c.exchangeMissing(c);
+                    coinExchanges[count]=c;
+                    count--;
+                    continue;
+                }
+                //For every exchange in the Coin's Exchanges array, check for the following exchanges and set their prices
+                for (Exchanges e: cryptoModel.getData().getExchanges()) {
+                    switch (e.getMarket()) {
+                        case "Coinbase": c.setCoinbase(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "Bitfinex": c.setBitfinex(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "BitTrex": c.setBittrex(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "Poloniex": c.setPoloniex(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "Kraken": c.setKraken(Double.parseDouble(e.getPrice()));
+                        break;
+                    }
+                }
+                coinExchanges[count]=c;
+                count--;
+            } catch (APIUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        return coinExchanges;
+    }
+
 }
