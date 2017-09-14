@@ -66,6 +66,7 @@ public class BackloadHistoDataService {
         }
     }
 
+    //Taner
     public void backloadMissingHistoData (String tsym, String exchange) {
         //gets the coin symbols from the top 30 coins table and backloads the histo
         //data for each coin in each table

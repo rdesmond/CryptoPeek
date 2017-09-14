@@ -1,9 +1,11 @@
 package crypto.model.miningContracts;
 
+import crypto.model.cryptoCompareModels.CryptoCompare;
+
 /**
  * Created by tanerali on 23/08/2017.
  */
-public class MiningContracts {
+public class MiningContracts extends CryptoCompare {
 
     String response;
     String message;

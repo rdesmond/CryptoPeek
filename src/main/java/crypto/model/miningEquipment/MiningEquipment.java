@@ -1,9 +1,11 @@
 package crypto.model.miningEquipment;
 
+import crypto.model.cryptoCompareModels.CryptoCompare;
+
 /**
  * Created by tanerali on 23/08/2017.
  */
-public class MiningEquipment {
+public class MiningEquipment extends CryptoCompare {
 
     String response;
     String message;

@@ -315,10 +315,13 @@ public class CryptoService {
         //if user has specified limit and sign parameters, then use this call;
         //necessary since omitting the limit param results in error if using
         //call with all params included
+
+        TopPairs topPairs = new TopPairs();
+
         if (limit != null) {
 
             try {
-                TopPairs topPairs = restTemplate.getForObject(url, TopPairs.class);
+                topPairs = (TopPairs) cryptoCompareService.callCryptoCompareAPI(url, topPairs);
                 return topPairs;
             } catch (Exception e) {
                 throw new APIUnavailableException();
@@ -328,7 +331,7 @@ public class CryptoService {
         } else {
 
             try {
-                TopPairs topPairs = restTemplate.getForObject(url2, TopPairs.class);
+                topPairs = (TopPairs) cryptoCompareService.callCryptoCompareAPI(url2, topPairs);
                 return topPairs;
             } catch (Exception e) {
                 throw new APIUnavailableException();
@@ -341,8 +344,10 @@ public class CryptoService {
     public MiningContracts getMiningContracts() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningcontracts";
 
+        MiningContracts miningContracts = new MiningContracts();
+
         try {
-            MiningContracts miningContracts = restTemplate.getForObject(url, MiningContracts.class);
+            miningContracts = (MiningContracts) cryptoCompareService.callCryptoCompareAPI(url, miningContracts);
             return miningContracts;
 
         } catch (Exception e) {
@@ -354,13 +359,15 @@ public class CryptoService {
     public MiningEquipment getMiningEquipment() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningequipment";
 
-//        try {
-        MiningEquipment miningEquipment = restTemplate.getForObject(url, MiningEquipment.class);
-        return miningEquipment;
+        MiningEquipment miningEquipment = new MiningEquipment();
 
-//        } catch (Exception e) {
-//            throw new APIUnavailableException();
-//        }
+        try {
+            miningEquipment = (MiningEquipment) cryptoCompareService.callCryptoCompareAPI(url, miningEquipment);
+            return miningEquipment;
+
+        } catch (Exception e) {
+            throw new APIUnavailableException();
+        }
     }
 
 
