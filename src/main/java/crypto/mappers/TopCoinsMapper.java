@@ -35,6 +35,7 @@ public interface TopCoinsMapper {
     public void addCoinId (@Param("coin_id")int coin_id, @Param("entry_id") int entry_id);
 
 
+
     String TOP5_HOURLY_MOVERS = "SELECT percent_change_1h, symbol " +
             "FROM cryptopeek.top_30 ORDER BY percent_change_1h DESC LIMIT 5";
 
@@ -53,8 +54,16 @@ public interface TopCoinsMapper {
     @Select(TOP5_WEEKLY_MOVERS)
     ArrayList<TopCoins> getTop5WeeklyMovers ();
 
+
+
     String GET_SYMBOLS = "SELECT symbol FROM cryptopeek.top_30";
 
     @Select(GET_SYMBOLS)
     ArrayList<TopCoins> getAllSymbols();
+
+
+    String FIND_BY_SYMBOL = "SELECT entry_id FROM cryptopeek.top_30 WHERE symbol = #{symbol}";
+
+    @Select(FIND_BY_SYMBOL)
+    TopCoins findBySymbol(String symbol);
 }

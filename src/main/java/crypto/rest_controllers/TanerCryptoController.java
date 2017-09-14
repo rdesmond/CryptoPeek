@@ -69,8 +69,7 @@ public class TanerCryptoController {
     //backloads all available minutely, hourly and daily historical data from
     //CryptoCompare to database
     @RequestMapping("/backload/alldata")
-    public void backloadHistoData (@RequestParam(value="fsym")String fsym,
-                                   @RequestParam(value="tsym")String tsym,
+    public void backloadHistoData (@RequestParam(value="tsym")String tsym,
                                    @RequestParam(value="exchange")String exchange)
             throws APIUnavailableException {
 
@@ -93,6 +92,15 @@ public class TanerCryptoController {
             throws APIUnavailableException {
 
         backloadHistoDataService.backloadSpecificHistoData(fsym, tsym, exchange, minutes, hours, days);
+    }
+
+    @RequestMapping("/backloadmissing")
+    public void backloadMissingHistoData (@RequestParam(value="tsym")String tsym,
+                                          @RequestParam(value="exchange")String exchange)
+
+            throws APIUnavailableException {
+
+        backloadHistoDataService.backloadMissingHistoData(tsym, exchange);
     }
 
     //used for sending email

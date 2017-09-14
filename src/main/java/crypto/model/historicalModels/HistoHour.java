@@ -1,12 +1,13 @@
 package crypto.model.historicalModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import crypto.model.cryptoCompareModels.CryptoCompare;
 
 /**
  * Created by daniel on 23.08.17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class HistoHour {
+public class HistoHour extends CryptoCompare{
 
     String response; //: "Success",
     int type; //: 100,

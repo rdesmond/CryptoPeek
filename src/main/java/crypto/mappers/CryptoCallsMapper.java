@@ -17,6 +17,7 @@ public interface CryptoCallsMapper {
 
     String GET_FIRST_CALL_LAST_HOUR = "SELECT IFNULL(( SELECT id FROM `cryptopeek`.crypto_compare_calls " +
             "WHERE time > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY time asc LIMIT 1), 0) as id";
+
     String GET_LAST_CALL_LAST_HOUR = "SELECT IFNULL(( SELECT id FROM `cryptopeek`.crypto_compare_calls " +
             "WHERE time > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY time desc LIMIT 1), 0) as id";
 
