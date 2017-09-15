@@ -2,8 +2,10 @@ package crypto.services;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.mappers.ArbitrageMapper;
 import crypto.mappers.TopCoinsMapper;
 import crypto.model.arbitrageModels.ArbitrageModel;
+import crypto.model.arbitrageModels.ArbitrageStatsForDbInsert;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
 import crypto.model.arbitrageModels.ArbitrageList;
@@ -27,6 +29,10 @@ public class ArbitrageService {
 
     @Autowired
     TopCoinsMapper topCoinsMapper;
+
+    @Autowired
+    ArbitrageMapper arbitrageMapper;
+
 
     //Aaron
     public ArbitrageModel getDifferenceHighestandLowestUSD (String fsym, String tsym) throws ExchangeNotFoundException {
@@ -157,7 +163,6 @@ public class ArbitrageService {
             arbitrageModel.setLowExchangeName(lowestExchange.getMarket());
             arbitrageModel.setHighExchangeName(highestExchange.getMarket());
             arbitrageModel.setDifferencein$USD(dif * Double.parseDouble(getBTCPrice.getHighExchangePrice()));
-            System.out.println(getBTCPrice.getHighExchangePrice());
             arbitrageModel.setSymbol(fsym);
 
             return arbitrageModel;
@@ -181,13 +186,17 @@ public class ArbitrageService {
 
     //Aaron
     public ArrayList<ArbitrageModel> getTopArbitrageOps(){
+
         ArrayList<String> topCoins = getTopCoinsArrayList();
         ArrayList<ArbitrageModel> topFiveArbitrageModels = new ArrayList<>();
+
         for (String symbol : topCoins){
             if (symbol.equalsIgnoreCase("BTC")){
                 try {
                     ArbitrageModel arbitrageModel = getDifferenceHighestandLowestUSD(symbol, "USD");
                     topFiveArbitrageModels.add(arbitrageModel);
+                    ArbitrageStatsForDbInsert arbitrageStatsForDbInsert = new ArbitrageStatsForDbInsert(arbitrageModel);
+                    arbitrageMapper.addArbitrageStatsToDb(arbitrageStatsForDbInsert);
                 } catch (ExchangeNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -195,6 +204,8 @@ public class ArbitrageService {
                 try {
                     ArbitrageModel arbitrageModel = getDifferenceHighestandLowestBTC(symbol,"BTC");
                     topFiveArbitrageModels.add(arbitrageModel);
+                    ArbitrageStatsForDbInsert arbitrageStatsForDbInsert = new ArbitrageStatsForDbInsert(arbitrageModel);
+                    arbitrageMapper.addArbitrageStatsToDb(arbitrageStatsForDbInsert);
                 } catch (ExchangeNotFoundException e) {
                     e.printStackTrace();
                 }

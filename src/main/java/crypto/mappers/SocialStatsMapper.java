@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Mapper
 public interface SocialStatsMapper {
 
-    String GET_COINS = "SELECT coin_id FROM cryptopeek.coins;";
+    String GET_COINS = "SELECT coin_id FROM cryptopeek.top_30;";
     String INSERT_SOCIAL_STATS = "INSERT INTO `cryptopeek`.social_stats (name, coin_name, " +
             "general_points, twitter_statuses, twitter_points, reddit_comments_per_day, reddit_points, facebook_likes, " +
             "facebook_points, time) values (#{name}, #{coin_name}, #{general_points}, " +

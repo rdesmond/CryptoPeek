@@ -25,7 +25,7 @@ public class ArbitrageModel {
     }
 
     public void setDifferencein$USD(Double differencein$USD) {
-        this.differencein$USD = Math.round(differencein$USD*1000.0)/1000.0;
+        this.differencein$USD = Math.round(differencein$USD*100.0)/100.0;
     }
 
     public String getSymbol() {
