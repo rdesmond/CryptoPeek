@@ -78,17 +78,6 @@ public class CryptoController {
         return cryptoService.coinsTest();
     }
 
-//    @RequestMapping("/api/pricedifference")
-//    public Double coinDif(@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
-//            throws ExchangeNotFoundException {
-//        return arbitrageService.getDifferenceHighestandLowest(fsym, tsym);
-//    }
-//
-//    @RequestMapping(value = "/topcoinslist", method = RequestMethod.GET)
-//    public ArrayList<SymbolList> arbitrageModels(){
-//        return arbitrageService.getTopCoinsArrayList();
-//    }
-
     @RequestMapping("api/getTopArbitrage")
     public ArrayList<ArbitrageModel> getTopArb() {
         return arbitrageService.getTopArbitrageOps();
