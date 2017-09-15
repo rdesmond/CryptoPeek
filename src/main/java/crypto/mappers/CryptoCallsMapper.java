@@ -23,8 +23,6 @@ public interface CryptoCallsMapper {
     String INSERT_CRYPTO_CALLS = "INSERT INTO `cryptopeek`.crypto_compare_calls (url_request, under_limit) " +
             "VALUES (#{urlRequest}, #{underLimit})"  ;
 
-
-
     @Select(GET_FIRST_CALL_LAST_HOUR)
     public int getFirstCallLastHour();
 

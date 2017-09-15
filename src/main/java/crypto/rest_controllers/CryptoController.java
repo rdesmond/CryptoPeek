@@ -6,7 +6,6 @@ import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
 import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
-import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.PersistHistoMinute;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.services.CryptoService;
@@ -71,7 +70,7 @@ public class CryptoController {
     // Author: Nicola
     @RequestMapping("/api/loadData")
     public ArrayList<PersistHistoMinute> getHistoMinuteData2() throws APIUnavailableException {
-        return cryptoService.getHistoMinuteData2();
+        return cryptoService.getHistoMinuteData();
     }
 
     // Author: Nicola

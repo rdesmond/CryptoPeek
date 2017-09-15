@@ -46,6 +46,7 @@ public class DateUnix {
     }
 
     // Author: Nicola
+    // This method changes the current time to unix time in seconds
     public static long currentTimeToSecs(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -56,6 +57,23 @@ public class DateUnix {
         currentSecs = date.getTime()/1000;
 
         return currentSecs;
+
+    }
+
+    // Author: Nicola
+    // This method gets the time for one hour ago in unix time in seconds
+    public static long oneHourInPastInSecs(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        Date curDate;
+
+        long currentSecs = 0;
+
+        currentSecs = date.getTime()/1000;
+        //3600
+        long oneHourInPast = currentSecs-86400;
+
+        return oneHourInPast;
 
     }
 }

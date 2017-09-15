@@ -1,12 +1,12 @@
 package crypto.model.historicalModels;
 
-public class PersistHistoMinute {
+public class PersistHistoWeek {
 
     double close;
     double high;
     double low;
     double open;
-    long time;
+    int time;
     double volumefrom;
     double volumeto;
     int coinId;
@@ -44,11 +44,11 @@ public class PersistHistoMinute {
         this.open = open;
     }
 
-    public long getTime() {
+    public int getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(int time) {
         this.time = time;
     }
 

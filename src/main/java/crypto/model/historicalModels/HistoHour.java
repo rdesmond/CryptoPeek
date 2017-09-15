@@ -8,14 +8,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HistoHour {
 
-    String response; //: "Success",
-    int type; //: 100,
-    boolean aggregated; //: true,
-    Data[] data; //: [],
-    int timeTo; //: 1502409600,
-    int timeFrom; //: 1486771200,
-    boolean firstValueInArray; //: true,
-    ConversionType conversionType; //: {}
+    String response;
+    int type;
+    boolean aggregated;
+    Data[] data;
+    int timeTo;
+    int timeFrom;
+    boolean firstValueInArray;
+    ConversionType conversionType;
 
     public String getResponse() {
         return response;

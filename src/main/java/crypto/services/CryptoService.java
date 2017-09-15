@@ -348,62 +348,54 @@ public class CryptoService {
     }
 
     // Author: Nicola
+    // Checks the DB to see if we have the last 5 minutes worth of raw data in the histo minute table.
     private boolean missing5Min() {
         long currentDate;
         long lastDate;
         String dateInDB;
         currentDate = DateUnix.currentTimeToSecs();
-
-        System.out.println("current date: " + currentDate);
-
         dateInDB = persistData.getMostRecentTime();
-        System.out.println("date in the DB: " + dateInDB);
-
         lastDate = Long.parseLong(persistData.getMostRecentTime());
-        System.out.println("last date: " + lastDate);
-
+        // Compares the current date to the last date in the table to see if they are less than 5 minutes apart.
         if (currentDate - lastDate < 300) {
             return false;
         } else return true;
     }
 
     // Author: Nicola
+    // Checks the DB to see if we have the last 5 minutes worth of raw data for BTC in the histo minute table.
     private boolean missing5MinBTC() {
         long currentDate;
         long lastDate;
         String dateInDB;
         currentDate = DateUnix.currentTimeToSecs();
-
-        System.out.println("current date: " + currentDate);
-
         dateInDB = persistData.getMostRecentTimeBTC();
-        System.out.println("date in the DB: " + dateInDB);
-
         lastDate = Long.parseLong(persistData.getMostRecentTime());
-        System.out.println("last date: " + lastDate);
-        System.out.println(currentDate - lastDate);
-
+        // Compares the current date to the last date in the table for BTC to see if they are less than 5 minutes apart.
         if (currentDate - lastDate < 300) {
             return false;
         } else return true;
     }
 
     // Author: Nicola
-    public ArrayList<PersistHistoMinute> getHistoMinuteData2() throws APIUnavailableException {
+    public ArrayList<PersistHistoMinute> getHistoMinuteData() throws APIUnavailableException {
 
         ArrayList<PersistHistoMinute> responses = new ArrayList<>();
 
         Coin coin;
+        // Checks to see if we are missing the last 5 minutes worth of data in the histo minute table.
         if (missing5Min()) {
+
+            // Gets all of the ID and Symbols for all of the coins we are following except BTC from the DB.
             ArrayList<Coin> coinArrayList = persistData.getCoinFromDB();
-            System.out.println("size of array list: " + coinArrayList.size());
 
             int i = 0;
             for (i = 0; i < coinArrayList.size(); i++) {
-                System.out.println("we are in the " + i + " iteration");
                 coin = coinArrayList.get(i);
 
                 HistoMinute histoMinute = new HistoMinute();
+
+                //Calls the CryptoCompair API for each coin to get the raw histo minute data.
                 try {
                     histoMinute = (HistoMinute) cryptoCompareService.callCryptoCompareAPI(
                             "https://min-api.cryptocompare.com/data/histominute?fsym=" + coin.getSymbol() + "&tsym=BTC&" +
@@ -416,6 +408,7 @@ public class CryptoService {
 
                             persistHistoMinute = new PersistHistoMinute();
 
+                            //Saves all of the data from the API call to the DB
                             persistHistoMinute.setClose(histoMinute.getData()[x].getClose());
                             persistHistoMinute.setHigh(histoMinute.getData()[x].getHigh());
                             persistHistoMinute.setLow(histoMinute.getData()[x].getLow());
@@ -445,8 +438,10 @@ public class CryptoService {
 
         ArrayList<PersistHistoMinute> responses = new ArrayList<>();
 
+        // Checks to see if we are missing the last 5 minutes worth of data in the histo minute table for BTC.
         if (missing5MinBTC()) {
             HistoMinute histoMinute = new HistoMinute();
+            //Calls the CryptoCompair API for BTC to get the raw histo minute data.
             histoMinute = (HistoMinute) cryptoCompareService.callCryptoCompareAPI(
                     "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&" +
                             "limit=5&aggregate=1&e=CCCAGG", histoMinute);
@@ -458,6 +453,7 @@ public class CryptoService {
 
                 persistHistoMinute = new PersistHistoMinute();
 
+                //Saves all of the data from the API call to the DB.
                 persistHistoMinute.setClose(histoMinute.getData()[x].getClose());
                 persistHistoMinute.setHigh(histoMinute.getData()[x].getHigh());
                 persistHistoMinute.setLow(histoMinute.getData()[x].getLow());

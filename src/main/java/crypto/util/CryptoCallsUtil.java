@@ -18,7 +18,7 @@ public class CryptoCallsUtil {
     CryptoCallsMapper cryptoCallsMapper;
 
     // Author: Nicola
-    // This method checks to make sure we have mad no more than 4000 calls within the last hour
+    // This method checks to make sure we have made no more than 4000 calls within the last hour
     public boolean haveCallsRemaining() throws NullPointerException{
 
         if (cryptoCallsMapper.getLastCallLastHour() - cryptoCallsMapper.getFirstCallLastHour() <= 4000) {

@@ -1,6 +1,6 @@
 package crypto.model.historicalModels;
 
-public class PersistHistoMinute {
+public class PersistHistoHour {
 
     double close;
     double high;

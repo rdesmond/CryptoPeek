@@ -16,6 +16,7 @@ public class NicolaService {
     @Autowired
     CryptoCompareService cryptoCompareService;
 
+    // Author: Nicola
     public CryptoPrice getPrice (String fsym, String tsyms) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/price?fsym=" + fsym + "&tsyms=" + tsyms;
@@ -29,6 +30,7 @@ public class NicolaService {
         return cryptoPrice;
     }
 
+    // Author: Nicola
     public PriceHistorical getPriceMulti (String tsyms) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=" + tsyms;
@@ -41,6 +43,8 @@ public class NicolaService {
         }
         return priceHistorical;
     }
+
+    // Author: Nicola
 //    public CryptoPrice getPriceMultiFull (String fsyms, String tsyms) throws APIUnavailableException {
 //
 //        String url = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + fsyms + "&tsyms=" + tsyms;
@@ -53,6 +57,8 @@ public class NicolaService {
 //        }
 //        return cryptoPrice;
 //    }
+
+    // Author: Nicola
     public CryptoPrice getGenerateAvg (String fsym, String tsym, String markets) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/generateAvg?fsym=" + fsym + "&tsym=" + tsym +
@@ -66,6 +72,8 @@ public class NicolaService {
         }
         return cryptoPrice;
     }
+
+    // Author: Nicola
     public CryptoPrice getDayAvg (String fsym, String tsym) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/dayAvg?fsym=" + fsym + "&tsym=" + tsym;
@@ -78,6 +86,8 @@ public class NicolaService {
         }
         return cryptoPrice;
     }
+
+    // Author: Nicola
     public PriceHistorical getPriceHistorical (String tsyms, String ts) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=" + tsyms + "&ts=" + ts;

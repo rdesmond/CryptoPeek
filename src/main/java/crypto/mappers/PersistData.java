@@ -15,7 +15,8 @@ import java.util.ArrayList;
 @Mapper
 public interface PersistData {
 
-    String GET_COIN_FROM_DB = "SELECT id,symbol FROM `cryptopeek`.coins WHERE following = 0 AND symbol != 'BTC'";
+    String GET_COIN_FROM_DB = "SELECT entry_id as id, symbol FROM `cryptopeek`.top_30 WHERE symbol != 'BTC'";
+    String GET_ALL_COIN_FROM_DB = "SELECT entry_id as id, symbol FROM `cryptopeek`.top_30";
     String INSERT_HISTO_MINUTE_DATA = "INSERT INTO `cryptopeek`.raw_histo_minute (close, high, low, open, time, " +
             "volumefrom, volumeto, coin_id) " +
             "VALUES (#{close}, #{high}, #{low}, #{open}, #{time}, #{volumefrom}, #{volumeto}, " +
@@ -27,6 +28,9 @@ public interface PersistData {
 
     @Select(GET_COIN_FROM_DB)
     public ArrayList<Coin> getCoinFromDB();
+
+    @Select(GET_ALL_COIN_FROM_DB)
+    public ArrayList<Coin> getAllCoinFromDB();
 
     @Insert(INSERT_HISTO_MINUTE_DATA)
     public int insertHistoMinuteData(PersistHistoMinute persistHistoMinute);
