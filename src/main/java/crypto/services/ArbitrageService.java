@@ -33,7 +33,7 @@ public class ArbitrageService {
     @Autowired
     ArbitrageMapper arbitrageMapper;
 
-
+    //ryan branch
     //Aaron
     public ArbitrageModel getDifferenceHighestandLowestUSD (String fsym, String tsym) throws ExchangeNotFoundException {
         Double dif;
