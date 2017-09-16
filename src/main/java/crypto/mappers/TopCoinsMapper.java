@@ -1,5 +1,6 @@
 package crypto.mappers;
 
+import crypto.model.arbitrageModels.SymbolList;
 import crypto.model.topCoins.TopCoins;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Insert;
@@ -22,6 +23,8 @@ public interface TopCoinsMapper {
     String GET_MOST_RECENT_TOP30 = "SELECT * FROM top_30 ORDER BY entry_id DESC LIMIT 30";
 
     String ADD_COIN_ID = "UPDATE top_30 SET coin_id = #{coin_id} WHERE entry_id = #{entry_id}";
+
+    String SELECT_COIN_SYMBOL = "SELECT name, symbol FROM top_30;";
 
     @Insert(INSERT_NEW_TOP30)
     public void addNewTop (TopCoins t);
@@ -57,4 +60,8 @@ public interface TopCoinsMapper {
 
     @Select(GET_SYMBOLS)
     ArrayList<TopCoins> getAllSymbols();
+
+
+    @Select(SELECT_COIN_SYMBOL)
+    ArrayList<SymbolList> getCoinSymbols();
 }
