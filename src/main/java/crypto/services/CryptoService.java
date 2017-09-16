@@ -294,19 +294,19 @@ public class CryptoService {
     }
 
 
-    public Coinslist coinsTest() {
-        ObjectMapper mapper = new ObjectMapper();
-        Gson gson = new Gson();
-        try {
-            String gsonToString = new Scanner(new URL("https://www.cryptocompare.com/api/data/coinlist/").openStream(), "UTF-8").useDelimiter("\\A").next();
-            System.out.println(gsonToString);
-            Coinslist coins1 = gson.fromJson(gsonToString, Coinslist.class);
-            return coins1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public Coinslist coinsTest() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        Gson gson = new Gson();
+//        try {
+//            String gsonToString = new Scanner(new URL("https://www.cryptocompare.com/api/data/coinlist/").openStream(), "UTF-8").useDelimiter("\\A").next();
+//            System.out.println(gsonToString);
+//            Coinslist coins1 = gson.fromJson(gsonToString, Coinslist.class);
+//            return coins1;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 
     public TopPairs getTopPairs(String fsym, String tsym, Integer limit, boolean sign)
