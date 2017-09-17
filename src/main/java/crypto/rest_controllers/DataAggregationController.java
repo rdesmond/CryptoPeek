@@ -15,9 +15,33 @@ public class DataAggregationController {
     @Autowired
     DataAggregationService dataAggregationService;
 
-    // Author: Nicola
+    /**
+     * @author Nicola
+     * @return Loads the last hour of data to the DB
+     * @throws APIUnavailableException
+     */
     @RequestMapping("/api/loadHourToDB")
     public ArrayList<PersistHistoMinute> getLastHourDataFromMin() throws APIUnavailableException {
        return dataAggregationService.getLastHourDataFromMin();
+    }
+
+    /**
+     * @author Nicola
+     * @return Loads the last day of data to the DB
+     * @throws APIUnavailableException
+     */
+    @RequestMapping("/api/loadDayToDB")
+    public ArrayList<PersistHistoMinute> getLastDayDataFromHour() throws APIUnavailableException {
+        return dataAggregationService.getLastDayDataFromHour();
+    }
+
+    /**
+     * @author Nicola
+     * @return Loads the last week of data to the DB
+     * @throws APIUnavailableException
+     */
+    @RequestMapping("/api/loadWeekToDB")
+    public ArrayList<PersistHistoMinute> getLastWeekDataFromDay() throws APIUnavailableException {
+        return dataAggregationService.getLastWeekDataFromDay();
     }
 }

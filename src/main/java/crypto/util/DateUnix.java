@@ -45,8 +45,10 @@ public class DateUnix {
         return time;
     }
 
-    // Author: Nicola
-    // This method changes the current time to unix time in seconds
+    /**
+     * @author
+     * @return Changes the current datetime to unix timestamp
+     */
     public static long currentTimeToSecs(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -60,8 +62,10 @@ public class DateUnix {
 
     }
 
-    // Author: Nicola
-    // This method gets the time for one hour ago in unix time in seconds
+    /**
+     * @author Nicola
+     * @return The unix timestamp for one hour in the past
+     */
     public static long oneHourInPastInSecs(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -70,8 +74,45 @@ public class DateUnix {
         long currentSecs = 0;
 
         currentSecs = date.getTime()/1000;
-        //3600
+
+        long oneHourInPast = currentSecs-3600;
+
+        return oneHourInPast;
+
+    }
+
+    /**
+     * @author Nicola
+     * @return The unix timestamp for one day in the past.
+     */
+    public static long oneDayInPastInSecs(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        Date curDate;
+
+        long currentSecs = 0;
+
+        currentSecs = date.getTime()/1000;
+
         long oneHourInPast = currentSecs-86400;
+
+        return oneHourInPast;
+
+    }
+
+    /**
+     * @author Nicola
+     * @return The unix timestamp for one week in the past.
+     */
+    public static long oneWeekInPastInSecs(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        Date curDate;
+
+        long currentSecs = 0;
+
+        currentSecs = date.getTime()/1000;
+        long oneHourInPast = currentSecs-604800;
 
         return oneHourInPast;
 
