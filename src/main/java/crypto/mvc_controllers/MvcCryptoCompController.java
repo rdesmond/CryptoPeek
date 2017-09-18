@@ -2,12 +2,15 @@ package crypto.mvc_controllers;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.mappers.CoinsMapper;
+import crypto.model.coinList.Coin;
 import crypto.model.cryptoCompareModels.*;
 import crypto.model.topCoins.CoinExchanges;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +23,9 @@ public class MvcCryptoCompController {
 
     @Autowired
     CryptoService cryptoService;
+
+    @Autowired
+    CoinsMapper coinsMapper;
 
     @RequestMapping("/mvc")
     public String showForm(Model model){
@@ -87,5 +93,13 @@ public class MvcCryptoCompController {
         CoinExchanges[] coinExchanges = cryptoService.getAllCoinsAllExchanges();
         model.addAttribute("coinExchanges", coinExchanges);
         return "homepage";
+    }
+
+    @RequestMapping("coin/{coin_name}")
+    public String getCoin (@PathVariable(value="coin_name") String coin_name, Model model) {
+        Coin c = coinsMapper.getCoinByName(coin_name);
+        c.setImage_url("https://www.cryptocompare.com"+c.getImage_url());
+        model.addAttribute("coinobj", c);
+        return "coin";
     }
 }

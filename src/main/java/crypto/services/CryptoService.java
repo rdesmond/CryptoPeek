@@ -33,8 +33,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.RoundingMode;
 import java.net.URL;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -85,6 +87,7 @@ public class CryptoService {
 
         return cryptoModel;
     }
+
 
     public CoinSnapshotFullByIdMain getCoinSnapshotFull(int id) throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=" + id;
@@ -547,6 +550,10 @@ public class CryptoService {
                     count--;
                     continue;
                 }
+
+                //Round all prices to 8 decimal places
+                DecimalFormat df = new DecimalFormat("#.########");
+                df.setRoundingMode(RoundingMode.CEILING);
                 //For every exchange in the Coin's Exchanges array, check for the following exchanges and set their prices
                 for (Exchanges e: cryptoModel.getData().getExchanges()) {
                     switch (e.getMarket()) {

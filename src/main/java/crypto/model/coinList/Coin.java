@@ -21,6 +21,52 @@ public class Coin {
     String totalCoinsFreeFloat; //"N/A",
     String sortOrder; //"34"
 
+    String symbol;
+    String coin_name;
+    String coin_id;
+    String image_url;
+    String following;
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String getCoin_name() {
+        return coin_name;
+    }
+
+    public void setCoin_name(String coin_name) {
+        this.coin_name = coin_name;
+    }
+
+    public String getCoin_id() {
+        return coin_id;
+    }
+
+    public void setCoin_id(String coin_id) {
+        this.coin_id = coin_id;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(String following) {
+        this.following = following;
+    }
+
     public String getId() {
         return id;
     }
