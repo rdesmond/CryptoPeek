@@ -1,7 +1,6 @@
 package crypto.mappers;
 
 import crypto.model.arbitrageModels.ArbitrageModel;
-import crypto.model.arbitrageModels.ArbitrageStatsForDbInsert;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 

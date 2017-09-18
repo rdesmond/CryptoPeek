@@ -5,7 +5,6 @@ import crypto.exceptions.ExchangeNotFoundException;
 import crypto.mappers.ArbitrageMapper;
 import crypto.mappers.TopCoinsMapper;
 import crypto.model.arbitrageModels.ArbitrageModel;
-import crypto.model.arbitrageModels.ArbitrageStatsForDbInsert;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
 import crypto.model.arbitrageModels.ArbitrageList;
