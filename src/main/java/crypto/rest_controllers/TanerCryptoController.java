@@ -3,7 +3,6 @@ package crypto.rest_controllers;
 import crypto.exceptions.APIUnavailableException;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
-import crypto.model.topCoins.TopCoins;
 import crypto.model.topPairs.TopPairs;
 import crypto.repository.EmailMessageRepository;
 import crypto.services.BackloadHistoDataService;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 
 /**
  * Created by tanerali on 24/08/2017.
@@ -66,49 +63,49 @@ public class TanerCryptoController {
         return cryptoService.getMiningEquipment();
     }
 
-    //backloads all available minutely, hourly and daily historical data from
-    //CryptoCompare to database
-    @RequestMapping("/backload/alldata")
-    public void backloadHistoData (@RequestParam(value="tsym")String tsym,
-                                   @RequestParam(value="exchange")String exchange)
-            throws APIUnavailableException {
+//    //backloads all available minutely, hourly and daily historical data from
+//    //CryptoCompare to database
+//    @RequestMapping("/backload/alldata")
+//    public void backloadHistoData (@RequestParam(value="tsym")String tsym,
+//                                   @RequestParam(value="exchange")String exchange)
+//            throws APIUnavailableException {
+//
+//        //fsym should be going to DB and getting the top 30 coins' coin_ids
+//
+//        backloadHistoDataService.backloadHistoricalData(tsym, exchange);
+//    }
 
-        //fsym should be going to DB and getting the top 30 coins' coin_ids
-
-        backloadHistoDataService.backloadHistoricalData(tsym, exchange);
-    }
-
-    //backloads specified minutely, hourly and/or daily historical data from
-    //CryptoCompare to database
+    //backloads previously (in the past) missing minutely, hourly and/or daily historical
+    //data from CryptoCompare to database;
+    //Taner
     @RequestMapping("/backload")
-    public void backloadSpecificMinutesHistoData
-            (@RequestParam(value="fsym")String fsym,
-             @RequestParam(value="tsym")String tsym,
-             @RequestParam(value="exchange")String exchange,
-             @RequestParam(value="minutes", required = false, defaultValue = "0")int minutes,
-             @RequestParam(value="hours", required = false, defaultValue = "0")int hours,
-             @RequestParam(value="days", required = false, defaultValue = "0")int days)
+    public void backloadPreviouslyMissingHistoData() throws APIUnavailableException {
 
-            throws APIUnavailableException {
-
-        backloadHistoDataService.backloadSpecificHistoData(fsym, tsym, exchange, minutes, hours, days);
+        backloadHistoDataService.backloadPreviouslyMissingHistoData();
     }
 
-    @RequestMapping("/backloadmissing")
-    public void backloadMissingHistoData (@RequestParam(value="tsym")String tsym,
-                                          @RequestParam(value="exchange")String exchange)
+    //Taner
+    @RequestMapping("/backload/missing")
+    public void backloadMissingHistoData()
 
             throws APIUnavailableException {
 
-        backloadHistoDataService.backloadMissingHistoData(tsym, exchange);
+        backloadHistoDataService.backloadRecentHistoData();
     }
 
     //used for sending email
+    //Taner
     @RequestMapping("/sendemail")
     public void sendEmail (@RequestParam(value="toAddress")String toAddress)
             throws Exception {
 
         emailSendingService.sendEmail(toAddress, emailMessageRepository.findBySubject("BTC price alert"));
+    }
+
+    //Taner
+    @RequestMapping("/pricechange")
+    public void priceChange() {
+        priceChangeService.topMovers();
     }
 
 }
