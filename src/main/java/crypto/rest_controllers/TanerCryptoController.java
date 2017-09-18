@@ -63,17 +63,6 @@ public class TanerCryptoController {
         return cryptoService.getMiningEquipment();
     }
 
-//    //backloads all available minutely, hourly and daily historical data from
-//    //CryptoCompare to database
-//    @RequestMapping("/backload/alldata")
-//    public void backloadHistoData (@RequestParam(value="tsym")String tsym,
-//                                   @RequestParam(value="exchange")String exchange)
-//            throws APIUnavailableException {
-//
-//        //fsym should be going to DB and getting the top 30 coins' coin_ids
-//
-//        backloadHistoDataService.backloadHistoricalData(tsym, exchange);
-//    }
 
     //backloads previously (in the past) missing minutely, hourly and/or daily historical
     //data from CryptoCompare to database;
@@ -85,7 +74,7 @@ public class TanerCryptoController {
     }
 
     //Taner
-    @RequestMapping("/backload/missing")
+    @RequestMapping("/backload/recent")
     public void backloadMissingHistoData()
 
             throws APIUnavailableException {
