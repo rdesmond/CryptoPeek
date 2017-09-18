@@ -93,7 +93,7 @@ public class BackloadHistoDataService {
                 timeStamp = hourlyHistoDataDBS[j].getTime();
                 nextTimeStamp = hourlyHistoDataDBS[j+1].getTime();
 
-                if ( (nextTimeStamp - timeStamp) > 60) {
+                if ( (nextTimeStamp - timeStamp) > 3600) {
                     backloadSpecificHourlyData(fsym, timeStamp, nextTimeStamp);
                 }
 
@@ -107,7 +107,7 @@ public class BackloadHistoDataService {
                 timeStamp = dailyHistoDataDBS[j].getTime();
                 nextTimeStamp = dailyHistoDataDBS[j+1].getTime();
 
-                if ( (nextTimeStamp - timeStamp) > 60) {
+                if ( (nextTimeStamp - timeStamp) > 86_400) {
                     backloadSpecificDailyData(fsym, timeStamp, nextTimeStamp);
                 }
 
