@@ -214,7 +214,7 @@ public class CryptoService {
 
             for (Exchanges val : ex) {
                 //this exchange higher than previous highest exchange return it
-                if (val.getPrice() > highestExchange.getPrice()) {
+                if (Double.parseDouble(val.getPrice()) > Double.parseDouble(highestExchange.getPrice())) {
 
                     highestExchange = val;
                 }
@@ -229,7 +229,7 @@ public class CryptoService {
                     continue;
                 }
                 //this exchange higher than previous highest exchange return it
-                if (val.getPrice() < lowestExchange.getPrice()) {
+                if (Double.parseDouble(val.getPrice()) < Double.parseDouble(lowestExchange.getPrice())) {
 
                     lowestExchange = val;
                 }
@@ -297,12 +297,12 @@ public class CryptoService {
             int count = 0;
             for (int i = 0; i < cryptoModel.getData().getExchanges().length; i++) {
                 System.out.println(cryptoModel.getData().getExchanges()[i].getPrice());
-                if (cryptoModel.getData().getExchanges()[i].getPrice() < ((sum / i) * .5)) {
+                if (Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice()) < ((sum / i) * .5)) {
                     System.out.println("IN if - SUM = " + sum + "and sum/i is" + (sum / i));
                     count++;
                     continue;
                 } else {
-                    sum += cryptoModel.getData().getExchanges()[i].getPrice();
+                    sum += Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice());
                 }
 
             }
@@ -565,7 +565,6 @@ public class CryptoService {
                 //some coins don't have any exchanges listed for them in the CryptoCompare API response
                 //in order to avoid nullpointer exceptions this if statements sets all of the prices to 0 if that's the case
                 if (cryptoModel.getData().getExchanges()==null){
-                    c.exchangeMissing(c);
                     coinExchanges[count]=c;
                     count--;
                     continue;

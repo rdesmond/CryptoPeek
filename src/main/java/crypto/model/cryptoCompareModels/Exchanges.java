@@ -16,7 +16,7 @@ public class Exchanges {
     String fromsymbol; //: "BTC",
     String tosymbol; //: "USD",
     String flags; //: "1",
-    double price; //: "3411.0572",
+    String price; //: "3411.0572",
     String lastupdate; //: "1502208866",
     String lastvolume; //: "0.012",
     String lastvolumeto; //: "40.9326864",
@@ -68,12 +68,12 @@ public class Exchanges {
         this.flags = flags;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
     public void setPrice(String price) {
-        this.price = Double.parseDouble(price);
+        this.price = price;
     }
 
     public String getLastupdate() {
