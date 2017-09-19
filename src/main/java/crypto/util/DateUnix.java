@@ -64,5 +64,59 @@ public class DateUnix {
         return currentSecs;
 
     }
+
+    //Taner
+    public static long toPreviousWholeMinute() {
+        Date date = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+
+        calendar.setTime(date);
+
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        System.out.println(calendar.getTimeInMillis()/1000);
+
+        return calendar.getTimeInMillis()/1000;
+    }
+
+    public static long toPreviousWholeHour() {
+        Date date = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+
+        calendar.setTime(date);
+
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+
+        System.out.println(calendar.getTimeInMillis()/1000);
+
+        return calendar.getTimeInMillis()/1000;
+    }
+
+    public static long toPreviousWholeDay() {
+        Date date = new Date();
+
+        Calendar calendar = new GregorianCalendar();
+
+        calendar.setTime(date);
+
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        calendar.set(Calendar.AM_PM, Calendar.AM);
+        calendar.set(Calendar.ZONE_OFFSET, 0);
+        calendar.set(Calendar.DST_OFFSET, 0);
+        calendar.set(Calendar.HOUR, 0);
+
+
+        System.out.println(calendar.getTimeInMillis()/1000);
+
+        return calendar.getTimeInMillis()/1000;
+    }
 }
 

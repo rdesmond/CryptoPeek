@@ -4,8 +4,6 @@ import crypto.exceptions.APIUnavailableException;
 import crypto.mappers.BackloadHistoDataMapper;
 import crypto.mappers.TopCoinsMapper;
 import crypto.model.historicalModels.Data;
-import crypto.model.historicalModels.HistoDay;
-import crypto.model.historicalModels.HistoHour;
 import crypto.model.historicalModels.HistoMinute;
 import crypto.model.tablePOJOs.HistoDataDB;
 import crypto.model.topCoins.TopCoins;
@@ -26,15 +24,6 @@ public class BackloadHistoDataService {
 
     @Autowired
     CryptoCompareService cryptoCompareService;
-
-
-//    @Autowired
-//    SessionFactory sessionFactory;
-
-    //if going to use hibernate to upload data to DB
-//    @Autowired
-//    BackloadHistoMinuteRepository backloadHistoDataRepository;
-
 
     @Autowired
     TopCoinsMapper topCoinsMapper;
@@ -70,7 +59,8 @@ public class BackloadHistoDataService {
             //from raw_histo_minute table
             HistoDataDB[] minutelyHistoDataDBS = backloadHistoDataMapper.getAllMinutelyTimestamps(coinID);
 
-            //
+            //j goes to up to minutelyHistoDataDBS.length-1 because nextTimeStamp would
+            //cause an ArrayIndexOutOfBounds if j went up to the last element
             for (int j=0; j < minutelyHistoDataDBS.length-1; j++) {
 
                 timeStamp = minutelyHistoDataDBS[j].getTime();
@@ -80,37 +70,8 @@ public class BackloadHistoDataService {
                 //database for a given coin is more than 60 seconds (since this is the raw_histo_minte table),
                 //then some data is missing in the period right after timeStamp
                 if ( (nextTimeStamp - timeStamp) > 60) {
-                    backloadSpecificMinutelyData(fsym, timeStamp, nextTimeStamp);
+                    backloadSpecificMinutelyData(fsym, coinID, timeStamp, nextTimeStamp);
                 }
-            }
-
-
-            //comments same as above, only difference is this is for hourly data
-            HistoDataDB[] hourlyHistoDataDBS = backloadHistoDataMapper.getAllHourlyTimestamps(coinID);
-
-            for (int j=0; j < hourlyHistoDataDBS.length-1; j++) {
-
-                timeStamp = hourlyHistoDataDBS[j].getTime();
-                nextTimeStamp = hourlyHistoDataDBS[j+1].getTime();
-
-                if ( (nextTimeStamp - timeStamp) > 3600) {
-                    backloadSpecificHourlyData(fsym, timeStamp, nextTimeStamp);
-                }
-
-            }
-
-            //comments same as above, only difference is this is for daily data
-            HistoDataDB[] dailyHistoDataDBS = backloadHistoDataMapper.getAllDailyTimestamps(coinID);
-
-            for (int j=0; j < dailyHistoDataDBS.length-1; j++) {
-
-                timeStamp = dailyHistoDataDBS[j].getTime();
-                nextTimeStamp = dailyHistoDataDBS[j+1].getTime();
-
-                if ( (nextTimeStamp - timeStamp) > 86_400) {
-                    backloadSpecificDailyData(fsym, timeStamp, nextTimeStamp);
-                }
-
             }
         }
 
@@ -123,12 +84,8 @@ public class BackloadHistoDataService {
      * @param fsym symbol of currency for which the data is fetched
      * @throws APIUnavailableException
      */
-    public void backloadSpecificMinutelyData(String fsym, long fromMinute, long toMinute)
+    public void backloadSpecificMinutelyData(String fsym, int coinID, long fromMinute, long toMinute)
             throws APIUnavailableException {
-
-
-        int coin_id = topCoinsMapper.findBySymbol(fsym).getEntry_id();
-
 
         //how many entries to backload into DB determined by the user-specified fromMinute and toMinute params;
         //by finding the difference between the timestamps of the toMinute and fromMinute params and
@@ -144,7 +101,7 @@ public class BackloadHistoDataService {
         imposed by CryptoCompare API whereby we can only get 2000 minutes worth of data at a time
         */
         if (numOfEntriesToBackload > 2000) {
-            backloadSpecificMinutelyData(fsym, fromMinute, toMinute-2000*60);
+            backloadSpecificMinutelyData(fsym, coinID, fromMinute, toMinute-2000*60);
         }
 
         /*
@@ -170,13 +127,18 @@ public class BackloadHistoDataService {
             throw new APIUnavailableException();
         }
 
+        //variables for calculating percentage change between opening and closing prices of a given coin
         double open;
         double close;
+        //% increase = Increase ÷ Original Number × 100.
+        //if negative number, then this is a percentage decrease
         double percentChange;
 
+        //will hold all the objects to be uploaded to DB as a batch insert
+        ArrayList<HistoDataDB> histoDataDBArrayList = new ArrayList<>();
+
         //loop that will iterate as many times as there are data objects in the response,
-        //assign each data object to a HistoDataDB object and then upload that HistoDataDB
-        //object to DB
+        //assign each data object to a HistoDataDB object and add it to histoDataDBArrayList
         //i starts from 1 because the first element in the array is the one that is at the
         //fromMinute timestamp and it already exists in DB; same reason why i goes to
         //histoMinute.getData().length-1 - because the last element in the array is the
@@ -196,125 +158,15 @@ public class BackloadHistoDataService {
             histoDataDB.setOpen( histoMinute.getData()[i].getOpen() );
             histoDataDB.setVolumefrom( histoMinute.getData()[i].getVolumefrom() );
             histoDataDB.setVolumeto( histoMinute.getData()[i].getVolumeto() );
-            histoDataDB.setCoin_id( coin_id );
+            histoDataDB.setCoin_id( coinID );
             histoDataDB.setPercent_change(percentChange);
 
-            backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
+            histoDataDBArrayList.add(histoDataDB);
         }
+
+        backloadHistoDataMapper.insertHistoMinuteData(histoDataDBArrayList);
 
     }
-
-
-    //comments same as above, but for hourly data
-    public void backloadSpecificHourlyData (String fsym, long fromHour, long toHour)
-            throws APIUnavailableException {
-
-        int coin_id = topCoinsMapper.findBySymbol(fsym).getEntry_id();
-
-        int numOfEntriesToBackload = (int) ( (toHour - fromHour)/60);
-
-        if (numOfEntriesToBackload > 2000) {
-            backloadSpecificHourlyData(fsym, fromHour, toHour-2000*60);
-        }
-
-
-        String urlHours = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=USD"
-                +"&limit="+ numOfEntriesToBackload+ "&toTs="+ toHour+ "&e=CCCAGG";
-
-        HistoHour histoHour = new HistoHour();
-        try {
-            histoHour = (HistoHour) cryptoCompareService.callCryptoCompareAPI(urlHours, histoHour);
-
-            if (histoHour.getData().length < 1){
-                throw new APIUnavailableException();
-            }
-
-        } catch (Exception e){
-            throw new APIUnavailableException();
-        }
-
-        double open;
-        double close;
-        double percentChange;
-
-        for (int i =1; i < histoHour.getData().length-1; i++) {
-
-            HistoDataDB histoDataDB = new HistoDataDB();
-
-            open = histoHour.getData()[i].getOpen();
-            close = histoHour.getData()[i].getClose();
-            percentChange = ( ( (close - open)/open) * 100);
-
-            histoDataDB.setTime( histoHour.getData()[i].getTime() );
-            histoDataDB.setClose( histoHour.getData()[i].getClose() );
-            histoDataDB.setHigh( histoHour.getData()[i].getHigh() );
-            histoDataDB.setLow( histoHour.getData()[i].getLow() );
-            histoDataDB.setOpen( histoHour.getData()[i].getOpen() );
-            histoDataDB.setVolumefrom( histoHour.getData()[i].getVolumefrom() );
-            histoDataDB.setVolumeto( histoHour.getData()[i].getVolumeto() );
-            histoDataDB.setCoin_id( coin_id );
-            histoDataDB.setPercent_change(percentChange);
-
-            backloadHistoDataMapper.insertHistoHourIntoDB(histoDataDB);
-        }
-
-    }
-
-    //comments same as above, but for daily data
-    public void backloadSpecificDailyData (String fsym, long fromDay, long toDay)
-            throws APIUnavailableException {
-
-        int coin_id = topCoinsMapper.findBySymbol(fsym).getEntry_id();
-
-        int numOfEntriesToBackload = (int) ( (toDay - fromDay)/60);
-
-        if (numOfEntriesToBackload > 2000) {
-            backloadSpecificDailyData(fsym, fromDay, toDay-2000*60);
-        }
-
-        String urlDays = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=USD"
-                +"&limit="+ numOfEntriesToBackload+ "&toTs="+ toDay+ "&e=CCCAGG";
-
-        HistoDay histoDay = new HistoDay();
-        try {
-            histoDay = (HistoDay) cryptoCompareService.callCryptoCompareAPI(urlDays, histoDay);
-
-            if (histoDay.getData().length < 1){
-                throw new APIUnavailableException();
-            }
-
-        } catch (Exception e){
-            throw new APIUnavailableException();
-        }
-
-        double open;
-        double close;
-        double percentChange;
-
-        for (int i =1; i < histoDay.getData().length-1; i++) {
-
-            HistoDataDB histoDataDB = new HistoDataDB();
-
-            open = histoDay.getData()[i].getOpen();
-            close = histoDay.getData()[i].getClose();
-            percentChange = ( ( (close - open)/open) * 100);
-
-            histoDataDB.setTime( histoDay.getData()[i].getTime() );
-            histoDataDB.setClose( histoDay.getData()[i].getClose() );
-            histoDataDB.setHigh( histoDay.getData()[i].getHigh() );
-            histoDataDB.setLow( histoDay.getData()[i].getLow() );
-            histoDataDB.setOpen( histoDay.getData()[i].getOpen() );
-            histoDataDB.setVolumefrom( histoDay.getData()[i].getVolumefrom() );
-            histoDataDB.setVolumeto( histoDay.getData()[i].getVolumeto() );
-            histoDataDB.setCoin_id( coin_id );
-            histoDataDB.setPercent_change(percentChange);
-
-            backloadHistoDataMapper.insertHistoDayIntoDB(histoDataDB);
-        }
-
-    }
-
-
 
 
 
@@ -425,9 +277,11 @@ public class BackloadHistoDataService {
             //if negative number, then this is a percentage decrease
             double percentChange;
 
+            //will hold all the objects to be uploaded to DB as a batch insert
+            ArrayList<HistoDataDB> histoDataDBArrayList = new ArrayList<>();
+
             //loop that will iterate as many times as there are data objects in the response,
-            //assign each data object to a HistoDataDB object and then upload that HistoDataDB
-            //object to DB
+            //assign each data object to a HistoDataDB object and add it to histoDataDBArrayList
             for (long j = lastHistominTime;
                  j < histoMinute.getData()[histoMinute.getData().length - 1].getTime(); j = j + 60) {
 
@@ -450,151 +304,15 @@ public class BackloadHistoDataService {
                 histoDataDB.setCoin_id(coinID);
                 histoDataDB.setPercent_change(percentChange);
 
-                backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
+//                backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
+
+                histoDataDBArrayList.add(histoDataDB);
 
                 indexMinute++;
 
             }
 
-
-            //----------------HOURS----------------
-            //same comments as above, only difference is this is used for backloading hourly data
-
-            String urlHours = "https://min-api.cryptocompare.com/data/histohour?fsym=" + fsym + "&tsym=USD"
-                    + "&limit=2000&e=CCCAGG";
-
-            HistoHour histoHour = new HistoHour();
-            try {
-                histoHour = (HistoHour) cryptoCompareService.callCryptoCompareAPI(urlHours, histoHour);
-
-                if (histoHour.getData().length < 1) {
-                    throw new APIUnavailableException();
-                }
-
-            } catch (Exception e) {
-                throw new APIUnavailableException();
-            }
-
-            long lastHistohourTime;
-
-            int indexHour = 0;
-
-            try {
-                lastHistohourTime = backloadHistoDataMapper.getLastHistohourEntry(coinID).getTime();
-
-                for (Data meetingPoint : histoHour.getData()) {
-
-                    indexHour++;
-                    if (meetingPoint.getTime() == lastHistohourTime) {
-                        break;
-                    }
-
-                    if (indexHour == 2001) {
-                        indexHour = 0;
-                        lastHistohourTime = histoHour.getData()[0].getTime();
-                        break;
-                    }
-
-                }
-
-            } catch (Exception e) {
-                lastHistohourTime = histoHour.getData()[0].getTime();
-            }
-
-            for (long j = lastHistohourTime;
-                 j < histoHour.getData()[histoHour.getData().length - 1].getTime(); j = j + 3600) {
-
-                HistoDataDB histoDataDB = new HistoDataDB();
-
-                open = histoHour.getData()[indexHour].getOpen();
-                close = histoHour.getData()[indexHour].getClose();
-                percentChange = (((close - open) / open) * 100);
-
-                histoDataDB.setTime(histoHour.getData()[indexHour].getTime());
-                histoDataDB.setClose(histoHour.getData()[indexHour].getClose());
-                histoDataDB.setHigh(histoHour.getData()[indexHour].getHigh());
-                histoDataDB.setLow(histoHour.getData()[indexHour].getLow());
-                histoDataDB.setOpen(histoHour.getData()[indexHour].getOpen());
-                histoDataDB.setVolumefrom(histoHour.getData()[indexHour].getVolumefrom());
-                histoDataDB.setVolumeto(histoHour.getData()[indexHour].getVolumeto());
-                histoDataDB.setCoin_id(coinID);
-                histoDataDB.setPercent_change(percentChange);
-
-                backloadHistoDataMapper.insertHistoHourIntoDB(histoDataDB);
-
-                indexHour++;
-
-            }
-
-
-            //----------------DAYS----------------
-            //same comments as above, only difference is this is used for backloading daily data
-
-            String urlDays = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=USD"
-                    + "&limit=500&e=CCCAGG";
-
-            HistoDay histoDay = new HistoDay();
-            try {
-                histoDay = (HistoDay) cryptoCompareService.callCryptoCompareAPI(urlDays, histoDay);
-
-                if (histoDay.getData().length < 1) {
-                    throw new APIUnavailableException();
-                }
-
-            } catch (Exception e) {
-                throw new APIUnavailableException();
-            }
-
-            long lastHistodayTime;
-
-            int indexDay = 0;
-
-            try {
-                lastHistodayTime = backloadHistoDataMapper.getLastHistodayEntry(coinID).getTime();
-
-                for (Data meetingPoint : histoDay.getData()) {
-
-                    indexDay++;
-                    if (meetingPoint.getTime() == lastHistodayTime) {
-                        break;
-                    }
-
-                    if (indexDay == 2001) {
-                        indexDay = 0;
-                        lastHistodayTime = histoDay.getData()[0].getTime();
-                        break;
-                    }
-
-                }
-
-            } catch (Exception e) {
-                lastHistodayTime = histoDay.getData()[0].getTime();
-            }
-
-            for (long j = lastHistodayTime;
-                 j < histoDay.getData()[histoDay.getData().length - 1].getTime(); j = j + 86_400) {
-
-                HistoDataDB histoDataDB = new HistoDataDB();
-
-                open = histoDay.getData()[indexDay].getOpen();
-                close = histoDay.getData()[indexDay].getClose();
-                percentChange = (((close - open) / open) * 100);
-
-                histoDataDB.setTime(histoDay.getData()[indexDay].getTime());
-                histoDataDB.setClose(histoDay.getData()[indexDay].getClose());
-                histoDataDB.setHigh(histoDay.getData()[indexDay].getHigh());
-                histoDataDB.setLow(histoDay.getData()[indexDay].getLow());
-                histoDataDB.setOpen(histoDay.getData()[indexDay].getOpen());
-                histoDataDB.setVolumefrom(histoDay.getData()[indexDay].getVolumefrom());
-                histoDataDB.setVolumeto(histoDay.getData()[indexDay].getVolumeto());
-                histoDataDB.setCoin_id(coinID);
-                histoDataDB.setPercent_change(percentChange);
-
-                backloadHistoDataMapper.insertHistoDayIntoDB(histoDataDB);
-
-                indexDay++;
-
-            }
+            backloadHistoDataMapper.insertHistoMinuteData(histoDataDBArrayList);
 
         }
     }
@@ -675,59 +393,5 @@ public class BackloadHistoDataService {
 //
 //            backloadHistoDataMapper.insertHistoMinuteIntoDB(histoDataDB);
 //        }
-//
-//
-//        //batch insert attempt 1
-//        //seems mybatis cannot insert an ArrayList into DB (tried with hibernate too)
-//
-////        ArrayList<HistoDataDB> histoDataDBArrayList = new ArrayList<>();
-////
-////        for (int i =0; i < historical.getData().length; i++) {
-////
-////            HistoDataDB histoDataDB = new HistoDataDB();
-////
-////            histoDataDB.setTime( historical.getData()[i].getTime() );
-////            histoDataDB.setClose( historical.getData()[i].getClose() );
-////            histoDataDB.setHigh( historical.getData()[i].getHigh() );
-////            histoDataDB.setLow( historical.getData()[i].getLow() );
-////            histoDataDB.setOpen( historical.getData()[i].getOpen() );
-////            histoDataDB.setVolumefrom( historical.getData()[i].getVolumefrom() );
-////            histoDataDB.setVolumeto( historical.getData()[i].getVolumeto() );
-////            histoDataDB.setCoin_id( coin_id );
-////
-////            histoDataDBArrayList.add(histoDataDB);
-////        }
-////
-////        backloadHistoDataMapper.insertHistoMinuteArrayIntoDB(histoDataDBArrayList);
-//
-//
-//
-//        //batch insert attempt 2
-//        //errors: cant create sessionFactoryBean properly
-//
-////        Session session = sessionFactory.openSession();
-////        Transaction tx = session.beginTransaction();
-////        for ( int i=0; i<historical.getData().length; i++ ) {
-////            HistoDataDB histoDataDB = new HistoDataDB();
-////
-////            histoDataDB.setTime( DateUnix.secondsToSpecificTime( historical.getData()[i].getTime() ) );
-////            histoDataDB.setClose( historical.getData()[i].getClose() );
-////            histoDataDB.setHigh( historical.getData()[i].getHigh() );
-////            histoDataDB.setLow( historical.getData()[i].getLow() );
-////            histoDataDB.setOpen( historical.getData()[i].getOpen() );
-////            histoDataDB.setVolumefrom( historical.getData()[i].getVolumefrom() );
-////            histoDataDB.setVolumeto( historical.getData()[i].getVolumeto() );
-////
-////            session.insertHistoMinuteArrayIntoDB(histoDataDB);
-////            if( i % 20 == 0 ) { // Same as the JDBC batch size
-////                //flush a batch of inserts and release memory:
-////                session.flush();
-////                session.clear();
-////            }
-////        }
-////        tx.commit();
-////        session.close();
-//
-//    }
 
 }

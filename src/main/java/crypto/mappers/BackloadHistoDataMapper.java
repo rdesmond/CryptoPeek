@@ -14,48 +14,68 @@ import java.util.ArrayList;
 @Mapper
 public interface BackloadHistoDataMapper {
 
+    String INSERT_HISTO_MINUTE_AS_ARRAY =
+            "<script>"+
+                "INSERT INTO `cryptopeek`.raw_histo_minute (time, open, close, percent_change, low, high, " +
+                "volumefrom, volumeto, coin_id)"+
+                "VALUES "+
+                    "<foreach  collection='histoList' item='item' separator=','>"+
+
+                        "( #{item.time}, #{item.open}, #{item.close}, " +
+                        "#{item.percent_change}, #{item.low}, #{item.high}, #{item.volumefrom}, " +
+                        "#{item.volumeto}, #{item.coin_id})"+
+
+                    "</foreach>"+
+            "</script>";
+
+    //Taner
+    @Insert({INSERT_HISTO_MINUTE_AS_ARRAY})
+    void insertHistoMinuteData(@Param("histoList") ArrayList<HistoDataDB> histoList);
+
+
+
     String INSERT_HISTO_MINUTE = "INSERT INTO `cryptopeek`.raw_histo_minute (time, open, close, percent_change, " +
             "low, high, volumefrom, volumeto, coin_id) VALUES (#{time}, #{open}, #{close}, #{percent_change}, #{low}, " +
             "#{high}, #{volumefrom}, #{volumeto}, #{coin_id})";
 
-    String INSERT_HISTO_HOUR = "INSERT INTO `cryptopeek`.raw_histo_hour (time, open, close, percent_change, low, high, " +
-            "volumefrom, volumeto, coin_id) VALUES (#{time}, #{open}, #{close}, #{percent_change}, #{low}, #{high}, " +
-            "#{volumefrom}, #{volumeto}, #{coin_id})";
-
-    String INSERT_HISTO_DAY = "INSERT INTO `cryptopeek`.raw_histo_day (time, open, close, percent_change, low, high, " +
-            "volumefrom, volumeto, coin_id) VALUES (#{time}, #{open}, #{close}, #{percent_change}, #{low}, #{high}, " +
-            "#{volumefrom}, #{volumeto}, #{coin_id})";
+//    String INSERT_HISTO_HOUR = "INSERT INTO `cryptopeek`.raw_histo_hour (time, open, close, percent_change, low, high, " +
+//            "volumefrom, volumeto, coin_id) VALUES (#{time}, #{open}, #{close}, #{percent_change}, #{low}, #{high}, " +
+//            "#{volumefrom}, #{volumeto}, #{coin_id})";
+//
+//    String INSERT_HISTO_DAY = "INSERT INTO `cryptopeek`.raw_histo_day (time, open, close, percent_change, low, high, " +
+//            "volumefrom, volumeto, coin_id) VALUES (#{time}, #{open}, #{close}, #{percent_change}, #{low}, #{high}, " +
+//            "#{volumefrom}, #{volumeto}, #{coin_id})";
 
     //Taner
     @Insert(INSERT_HISTO_MINUTE)
     void insertHistoMinuteIntoDB(HistoDataDB histoDataDB);
 
-    @Insert(INSERT_HISTO_HOUR)
-    void insertHistoHourIntoDB(HistoDataDB histoDataDB);
-
-    @Insert(INSERT_HISTO_DAY)
-    void insertHistoDayIntoDB(HistoDataDB histoDataDB);
+//    @Insert(INSERT_HISTO_HOUR)
+//    void insertHistoHourIntoDB(HistoDataDB histoDataDB);
+//
+//    @Insert(INSERT_HISTO_DAY)
+//    void insertHistoDayIntoDB(HistoDataDB histoDataDB);
 
 
 
     String GET_LAST_TIMESTAMP_FROM_HISTOMINUTE = "SELECT id, time FROM cryptopeek.raw_histo_minute " +
             "WHERE coin_id = #{coin_id} ORDER BY id DESC LIMIT 1";
 
-    String GET_LAST_TIMESTAMP_FROM_HISTOHOUR = "SELECT id, time FROM cryptopeek.raw_histo_hour " +
-            "WHERE coin_id = #{coin_id} ORDER BY id DESC LIMIT 1";
-
-    String GET_LAST_TIMESTAMP_FROM_HISTODAY = "SELECT id, time FROM cryptopeek.raw_histo_day " +
-            "WHERE coin_id = #{coin_id} ORDER BY id DESC LIMIT 1";
+//    String GET_LAST_TIMESTAMP_FROM_HISTOHOUR = "SELECT id, time FROM cryptopeek.raw_histo_hour " +
+//            "WHERE coin_id = #{coin_id} ORDER BY id DESC LIMIT 1";
+//
+//    String GET_LAST_TIMESTAMP_FROM_HISTODAY = "SELECT id, time FROM cryptopeek.raw_histo_day " +
+//            "WHERE coin_id = #{coin_id} ORDER BY id DESC LIMIT 1";
 
     //Taner
     @Select(GET_LAST_TIMESTAMP_FROM_HISTOMINUTE)
     HistoDataDB getLastHistominEntry(int coin_id);
 
-    @Select(GET_LAST_TIMESTAMP_FROM_HISTOHOUR)
-    HistoDataDB getLastHistohourEntry(int coin_id);
-
-    @Select(GET_LAST_TIMESTAMP_FROM_HISTODAY)
-    HistoDataDB getLastHistodayEntry(int coin_id);
+//    @Select(GET_LAST_TIMESTAMP_FROM_HISTOHOUR)
+//    HistoDataDB getLastHistohourEntry(int coin_id);
+//
+//    @Select(GET_LAST_TIMESTAMP_FROM_HISTODAY)
+//    HistoDataDB getLastHistodayEntry(int coin_id);
 
 
 
@@ -80,28 +100,23 @@ public interface BackloadHistoDataMapper {
 
 
 
-    String GET_ALL_MINUTELY_TIMESTAMPS = "SELECT time FROM cryptopeek.raw_histo_minute WHERE coin_id = #{coin_id}";
+    String GET_ALL_MINUTELY_TIMESTAMPS = "SELECT time FROM `cryptopeek`.raw_histo_minute WHERE coin_id = #{coin_id} " +
+            "ORDER BY time ASC";
 
-    String GET_ALL_HOURLY_TIMESTAMPS = "SELECT time FROM cryptopeek.raw_histo_hour WHERE coin_id = #{coin_id}";
-
-    String GET_ALL_DAILY_TIMESTAMPS = "SELECT time FROM cryptopeek.raw_histo_day WHERE coin_id = #{coin_id}";
+//    String GET_ALL_HOURLY_TIMESTAMPS = "SELECT time FROM cryptopeek.raw_histo_hour WHERE coin_id = #{coin_id}" +
+//            "ORDER BY time ASC";
+//
+//    String GET_ALL_DAILY_TIMESTAMPS = "SELECT time FROM cryptopeek.raw_histo_day WHERE coin_id = #{coin_id}" +
+//        "ORDER BY time ASC";
 
     //Taner
     @Select(GET_ALL_MINUTELY_TIMESTAMPS)
     HistoDataDB[] getAllMinutelyTimestamps(int coin_id);
 
-    @Select(GET_ALL_HOURLY_TIMESTAMPS)
-    HistoDataDB[] getAllHourlyTimestamps(int coin_id);
-
-    @Select(GET_ALL_DAILY_TIMESTAMPS)
-    HistoDataDB[] getAllDailyTimestamps(int coin_id);
-
-
-    //batch insert attempt
-//    String INSERT_HISTO_MINUTE_AS_ARRAY = "INSERT INTO `cryptopeek`.raw_histo_minute (time, open, close, low, high, " +
-//            "volumefrom, volumeto, coin_id) VALUES (#{time}, #{open}, #{close}, #{low}, #{high}, " +
-//            "#{volumefrom}, #{volumeto}, #{coin_id})";
+//    @Select(GET_ALL_HOURLY_TIMESTAMPS)
+//    HistoDataDB[] getAllHourlyTimestamps(int coin_id);
 //
-//    @Insert(INSERT_HISTO_MINUTE_AS_ARRAY)
-//    void insertHistoMinuteArrayIntoDB(ArrayList<HistoDataDB> histoDataDBArrayList);
+//    @Select(GET_ALL_DAILY_TIMESTAMPS)
+//    HistoDataDB[] getAllDailyTimestamps(int coin_id);
+
 }

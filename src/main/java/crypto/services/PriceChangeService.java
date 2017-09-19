@@ -21,17 +21,27 @@ public class PriceChangeService {
     //Taner
     //gets the top 5 coins that have increased the most in terms of price in the
     //minutely, hourly and daily timeframe
-    public void topMovers() {
+    public ArrayList<HistoDataDB> topMinutelyMovers() {
 
         ArrayList<HistoDataDB> topMinutelyMovers =
-                backloadHistoDataMapper.getTopMinutelyMovers(DateUnix.currentTimeToSecs());
+                backloadHistoDataMapper.getTopMinutelyMovers(DateUnix.toPreviousWholeMinute());
 
-        ArrayList<HistoDataDB> topHourlyMovers =
-                backloadHistoDataMapper.getTopHourlyMovers(DateUnix.currentTimeToSecs());
-
-        ArrayList<HistoDataDB> topDailyMovers =
-                backloadHistoDataMapper.getTopDailyMovers(DateUnix.currentTimeToSecs());
-
+        return topMinutelyMovers;
     }
+
+    public ArrayList<HistoDataDB> topHourlyMovers() {
+        ArrayList<HistoDataDB> topHourlyMovers =
+                backloadHistoDataMapper.getTopHourlyMovers(DateUnix.toPreviousWholeHour());
+
+        return topHourlyMovers;
+    }
+
+    public ArrayList<HistoDataDB> topDailyMovers() {
+        ArrayList<HistoDataDB> topDailyMovers =
+                backloadHistoDataMapper.getTopDailyMovers(DateUnix.toPreviousWholeDay());
+
+        return topDailyMovers;
+    }
+
 
 }

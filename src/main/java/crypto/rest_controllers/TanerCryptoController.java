@@ -3,6 +3,7 @@ package crypto.rest_controllers;
 import crypto.exceptions.APIUnavailableException;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
+import crypto.model.tablePOJOs.HistoDataDB;
 import crypto.model.topPairs.TopPairs;
 import crypto.repository.EmailMessageRepository;
 import crypto.services.BackloadHistoDataService;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 
 /**
  * Created by tanerali on 24/08/2017.
@@ -36,6 +39,7 @@ public class TanerCryptoController {
     @Autowired
     PriceChangeService priceChangeService;
 
+    //Taner
     //straight-through API call to TopPairs at CryptoCompare
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
@@ -47,6 +51,7 @@ public class TanerCryptoController {
         return cryptoService.getTopPairs(fsym, tsym, limit, sign);
     }
 
+    //Taner
     //straight-through API call to MiningContracts at CryptoCompare
     @RequestMapping("/mining/contracts")
     public MiningContracts getMiningContracts ()
@@ -55,6 +60,7 @@ public class TanerCryptoController {
         return cryptoService.getMiningContracts();
     }
 
+    //Taner
     //straight-through API call to MiningEquipment at CryptoCompare
     @RequestMapping("/mining/equipment")
     public MiningEquipment getMiningEquipment ()
@@ -63,11 +69,10 @@ public class TanerCryptoController {
         return cryptoService.getMiningEquipment();
     }
 
-
+    //Taner
     //backloads previously (in the past) missing minutely, hourly and/or daily historical
     //data from CryptoCompare to database;
-    //Taner
-    @RequestMapping("/backload")
+    @RequestMapping("/backload/missing")
     public void backloadPreviouslyMissingHistoData() throws APIUnavailableException {
 
         backloadHistoDataService.backloadPreviouslyMissingHistoData();
@@ -75,15 +80,15 @@ public class TanerCryptoController {
 
     //Taner
     @RequestMapping("/backload/recent")
-    public void backloadMissingHistoData()
+    public void backloadRecentHistoData()
 
             throws APIUnavailableException {
 
         backloadHistoDataService.backloadRecentHistoData();
     }
 
-    //used for sending email
     //Taner
+    //used for sending email
     @RequestMapping("/sendemail")
     public void sendEmail (@RequestParam(value="toAddress")String toAddress)
             throws Exception {
@@ -92,9 +97,21 @@ public class TanerCryptoController {
     }
 
     //Taner
-    @RequestMapping("/pricechange")
-    public void priceChange() {
-        priceChangeService.topMovers();
+    @RequestMapping("/top/minutely")
+    public ArrayList<HistoDataDB> topMinutelyMovers() {
+        return priceChangeService.topMinutelyMovers();
+    }
+
+    //Taner
+    @RequestMapping("/top/hourly")
+    public ArrayList<HistoDataDB> topHourlyMovers() {
+        return priceChangeService.topHourlyMovers();
+    }
+
+    //Taner
+    @RequestMapping("/top/daily")
+    public ArrayList<HistoDataDB> topDailyMovers() {
+        return priceChangeService.topDailyMovers();
     }
 
 }
