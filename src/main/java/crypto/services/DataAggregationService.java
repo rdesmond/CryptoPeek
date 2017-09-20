@@ -23,8 +23,9 @@ public class DataAggregationService {
      * @author Nicola
      * @return The averages for the last Hour of raw data for the DB
      * @throws APIUnavailableException
+     * @throws IndexOutOfBoundsException
      */
-    public ArrayList<PersistHistoMinute> getLastHourDataFromMin() throws APIUnavailableException {
+    public ArrayList<PersistHistoMinute> getLastHourDataFromMin() throws APIUnavailableException, IndexOutOfBoundsException {
 
 
         ArrayList<PersistHistoMinute> avgs = new ArrayList<>();
@@ -35,33 +36,37 @@ public class DataAggregationService {
         PersistHistoHour persistHistoHour;
         PersistHistoMinute persistHistoMinute;
         // Gets the unix timestamp for the last hour
-        long param1 = DateUnix.oneHourInPastInSecs();
+        long time = DateUnix.oneHourInPastInSecs();
         // Gets the current unix timestamp
         long currentTime = DateUnix.currentTimeToSecs();
         int i = 0;
         for (i = 0; i < coinArrayList.size(); i++) {
 
             coin = coinArrayList.get(i);
+            try {
+                //  Gets the last hour of data from the rawHistoMinute table in the DB.
+                ArrayList<PersistHistoMinute> rawData = dataAggregationMapper.getLastHourOpenCloseFromMin(coin.getId(), time);
+                // Gets the average of the Low, High, Volumefrom and Volumeto from the rawHistoMinute table in the DB.
+                ArrayList<PersistHistoMinute> avgData = dataAggregationMapper.getLastHourAvgFromMin(coin.getId(), time);
 
-            //  Gets the last hour of data from the rawHistoMinute table in the DB.
-            ArrayList<PersistHistoMinute> rawData = dataAggregationMapper.getLastHourOpenCloseFromMin(coin.getId(), param1);
-            // Gets the average of the Low, High, Volumefrom and Volumeto from the rawHistoMinute table in the DB.
-            ArrayList<PersistHistoMinute> avgData = dataAggregationMapper.getLastHourAvgFromMin(coin.getId(), param1);
+                persistHistoMinute = new PersistHistoMinute();
+                persistHistoHour = new PersistHistoHour();
 
-            persistHistoMinute = new PersistHistoMinute();
-            persistHistoHour = new PersistHistoHour();
+                // Saves the averages from HistoMinute to the rawHistoHour table in the DB.
+                persistHistoHour.setTime(currentTime);
+                persistHistoHour.setOpen(rawData.get(0).getOpen());
+                persistHistoHour.setClose(rawData.get(rawData.size()-1).getClose());
+                persistHistoHour.setPercent_change(avgData.get(0).getPercent_change());
+                persistHistoHour.setLow(avgData.get(0).getLow());
+                persistHistoHour.setHigh(avgData.get(0).getHigh());
+                persistHistoHour.setVolumefrom(avgData.get(0).getVolumefrom());
+                persistHistoHour.setVolumeto(avgData.get(0).getVolumeto());
+                avgs.add(persistHistoMinute);
 
-            // Saves the averages from HistoMinute to the rawHistoHour table in the DB.
-            persistHistoHour.setTime(currentTime);
-            persistHistoHour.setOpen(rawData.get(0).getOpen());
-            persistHistoHour.setClose(rawData.get(rawData.size()-1).getClose());
-            persistHistoHour.setLow(avgData.get(0).getLow());
-            persistHistoHour.setHigh(avgData.get(0).getHigh());
-            persistHistoHour.setVolumefrom(avgData.get(0).getVolumefrom());
-            persistHistoHour.setVolumeto(avgData.get(0).getVolumeto());
-            avgs.add(persistHistoMinute);
-
-            dataAggregationMapper.insertHourDataInDB(persistHistoMinute);
+                dataAggregationMapper.insertHourDataInDB(persistHistoMinute);
+            }catch (IndexOutOfBoundsException e) {
+                System.out.println("no data in DB for selected timeframe");
+            }
 
         }return avgs;
     }
@@ -81,7 +86,7 @@ public class DataAggregationService {
         PersistHistoHour persistHistoHour;
         PersistHistoMinute persistHistoMinute;
         // Gets the unix timestamp for the last day
-        long param1 = DateUnix.oneDayInPastInSecs();
+        long time = DateUnix.oneDayInPastInSecs();
         // Gets the current unix timestamp
         long currentTime = DateUnix.currentTimeToSecs();
         int i = 0;
@@ -90,9 +95,9 @@ public class DataAggregationService {
             coin = coinArrayList.get(i);
 
             //  Gets the last day of data from the rawHistoHour table in the DB.
-            ArrayList<PersistHistoMinute> rawData = dataAggregationMapper.getLastDayOpenCloseFromHour(coin.getId(), param1);
+            ArrayList<PersistHistoMinute> rawData = dataAggregationMapper.getLastDayOpenCloseFromHour(coin.getId(), time);
             // Gets the average of the Low, High, Volumefrom and Volumeto from the rawHistoHour table in the DB.
-            ArrayList<PersistHistoMinute> avgData = dataAggregationMapper.getLastDayAvgFromHour(coin.getId(), param1);
+            ArrayList<PersistHistoMinute> avgData = dataAggregationMapper.getLastDayAvgFromHour(coin.getId(), time);
 
             persistHistoMinute = new PersistHistoMinute();
             persistHistoHour = new PersistHistoHour();
@@ -101,6 +106,7 @@ public class DataAggregationService {
             persistHistoHour.setTime(currentTime);
             persistHistoHour.setOpen(rawData.get(0).getOpen());
             persistHistoHour.setClose(rawData.get(rawData.size()-1).getClose());
+            persistHistoHour.setPercent_change(avgData.get(0).getPercent_change());
             persistHistoHour.setLow(avgData.get(0).getLow());
             persistHistoHour.setHigh(avgData.get(0).getHigh());
             persistHistoHour.setVolumefrom(avgData.get(0).getVolumefrom());
@@ -127,7 +133,7 @@ public class DataAggregationService {
         PersistHistoHour persistHistoHour;
         PersistHistoMinute persistHistoMinute;
         // Gets the unix timestamp for the last week
-        long param1 = DateUnix.oneWeekInPastInSecs();
+        long time = DateUnix.oneWeekInPastInSecs();
         // Gets the current unix timestamp
         long currentTime = DateUnix.currentTimeToSecs();
         int i = 0;
@@ -136,9 +142,9 @@ public class DataAggregationService {
             coin = coinArrayList.get(i);
 
             //  Gets the last week of data from the rawHistoDay table in the DB.
-            ArrayList<PersistHistoMinute> rawData = dataAggregationMapper.getLastWeekOpenCloseFromDay(coin.getId(), param1);
+            ArrayList<PersistHistoMinute> rawData = dataAggregationMapper.getLastWeekOpenCloseFromDay(coin.getId(), time);
             // Gets the average of the Low, High, Volumefrom and Volumeto from the rawHistoDay table in the DB.
-            ArrayList<PersistHistoMinute> avgData = dataAggregationMapper.getLastWeekAvgFromDay(coin.getId(), param1);
+            ArrayList<PersistHistoMinute> avgData = dataAggregationMapper.getLastWeekAvgFromDay(coin.getId(), time);
 
             persistHistoMinute = new PersistHistoMinute();
             persistHistoHour = new PersistHistoHour();
@@ -147,6 +153,7 @@ public class DataAggregationService {
             persistHistoHour.setTime(currentTime);
             persistHistoHour.setOpen(rawData.get(0).getOpen());
             persistHistoHour.setClose(rawData.get(rawData.size()-1).getClose());
+            persistHistoHour.setPercent_change(avgData.get(0).getPercent_change());
             persistHistoHour.setLow(avgData.get(0).getLow());
             persistHistoHour.setHigh(avgData.get(0).getHigh());
             persistHistoHour.setVolumefrom(avgData.get(0).getVolumefrom());

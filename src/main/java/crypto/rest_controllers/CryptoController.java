@@ -67,13 +67,21 @@ public class CryptoController {
         return cryptoService.getSocialStatsForFollowedCoins();
     }
 
-    // Author: Nicola
+    /**
+     * @author Nicola
+     * @return puts histoMinute data for all coins but BTC for last 5 minutes into database
+     * @throws APIUnavailableException
+     */
     @RequestMapping("/api/loadData")
     public ArrayList<PersistHistoMinute> getHistoMinuteData2() throws APIUnavailableException {
         return cryptoService.getHistoMinuteData();
     }
 
-    // Author: Nicola
+    /**
+     * @author Nicola
+     * @return puts histoMinute data for BTC for last 5 minutes into database
+     * @throws APIUnavailableException
+     */
     @RequestMapping("/api/loadDataBTC")
     public ArrayList<PersistHistoMinute> getHistoMinuteDataBTC() throws APIUnavailableException {
         return cryptoService.getHistoMinuteDataBTC();

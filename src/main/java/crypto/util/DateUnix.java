@@ -74,8 +74,8 @@ public class DateUnix {
         long currentSecs = 0;
 
         currentSecs = date.getTime()/1000;
-
-        long oneHourInPast = currentSecs-3600;
+        //3600
+        long oneHourInPast = currentSecs-345600;
 
         return oneHourInPast;
 

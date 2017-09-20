@@ -19,9 +19,10 @@ public class DataAggregationController {
      * @author Nicola
      * @return Loads the last hour of data to the DB
      * @throws APIUnavailableException
+     * @throws IndexOutOfBoundsException
      */
     @RequestMapping("/api/loadHourToDB")
-    public ArrayList<PersistHistoMinute> getLastHourDataFromMin() throws APIUnavailableException {
+    public ArrayList<PersistHistoMinute> getLastHourDataFromMin() throws APIUnavailableException, IndexOutOfBoundsException {
        return dataAggregationService.getLastHourDataFromMin();
     }
 

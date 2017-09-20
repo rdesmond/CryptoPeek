@@ -4,6 +4,7 @@ public class PersistHistoHour {
 
     double close;
     double high;
+    double percent_change;
     double low;
     double open;
     long time;
@@ -26,6 +27,14 @@ public class PersistHistoHour {
 
     public void setHigh(double high) {
         this.high = high;
+    }
+
+    public double getPercent_change() {
+        return percent_change;
+    }
+
+    public void setPercent_change(double percent_change) {
+        this.percent_change = percent_change;
     }
 
     public double getLow() {

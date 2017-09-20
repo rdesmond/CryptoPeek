@@ -26,18 +26,40 @@ public interface PersistData {
             "ORDER BY time desc LIMIT 1";
 
 
+    /**
+     * @author Nicola
+     * @return All coin id's and symbols except BTC from the top_30 table in the database
+     */
     @Select(GET_COIN_FROM_DB)
     public ArrayList<Coin> getCoinFromDB();
 
+    /**
+     * @author Nicola
+     * @return All coin id's and symbols from the top_30 table in the database
+     */
     @Select(GET_ALL_COIN_FROM_DB)
     public ArrayList<Coin> getAllCoinFromDB();
 
+    /**
+     * @author Nicola
+     * @param persistHistoMinute
+     * @return
+     * Inserts raw data from cryptopeek into histoMinute table in DB
+     */
     @Insert(INSERT_HISTO_MINUTE_DATA)
     public int insertHistoMinuteData(PersistHistoMinute persistHistoMinute);
 
+    /**
+     * @author Nicola
+     * @return The timestamp for the last item entered into the histoMinute table in the database for all coins
+     */
     @Select(GET_MOST_RECENT_TIME)
     public String getMostRecentTime();
 
+    /**
+     * @author Nicola
+     * @return The timestamp for the last item entered into the histoMinute table in the database for BTC
+     */
     @Select(GET_MOST_RECENT_TIME_BTC)
     public String getMostRecentTimeBTC();
 
