@@ -1,22 +1,22 @@
 package crypto.services;
 
-/**
- * Created by aaron on 8/10/17.
- */
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.mappers.CoinsMapper;
 import crypto.mappers.PersistData;
 import crypto.mappers.TopCoinsMapper;
+import crypto.model.coinList.Coin;
+import crypto.model.coinList.Coins;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
-import crypto.model.historicalModels.Coin;
+import crypto.model.historicalModels.CoinPojo;
 import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.PersistHistoMinute;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
+import crypto.model.topCoins.CoinExchanges;
 import crypto.model.topPairs.TopPairs;
 import crypto.model.topCoins.TopCoins;
 import crypto.mappers.SocialStatsMapper;
@@ -24,6 +24,7 @@ import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.model.socialStatsModels.SocialStatsCoins;
 import crypto.model.socialStatsModels.SocialStatsForDbInsert;
+import crypto.services.threads.CryptoID;
 import crypto.util.DateUnix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,12 +32,15 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 
 import java.util.ArrayList;
 
 /**
  * Created by aaron on 8/8/17.
+ *
+ *
  */
 @Service
 public class CryptoService {
@@ -51,11 +55,16 @@ public class CryptoService {
     SocialStatsMapper socialStatsMapper;
 
     @Autowired
+    CoinsMapper coinsMapper;
+    
+    @Autowired
+    CryptoID cryptoID;
+
+    @Autowired
     PersistData persistData;
 
     @Autowired
     CryptoCompareService cryptoCompareService;
-
 
 
     @Cacheable("CryptoCache")
@@ -63,17 +72,16 @@ public class CryptoService {
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;
         try {
-            System.out.println("Cryptoservice running");
-            cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
 
-            if (cryptoModel.getData().getExchanges().length < 1) {
-                throw new APIUnavailableException();
-            }
+            cryptoModel = restTemplate.getForObject(url, CryptoModel.class);
+//            if (cryptoModel.getData().getExchanges().length < 0) {
+//                throw new APIUnavailableException();
+//            }
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new APIUnavailableException();
         }
-
 
         return cryptoModel;
     }
@@ -149,7 +157,8 @@ public class CryptoService {
         // we don't have to do anything in here - this method just needs to be called
     }
 
-    public Exchanges getCoinSnapshotByExchange(String fsym, String tsym, String exchange) throws ExchangeNotFoundException {
+    public Exchanges getCoinSnapshotByExchange(String fsym, String tsym, String exchange)
+            throws ExchangeNotFoundException {
 
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;
@@ -175,7 +184,8 @@ public class CryptoService {
         }
     }
 
-    public Exchanges[] getCoinSnapshotByHighestAndLowestExchange(String fsym, String tsym) throws ExchangeNotFoundException {
+    public Exchanges[] getCoinSnapshotByHighestAndLowestExchange(String fsym, String tsym)
+            throws ExchangeNotFoundException {
 
         String url = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=" + fsym + "&tsym=" + tsym;
         CryptoModel cryptoModel;
@@ -252,6 +262,10 @@ public class CryptoService {
             topCoinsMapper.addNewTop(topCoins[i]);
         }
 
+        //this thread is going to populate the top30 table with the CryptoCompare coin IDs in the background
+        Thread t = new Thread(cryptoID);
+        t.start();
+
         return;
     }
 
@@ -290,6 +304,8 @@ public class CryptoService {
 
     }
 
+
+    //Taner
     public TopPairs getTopPairs(String fsym, String tsym, Integer limit, boolean sign)
             throws APIUnavailableException {
 
@@ -322,7 +338,7 @@ public class CryptoService {
 
     }
 
-
+    //Taner
     public MiningContracts getMiningContracts() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningcontracts";
 
@@ -335,6 +351,7 @@ public class CryptoService {
         }
     }
 
+    //Taner
     public MiningEquipment getMiningEquipment() throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/miningequipment";
 
@@ -345,6 +362,25 @@ public class CryptoService {
 //        } catch (Exception e) {
 //            throw new APIUnavailableException();
 //        }
+    }
+
+    //Method to populate all of the coins from CryptoCompare to our database.
+    public Coins getAllCoins() throws APIUnavailableException {
+        String url = "https://www.cryptocompare.com/api/data/coinlist/";
+        Coins coins = restTemplate.getForObject(url, Coins.class);
+        Field[] fields = coins.getData().getClass().getDeclaredFields();
+        for (Field f : fields) {
+            f.setAccessible(true);
+
+            try {
+                Coin c = (Coin) f.get(coins.getData());
+                coinsMapper.insertCoin(c);
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return coins;
     }
 
     /**
@@ -438,62 +474,56 @@ public class CryptoService {
 
         ArrayList<PersistHistoMinute> responses = new ArrayList<>();
 
-        Coin coin;
 
-        // Checks to see if we are missing the last 5 minutes worth of data in the HistoMinute table.
-        if (missingMoreThan6MinBTC()){
-            //Use Taner's backload based off of time method. Not sure which one this is.
-            //Return option needs to change.
-            return responses;
-        }else {
-            // Checks to see if we are missing the last 5 minutes worth of data in the HistoMinute table.
-            if (missing5Min()) {
+        CoinPojo coin;
+        if (missing5Min()) {
+            ArrayList<CoinPojo> coinArrayList = persistData.getCoinFromDB();
+            System.out.println("size of array list: " + coinArrayList.size());
 
-                // Gets all of the ID and Symbols for all of the coins we are following except BTC from the DB.
-                ArrayList<Coin> coinArrayList = persistData.getCoinFromDB();
+            int i = 0;
+            for (i = 0; i < coinArrayList.size(); i++) {
+                System.out.println("we are in the " + i + " iteration");
+                coin = coinArrayList.get(i);
 
-                int i = 0;
-                for (i = 0; i < coinArrayList.size(); i++) {
-                    coin = coinArrayList.get(i);
 
-                    HistoMinute histoMinute = new HistoMinute();
+                HistoMinute histoMinute = new HistoMinute();
 
-                    //Calls the CryptoCompair API for each coin to get the raw histo minute data.
-                    try {
-                        histoMinute = (HistoMinute) cryptoCompareService.callCryptoCompareAPI(
-                                "https://min-api.cryptocompare.com/data/histominute?fsym=" + coin.getSymbol() + "&tsym=BTC&" +
-                                        "limit=5&aggregate=1&e=CCCAGG", histoMinute);
-                        if (histoMinute != null) {
-                            PersistHistoMinute persistHistoMinute;
-                            int x = 0;
-                            for (x = 0; x < histoMinute.getData().length; x++) {
-                                System.out.println(x);
+                //Calls the CryptoCompair API for each coin to get the raw histo minute data.
+                try {
+                    histoMinute = (HistoMinute) cryptoCompareService.callCryptoCompareAPI(
+                            "https://min-api.cryptocompare.com/data/histominute?fsym=" + coin.getSymbol() + "&tsym=BTC&" +
+                                    "limit=5&aggregate=1&e=CCCAGG", histoMinute);
+                    if (histoMinute != null) {
+                        PersistHistoMinute persistHistoMinute;
+                        int x = 0;
+                        for (x = 0; x < histoMinute.getData().length; x++) {
+                            System.out.println(x);
 
-                                persistHistoMinute = new PersistHistoMinute();
+                            persistHistoMinute = new PersistHistoMinute();
 
-                                //Saves all of the data from the API call to the DB
-                                persistHistoMinute.setClose(histoMinute.getData()[x].getClose());
-                                persistHistoMinute.setHigh(histoMinute.getData()[x].getHigh());
-                                persistHistoMinute.setLow(histoMinute.getData()[x].getLow());
-                                persistHistoMinute.setOpen(histoMinute.getData()[x].getOpen());
-                                persistHistoMinute.setTime(histoMinute.getData()[x].getTime());
-                                persistHistoMinute.setVolumefrom(histoMinute.getData()[x].getVolumefrom());
-                                persistHistoMinute.setVolumeto(histoMinute.getData()[x].getVolumeto());
-                                persistHistoMinute.setCoinId(coin.getId());
-                                responses.add(persistHistoMinute);
+                            //Saves all of the data from the API call to the DB
+                            persistHistoMinute.setClose(histoMinute.getData()[x].getClose());
+                            persistHistoMinute.setHigh(histoMinute.getData()[x].getHigh());
+                            persistHistoMinute.setLow(histoMinute.getData()[x].getLow());
+                            persistHistoMinute.setOpen(histoMinute.getData()[x].getOpen());
+                            persistHistoMinute.setTime(histoMinute.getData()[x].getTime());
+                            persistHistoMinute.setVolumefrom(histoMinute.getData()[x].getVolumefrom());
+                            persistHistoMinute.setVolumeto(histoMinute.getData()[x].getVolumeto());
+                            persistHistoMinute.setCoinId(coin.getId());
+                            responses.add(persistHistoMinute);
 
-                                persistData.insertHistoMinuteData(persistHistoMinute);
-                            }
+                            persistData.insertHistoMinuteData(persistHistoMinute);
                         }
-                        throw new APIUnavailableException();
-                    } catch (APIUnavailableException e) {
-                        e.toString();
                     }
+                    throw new APIUnavailableException();
+                } catch (APIUnavailableException e) {
+                    e.toString();
                 }
             }
-            return responses;
         }
+        return responses;
     }
+
 
     /**
      * @author Nicola
@@ -542,4 +572,65 @@ public class CryptoService {
             return responses;
         }
     }
+
+    //Dani
+    //This method gets the top30 coins from the database and creates a new CoinExchange object for each coin
+    //which contains the coin name and its prices in our top 5 exchanges
+    public CoinExchanges[] getAllCoinsAllExchanges() {
+        //get our top 30 coins (in reverse order)
+        ArrayList<TopCoins> t = topCoinsMapper.getMostRecentTop();
+        //create a new empty array of CoinExchanges objects that will hold our new objects
+        CoinExchanges[] coinExchanges = new CoinExchanges[30];
+        int count = 29;
+        //for every TopCoin object we have do the following
+        for (TopCoins top : t) {
+
+            //create a new CoinExchanges object
+            CoinExchanges c = new CoinExchanges();
+
+            //the default pricing will be in BitCoin
+            String tsym="BTC";
+
+            //get the coin snapshot of a coin using its symbol
+            try {
+                //if the coin is BitCoin, change price to USD
+                if (top.getSymbol().equalsIgnoreCase("BTC")){
+                    tsym = "USD";
+                }
+                CryptoModel cryptoModel = getCoinSnapshot(top.getSymbol(), tsym);
+                //set the name
+                c.setCoin_name(top.getName());
+                //some coins don't have any exchanges listed for them in the CryptoCompare API response
+                //in order to avoid nullpointer exceptions this if statements sets all of the prices to 0 if that's the case
+                if (cryptoModel.getData().getExchanges()==null){
+                    c.exchangeMissing(c);
+                    coinExchanges[count]=c;
+                    count--;
+                    continue;
+                }
+                //For every exchange in the Coin's Exchanges array, check for the following exchanges and set their prices
+                for (Exchanges e: cryptoModel.getData().getExchanges()) {
+                    switch (e.getMarket()) {
+                        case "Coinbase": c.setCoinbase(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "Bitfinex": c.setBitfinex(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "BitTrex": c.setBittrex(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "Poloniex": c.setPoloniex(Double.parseDouble(e.getPrice()));
+                        break;
+                        case "Kraken": c.setKraken(Double.parseDouble(e.getPrice()));
+                        break;
+                    }
+                }
+                coinExchanges[count]=c;
+                count--;
+            } catch (APIUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        return coinExchanges;
+    }
+
+
 }

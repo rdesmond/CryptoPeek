@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class CoinSnapshotFullByIdMain {
 
     String response; //: "Success",
-    String message; //: "Coin full snapshot successfully returned",
+    String message; //: "CoinPojo full snapshot successfully returned",
     Data data; //: {},
     int type; //: 100
 

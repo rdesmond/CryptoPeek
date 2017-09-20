@@ -5,7 +5,6 @@ import crypto.model.socialStatsModels.SocialStatsForDbInsert;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.mybatis.spring.annotation.MapperScan;
 
 import java.util.ArrayList;
 
@@ -15,14 +14,15 @@ import java.util.ArrayList;
 @Mapper
 public interface SocialStatsMapper {
 
-    String GET_COINS = "SELECT coin_id FROM cryptopeek.coins;";
+    String GET_COIN_ID = "SELECT coin_id FROM cryptopeek.top_30;";
+
     String INSERT_SOCIAL_STATS = "INSERT INTO `cryptopeek`.social_stats (name, coin_name, " +
             "general_points, twitter_statuses, twitter_points, reddit_comments_per_day, reddit_points, facebook_likes, " +
             "facebook_points, time) values (#{name}, #{coin_name}, #{general_points}, " +
             "#{twitter_statuses}, #{twitter_points}, #{reddit_comments_per_day}, #{reddit_points}, #{facebook_likes}, " +
             "#{facebook_points}, #{time});";
 
-    @Select(GET_COINS)
+    @Select(GET_COIN_ID)
     ArrayList<SocialStatsCoins> getSocialStatsCoins();
 
     @Insert(INSERT_SOCIAL_STATS)

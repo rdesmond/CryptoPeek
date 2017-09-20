@@ -1,6 +1,6 @@
 package crypto.mappers;
 
-import crypto.model.historicalModels.Coin;
+import crypto.model.historicalModels.CoinPojo;
 import crypto.model.historicalModels.PersistHistoMinute;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,7 +31,7 @@ public interface PersistData {
      * @return All coin id's and symbols except BTC from the top_30 table in the database
      */
     @Select(GET_COIN_FROM_DB)
-    public ArrayList<Coin> getCoinFromDB();
+    public ArrayList<CoinPojo> getCoinFromDB();
 
     /**
      * @author Nicola

@@ -2,12 +2,14 @@ package crypto.rest_controllers;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.model.arbitrageModels.ArbitrageModel;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
 import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.historicalModels.PersistHistoMinute;
 import crypto.model.socialStatsModels.SocialStats;
+import crypto.services.ArbitrageService;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ public class CryptoController {
 
     @Autowired
     CryptoService cryptoService;
+
+    @Autowired
+    ArbitrageService arbitrageService;
 
     @RequestMapping("/api")
     public CryptoModel getSnapShot(@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
@@ -85,5 +90,11 @@ public class CryptoController {
     @RequestMapping("/api/loadDataBTC")
     public ArrayList<PersistHistoMinute> getHistoMinuteDataBTC() throws APIUnavailableException {
         return cryptoService.getHistoMinuteDataBTC();
+    }
+
+    //Aaron
+    @RequestMapping("api/getTopArbitrage")
+    public ArrayList<ArbitrageModel> getTopArb() {
+        return arbitrageService.getTopArbitrageOps();
     }
 }

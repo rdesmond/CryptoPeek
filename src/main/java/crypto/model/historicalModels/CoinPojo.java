@@ -1,6 +1,6 @@
 package crypto.model.historicalModels;
 
-public class Coin {
+public class CoinPojo {
     int id;
     String symbol;
 
