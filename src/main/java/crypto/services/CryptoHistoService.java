@@ -6,6 +6,7 @@ import crypto.model.historicalModels.HistoHour;
 import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.ThirtyDayAverage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,6 +22,7 @@ public class CryptoHistoService {
     @Autowired
     RestTemplate restTemplate;
 
+    @Cacheable("CryptoCache")
     public HistoDay getHistoricalDailyData(String fsym, String tsym, String exchange) throws APIUnavailableException {
 
         String url = "https://min-api.cryptocompare.com/data/histoday?fsym=" + fsym + "&tsym=" + tsym +"&e="+exchange;

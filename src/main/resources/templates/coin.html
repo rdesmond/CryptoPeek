@@ -27,6 +27,8 @@
 
     <!-- Custom Fonts -->
     <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" href="../static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
 </head>
 <body>
 
@@ -492,10 +494,44 @@
 <script th:src="@{/vendor/flot/jquery.flot.resize.js}" src="../static/vendor/flot/jquery.flot.resize.js"></script>
 <script th:src="@{/vendor/flot/jquery.flot.time.js}" src="../static/vendor/flot/jquery.flot.time.js"></script>
 <script th:src="@{/vendor/flot-tooltip/jquery.flot.tooltip.min.js}" src="../static/vendor/flot-tooltip/jquery.flot.tooltip.min.js"></script>
-<script th:src="@{/data/flot-data.js}" src="../static/data/flot-data.js"></script>
+<!--<script th:src="@{/data/flot-data.js}" src="../static/data/flot-data.js"></script>-->
 
 <!-- Custom Theme JavaScript -->
 <script th:src="@{/dist/js/sb-admin-2.js}" src="../static/dist/js/sb-admin-2.js"></script>
+
+<script th:inline="javascript">
+$(document).ready(function() {
+
+
+    var options = {
+            series: {
+                lines: {
+                    show: true
+                },
+                points: {
+                    show: true
+                }
+            },
+            grid: {
+                hoverable: true //IMPORTANT! this is needed for tooltip to work
+            },
+            yaxis: {
+                min: 0,
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "'%s' of %x.1 is %y.4",
+                shifts: {
+                    x: -60,
+                    y: 25
+                }
+            }
+        };
+
+    var plotObj = $.plot($("#flot-line-chart"), [[${data}]], options);
+
+});
+</script>
 
 
 </body>

@@ -5,7 +5,10 @@ import crypto.exceptions.ExchangeNotFoundException;
 import crypto.mappers.CoinsMapper;
 import crypto.model.coinList.Coin;
 import crypto.model.cryptoCompareModels.*;
+import crypto.model.historicalModels.HistoDay;
+import crypto.model.historicalModels.Data;
 import crypto.model.topCoins.CoinExchanges;
+import crypto.services.CryptoHistoService;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,9 @@ public class MvcCryptoCompController {
 
     @Autowired
     CoinsMapper coinsMapper;
+
+    @Autowired
+    CryptoHistoService cryptoHistoService;
 
     @RequestMapping("/mvc")
     public String showForm(Model model){
@@ -99,7 +105,30 @@ public class MvcCryptoCompController {
     public String getCoin (@PathVariable(value="coin_name") String coin_name, Model model) {
         Coin c = coinsMapper.getCoinByName(coin_name);
         c.setImage_url("https://www.cryptocompare.com"+c.getImage_url());
+        HistoDay hD = new HistoDay();
+        if (c.getCoin_name().equalsIgnoreCase("Bitcoin")) {
+            try {
+                hD = cryptoHistoService.getHistoricalDailyData("BTC", "USD", "CCCAGG");
+            } catch (APIUnavailableException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                hD = cryptoHistoService.getHistoricalDailyData(c.getSymbol(), "BTC", "CCCAGG");
+            } catch (APIUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
         model.addAttribute("coinobj", c);
+
+        double[] data = new double[hD.getData().length];
+        int count=0;
+        for (Data d : hD.getData()){
+            data[count]=d.getClose();
+            count++;
+        }
+
+        model.addAttribute("data", data);
         return "coin";
     }
 }
