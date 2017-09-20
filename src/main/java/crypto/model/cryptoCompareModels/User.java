@@ -35,7 +35,7 @@ public class User {
     @NotEmpty(message = "*Please provide your password")
     @Transient
     private String password;
-    @Column(name = "name")
+    @Column(name = "first_name")
     @NotEmpty(message = "*Please provide your name")
     private String name;
     @Column(name = "last_name")
