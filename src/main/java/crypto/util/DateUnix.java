@@ -76,8 +76,6 @@ public class DateUnix {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        System.out.println(calendar.getTimeInMillis()/1000);
-
         return calendar.getTimeInMillis()/1000;
     }
 
@@ -91,8 +89,6 @@ public class DateUnix {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MINUTE, 0);
-
-        System.out.println(calendar.getTimeInMillis()/1000);
 
         return calendar.getTimeInMillis()/1000;
     }
@@ -113,8 +109,6 @@ public class DateUnix {
         calendar.set(Calendar.DST_OFFSET, 0);
         calendar.set(Calendar.HOUR, 0);
 
-
-        System.out.println(calendar.getTimeInMillis()/1000);
 
         return calendar.getTimeInMillis()/1000;
     }

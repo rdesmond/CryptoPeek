@@ -31,6 +31,23 @@ public class HistoDataDB {
     int coin_id;
 
 
+    public HistoDataDB(int id, long time, double open, double close, double percent_change,
+                       double low, double high, double volumefrom, double volumeto, int coin_id) {
+        this.id = id;
+        this.time = time;
+        this.open = open;
+        this.close = close;
+        this.percent_change = percent_change;
+        this.low = low;
+        this.high = high;
+        this.volumefrom = volumefrom;
+        this.volumeto = volumeto;
+        this.coin_id = coin_id;
+    }
+
+    public HistoDataDB() {
+    }
+
     public int getId() {
         return id;
     }
