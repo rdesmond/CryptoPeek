@@ -277,7 +277,7 @@ public class CryptoService {
             topCoinsMapper.addNewTop(topCoins[i]);
         }
 
-        //this thread is going to populate the top30 table with the CryptoCompare coin IDs in the background
+        //this thread is going to populate the top30 table with the CryptoCompare coin IDs and image URLs in the background
         Thread t = new Thread(cryptoID);
         t.start();
 
@@ -563,6 +563,8 @@ public class CryptoService {
                 CryptoModel cryptoModel = getCoinSnapshot(top.getSymbol(), tsym);
                 //set the name
                 c.setCoin_name(top.getName());
+                //set image url
+                c.setImage_url(top.getImage_url());
                 //some coins don't have any exchanges listed for them in the CryptoCompare API response
                 //in order to avoid nullpointer exceptions this if statements sets all of the prices to 0 if that's the case
                 if (cryptoModel.getData().getExchanges()==null){
@@ -577,15 +579,15 @@ public class CryptoService {
                 //For every exchange in the Coin's Exchanges array, check for the following exchanges and set their prices
                 for (Exchanges e: cryptoModel.getData().getExchanges()) {
                     switch (e.getMarket()) {
-                        case "Coinbase": c.setCoinbase(e.getPrice());
+                        case "Coinbase": c.setCoinbase(e.getPrice()+" "+tsym);
                         break;
-                        case "Bitfinex": c.setBitfinex(e.getPrice());
+                        case "Bitfinex": c.setBitfinex(e.getPrice()+" "+tsym);
                         break;
-                        case "BitTrex": c.setBittrex(e.getPrice());
+                        case "BitTrex": c.setBittrex(e.getPrice()+" "+tsym);
                         break;
-                        case "Poloniex": c.setPoloniex(e.getPrice());
+                        case "Poloniex": c.setPoloniex(e.getPrice()+" "+tsym);
                         break;
-                        case "Kraken": c.setKraken(e.getPrice());
+                        case "Kraken": c.setKraken(e.getPrice()+" "+tsym);
                         break;
                     }
                 }

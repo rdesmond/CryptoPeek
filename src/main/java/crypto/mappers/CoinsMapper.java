@@ -19,6 +19,10 @@ public interface CoinsMapper {
 
     String GET_COIN_BY_NAME = "SELECT * FROM coins  WHERE coin_name=#{coin_name}";
 
+    String GET_IMAGE_URL_BY_SYMBOL = "SELECT image_url FROM coins WHERE symbol=#{symbol}";
+
+    String GET_IMAGE_URL_BY_NAME = "SELECT image_url FROM coins WHERE coin_name=#{coin_name}";
+
     @Insert(INSERT_COIN)
     public void insertCoin(Coin c);
 
@@ -30,6 +34,12 @@ public interface CoinsMapper {
 
     @Select(GET_COIN_BY_NAME)
     public Coin getCoinByName(String coin_name);
+
+    @Select(GET_IMAGE_URL_BY_NAME)
+    public String getImageUrlByName(String coin_name);
+
+    @Select(GET_IMAGE_URL_BY_SYMBOL)
+    public String getImageUrlBySymbol(String symbol);
 
 
 }

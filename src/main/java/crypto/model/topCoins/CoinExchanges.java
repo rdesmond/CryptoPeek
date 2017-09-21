@@ -12,6 +12,7 @@ public class CoinExchanges {
     String Bittrex;
     String Bitfinex;
     String Coinbase;
+    String image_url;
 
     public CoinExchanges() {
         Kraken="";
@@ -19,6 +20,14 @@ public class CoinExchanges {
         Bitfinex="";
         Bittrex="";
         Coinbase="";
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getCoin_name() {
