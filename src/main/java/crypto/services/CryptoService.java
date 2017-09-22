@@ -11,6 +11,7 @@ import crypto.model.coinList.Coins;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
+import crypto.model.cryptoVolumeModel.CryptoVolume;
 import crypto.model.historicalModels.CoinPojo;
 import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.PersistHistoMinute;
@@ -570,5 +571,7 @@ public class CryptoService {
         }
         return coinExchanges;
     }
+
+
 
 }

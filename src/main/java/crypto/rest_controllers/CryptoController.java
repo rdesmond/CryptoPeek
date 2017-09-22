@@ -6,12 +6,14 @@ import crypto.model.arbitrageModels.ArbitrageModel;
 import crypto.model.cryptoCompareModels.CryptoAverage;
 import crypto.model.cryptoCompareModels.CryptoModel;
 import crypto.model.cryptoCompareModels.Exchanges;
+import crypto.model.cryptoVolumeModel.CryptoVolume;
 import crypto.model.getCoinSnapshotByFullID.CoinSnapshotFullByIdMain;
 import crypto.model.historicalModels.HistoMinute;
 import crypto.model.historicalModels.PersistHistoMinute;
 import crypto.model.socialStatsModels.SocialStats;
 import crypto.services.ArbitrageService;
 import crypto.services.CryptoService;
+import crypto.services.VolumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,9 @@ public class CryptoController {
 
     @Autowired
     ArbitrageService arbitrageService;
+
+    @Autowired
+    VolumeService volumeService;
 
     @RequestMapping("/api")
     public CryptoModel getSnapShot(@RequestParam(value="fsym")String fsym, @RequestParam(value="tsym")String tsym)
@@ -86,8 +91,29 @@ public class CryptoController {
     }
 
     //Aaron
-    @RequestMapping("api/getTopArbitrage")
+    @RequestMapping("/api/getTopArbitrage")
     public ArrayList<ArbitrageModel> getTopArb() {
         return arbitrageService.getTopArbitrageOps();
     }
+
+    //Aaron
+    @RequestMapping("/api/getcryptovolume")
+    public CryptoVolume getCrypVolume (@RequestParam(value="fsym")String fsym,
+                                        @RequestParam(value="tsym")String tsym)
+                                        throws ExchangeNotFoundException {
+        return volumeService.getCryptoVolume1coin(fsym,tsym);
+    }
+
+    //Aaron
+    @RequestMapping("/api/getTop5Volumes")
+    public ArrayList<CryptoVolume> getTopVolumes(){
+        return volumeService.getTop5Volumes();
+    }
+
+    //Aaron
+    @RequestMapping("/api/getTop5Values")
+    public ArrayList<CryptoVolume> getTopValues(){
+        return volumeService.getTop5Values();
+    }
+
 }

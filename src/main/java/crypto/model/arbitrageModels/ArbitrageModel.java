@@ -1,11 +1,14 @@
 package crypto.model.arbitrageModels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 /**
  * Created by aaron on 9/8/17.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ArbitrageModel {
 
     String name;
