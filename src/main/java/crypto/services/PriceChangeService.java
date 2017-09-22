@@ -1,7 +1,9 @@
 package crypto.services;
 
+import crypto.mappers.BackloadHistoDataMapper;
 import crypto.mappers.TopCoinsMapper;
-import crypto.model.topCoins.TopCoins;
+import crypto.model.tablePOJOs.HistoDataDB;
+import crypto.util.DateUnix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,58 +16,32 @@ import java.util.ArrayList;
 public class PriceChangeService {
 
     @Autowired
-    TopCoinsMapper topCoinsMapper;
-
-
-    /*
-    method for calculating percentage change between opening and closing prices of a given coin
-    turns out not necessary since CoinMarketCap has an API call that returns percentage changes
-    for most recent period (be it hour, day, week); will be necessary if we want to calculate
-    which were the top 5 movers in some period in the past
-    */
-
-    //% increase = Increase ÷ Original Number × 100.
-    //if negative number, then this is a percentage decrease
-//    public void getHourlyPriceChange (int coin_id) {
-//
-//        //get all the open and close historical prices for all coins
-//        ArrayList<HistoDataDB> histoHourDataDBArrayList = backloadHistoDataMapper.getHourlyHistoricalData(coin_id);
-//
-//        //index of last element histoHourDataDBArrayList
-//        int lastIndex = histoHourDataDBArrayList.size() - 1;
-//
-//        //open price for most recent hourly price
-//        double open = histoHourDataDBArrayList.get(lastIndex).getOpen();
-//
-//        double close = histoHourDataDBArrayList.get(lastIndex).getClose();
-//
-//        double percentChange = ( (( close - open)/open) * 100);
-//    }
-
+    BackloadHistoDataMapper backloadHistoDataMapper;
 
     //Taner
-    //gets the top 5 hourly movers by percentage
-    public ArrayList<TopCoins> getTop5Hourly () {
+    //gets the top 5 coins that have increased the most in terms of price in the
+    //minutely, hourly and daily timeframe
+    public ArrayList<HistoDataDB> topMinutelyMovers() {
 
-        ArrayList<TopCoins> top5HourlyMoversArrayList = topCoinsMapper.getTop5HourlyMovers();
+        ArrayList<HistoDataDB> topMinutelyMovers =
+                backloadHistoDataMapper.getTopMinutelyMovers(DateUnix.toPreviousWholeMinute());
 
-        return top5HourlyMoversArrayList;
+        return topMinutelyMovers;
     }
 
-    //Taner
-    public ArrayList<TopCoins> getTop5Daily () {
+    public ArrayList<HistoDataDB> topHourlyMovers() {
+        ArrayList<HistoDataDB> topHourlyMovers =
+                backloadHistoDataMapper.getTopHourlyMovers(DateUnix.toPreviousWholeHour());
 
-        ArrayList<TopCoins> top5DailyMoversArrayList = topCoinsMapper.getTop5DailyMovers();
-
-        return top5DailyMoversArrayList;
+        return topHourlyMovers;
     }
 
-    //Taner
-    public ArrayList<TopCoins> getTop5Weekly () {
+    public ArrayList<HistoDataDB> topDailyMovers() {
+        ArrayList<HistoDataDB> topDailyMovers =
+                backloadHistoDataMapper.getTopDailyMovers(DateUnix.toPreviousWholeDay());
 
-        ArrayList<TopCoins> top5WeeklyMoversArrayList = topCoinsMapper.getTop5WeeklyMovers();
-
-        return top5WeeklyMoversArrayList;
+        return topDailyMovers;
     }
+
 
 }

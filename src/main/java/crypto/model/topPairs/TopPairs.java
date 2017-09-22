@@ -1,9 +1,11 @@
 package crypto.model.topPairs;
 
+import crypto.model.cryptoCompareModels.CryptoCompare;
+
 /**
  * Created by tanerali on 23/08/2017.
  */
-public class TopPairs {
+public class TopPairs extends CryptoCompare{
 
     String response;
     Data[] data;

@@ -1,5 +1,6 @@
 package crypto.util;
 
+import crypto.exceptions.DataBaseAccessException;
 import crypto.mappers.CryptoCallsMapper;
 import crypto.model.cryptoCompareModels.CryptoCalls;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class CryptoCallsUtil {
     }
 
     // This method logs every call we make or try to make to the cryptoCompare API
-    public void logCryptoCalls(String urlRequest, boolean underLimit){
+    public void logCryptoCalls(String urlRequest, boolean underLimit) throws DataBaseAccessException {
 
         CryptoCalls cryptoCalls;
         ArrayList<CryptoCalls> responses = new ArrayList<>();
@@ -39,7 +40,12 @@ public class CryptoCallsUtil {
         cryptoCalls.setUnderLimit(underLimit);
         responses.add(cryptoCalls);
 
-        cryptoCallsMapper.insertCryptoCalls(cryptoCalls);
+        try {
+            cryptoCallsMapper.insertCryptoCalls(cryptoCalls);
+        } catch (Exception e) {
+            throw new DataBaseAccessException();
+        }
+
 
     }
 

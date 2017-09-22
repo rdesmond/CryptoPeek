@@ -27,4 +27,13 @@ public class GlobalExceptionHandler {
         error.setError_code(500);
         return error;
     }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)  // 409
+    @ExceptionHandler(DataBaseAccessException.class)
+    public @ResponseBody CustomError unableToAccessDataBase() {
+        CustomError error = new CustomError();
+        error.setMessage("Unfortunately, you could not access the database.");
+        error.setError_code(500);
+        return error;
+    }
 }

@@ -3,7 +3,7 @@ package crypto.rest_controllers;
 import crypto.exceptions.APIUnavailableException;
 import crypto.model.miningContracts.MiningContracts;
 import crypto.model.miningEquipment.MiningEquipment;
-import crypto.model.topCoins.TopCoins;
+import crypto.model.tablePOJOs.HistoDataDB;
 import crypto.model.topPairs.TopPairs;
 import crypto.repository.EmailMessageRepository;
 import crypto.services.BackloadHistoDataService;
@@ -39,6 +39,7 @@ public class TanerCryptoController {
     @Autowired
     PriceChangeService priceChangeService;
 
+    //Taner
     //straight-through API call to TopPairs at CryptoCompare
     @RequestMapping("/top/pairs")
     public TopPairs getTopPairs (@RequestParam(value="fsym")String fsym,
@@ -50,6 +51,7 @@ public class TanerCryptoController {
         return cryptoService.getTopPairs(fsym, tsym, limit, sign);
     }
 
+    //Taner
     //straight-through API call to MiningContracts at CryptoCompare
     @RequestMapping("/mining/contracts")
     public MiningContracts getMiningContracts ()
@@ -58,6 +60,7 @@ public class TanerCryptoController {
         return cryptoService.getMiningContracts();
     }
 
+    //Taner
     //straight-through API call to MiningEquipment at CryptoCompare
     @RequestMapping("/mining/equipment")
     public MiningEquipment getMiningEquipment ()
@@ -66,41 +69,49 @@ public class TanerCryptoController {
         return cryptoService.getMiningEquipment();
     }
 
-    //backloads all available minutely, hourly and daily historical data from
-    //CryptoCompare to database
-    @RequestMapping("/backload/alldata")
-    public void backloadHistoData (@RequestParam(value="fsym")String fsym,
-                                   @RequestParam(value="tsym")String tsym,
-                                   @RequestParam(value="exchange")String exchange)
-            throws APIUnavailableException {
+    //Taner
+    //backloads previously (in the past) missing minutely, hourly and/or daily historical
+    //data from CryptoCompare to database;
+    @RequestMapping("/backload/missing")
+    public void backloadPreviouslyMissingHistoData() throws APIUnavailableException {
 
-        //fsym should be going to DB and getting the top 30 coins' coin_ids
-
-        backloadHistoDataService.backloadHistoricalData(tsym, exchange);
+        backloadHistoDataService.backloadPreviouslyMissingHistoData();
     }
 
-    //backloads specified minutely, hourly and/or daily historical data from
-    //CryptoCompare to database
-    @RequestMapping("/backload")
-    public void backloadSpecificMinutesHistoData
-            (@RequestParam(value="fsym")String fsym,
-             @RequestParam(value="tsym")String tsym,
-             @RequestParam(value="exchange")String exchange,
-             @RequestParam(value="minutes", required = false, defaultValue = "0")int minutes,
-             @RequestParam(value="hours", required = false, defaultValue = "0")int hours,
-             @RequestParam(value="days", required = false, defaultValue = "0")int days)
+    //Taner
+    @RequestMapping("/backload/recent")
+    public void backloadRecentHistoData()
 
             throws APIUnavailableException {
 
-        backloadHistoDataService.backloadSpecificHistoData(fsym, tsym, exchange, minutes, hours, days);
+        backloadHistoDataService.backloadRecentHistoData();
     }
 
+    //Taner
     //used for sending email
     @RequestMapping("/sendemail")
     public void sendEmail (@RequestParam(value="toAddress")String toAddress)
             throws Exception {
 
         emailSendingService.sendEmail(toAddress, emailMessageRepository.findBySubject("BTC price alert"));
+    }
+
+    //Taner
+    @RequestMapping("/top/minutely")
+    public ArrayList<HistoDataDB> topMinutelyMovers() {
+        return priceChangeService.topMinutelyMovers();
+    }
+
+    //Taner
+    @RequestMapping("/top/hourly")
+    public ArrayList<HistoDataDB> topHourlyMovers() {
+        return priceChangeService.topHourlyMovers();
+    }
+
+    //Taner
+    @RequestMapping("/top/daily")
+    public ArrayList<HistoDataDB> topDailyMovers() {
+        return priceChangeService.topDailyMovers();
     }
 
 }

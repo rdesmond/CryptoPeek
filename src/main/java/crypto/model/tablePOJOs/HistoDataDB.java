@@ -1,7 +1,5 @@
 package crypto.model.tablePOJOs;
 
-import javax.persistence.*;
-
 /**
  * Created by tanerali on 27/08/2017.
  */
@@ -23,14 +21,32 @@ public class HistoDataDB {
 
     int id;
     long time;
-    double close;
-    double high;
-    double low;
     double open;
+    double close;
+    double percent_change;
+    double low;
+    double high;
     double volumefrom;
     double volumeto;
     int coin_id;
 
+
+    public HistoDataDB(int id, long time, double open, double close, double percent_change,
+                       double low, double high, double volumefrom, double volumeto, int coin_id) {
+        this.id = id;
+        this.time = time;
+        this.open = open;
+        this.close = close;
+        this.percent_change = percent_change;
+        this.low = low;
+        this.high = high;
+        this.volumefrom = volumefrom;
+        this.volumeto = volumeto;
+        this.coin_id = coin_id;
+    }
+
+    public HistoDataDB() {
+    }
 
     public int getId() {
         return id;
@@ -48,6 +64,14 @@ public class HistoDataDB {
         this.time = time;
     }
 
+    public double getOpen() {
+        return open;
+    }
+
+    public void setOpen(double open) {
+        this.open = open;
+    }
+
     public double getClose() {
         return close;
     }
@@ -56,12 +80,12 @@ public class HistoDataDB {
         this.close = close;
     }
 
-    public double getHigh() {
-        return high;
+    public double getPercent_change() {
+        return percent_change;
     }
 
-    public void setHigh(double high) {
-        this.high = high;
+    public void setPercent_change(double percent_change) {
+        this.percent_change = percent_change;
     }
 
     public double getLow() {
@@ -72,12 +96,12 @@ public class HistoDataDB {
         this.low = low;
     }
 
-    public double getOpen() {
-        return open;
+    public double getHigh() {
+        return high;
     }
 
-    public void setOpen(double open) {
-        this.open = open;
+    public void setHigh(double high) {
+        this.high = high;
     }
 
     public double getVolumefrom() {

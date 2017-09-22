@@ -1,5 +1,6 @@
 package crypto.services;
 
+import crypto.exceptions.DataBaseAccessException;
 import crypto.model.cryptoCompareModels.CryptoCompare;
 import crypto.util.CryptoCallsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,25 @@ public class CryptoCompareService {
     CryptoCallsUtil cryptoCallsUtil;
 
     public CryptoCompare callCryptoCompareAPI(String url, CryptoCompare returnType){
+
         boolean callsRemaining = cryptoCallsUtil.haveCallsRemaining();
+
         if(callsRemaining) {
             CryptoCompare cc = restTemplate.getForObject(url, returnType.getClass());
-            cryptoCallsUtil.logCryptoCalls(url, callsRemaining);
+
+            try {
+                cryptoCallsUtil.logCryptoCalls(url, callsRemaining);
+            } catch (DataBaseAccessException e) {
+                e.printStackTrace();
+            }
+
             return cc;
-        }else {
-            cryptoCallsUtil.logCryptoCalls(url, callsRemaining);
+        } else {
+            try {
+                cryptoCallsUtil.logCryptoCalls(url, callsRemaining);
+            } catch (DataBaseAccessException e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
