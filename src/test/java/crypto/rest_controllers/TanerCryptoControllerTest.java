@@ -131,10 +131,64 @@ public class TanerCryptoControllerTest {
 
     @Test
     public void topHourlyMovers() throws Exception {
+        ArrayList<HistoDataDB> histoDataDBs = new ArrayList<>();
+
+        //Create test data which’ll be returned as a response in the rest service.
+        histoDataDBs.add(new HistoDataDB(1, 1505903382, 423.423, 423.423,
+                0, 420.05,425.05, 59.5, 237284.15, 1));
+
+        //Configure mock object to return the test data when the topHourlyMovers()
+        //method of the priceChangeService is invoked
+        when(priceChangeService.topHourlyMovers()).thenReturn(histoDataDBs);
+
+        //Invoke an HTTP GET request to the /api/top/hourly URI.
+        //DONT FORGET THE FIRST SLASH /
+        mockMvc.perform(get("/api/top/hourly"))
+                //Verify that the HTTP status code is 200 (OK).
+                .andExpect(status().isOk())
+                //Verify that the content-type of the response is application/json and its character set is UTF-8.
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                //Verify that the collection contains 2 items.
+                .andExpect(jsonPath("$", hasSize(1)))
+                //Verify that the id attribute of the first element equals to 1.
+                .andExpect(jsonPath("$[0].id", is(1)))
+                //Verify that the opening price attribute of the first element equals to 423.423
+                .andExpect(jsonPath("$[0].open", is(423.423)));
+        //Verify that the topMinutelyMovers() method of the PriceChangeService is invoked exactly once.
+        verify(priceChangeService, times(1)).topHourlyMovers();
+        //Verify that after the response, no more interactions are made to the PriceChangeService
+        verifyNoMoreInteractions(priceChangeService);
     }
 
     @Test
     public void topDailyMovers() throws Exception {
+        ArrayList<HistoDataDB> histoDataDBs = new ArrayList<>();
+
+        //Create test data which’ll be returned as a response in the rest service.
+        histoDataDBs.add(new HistoDataDB(1, 1505903382, 423.423, 423.423,
+                0, 420.05,425.05, 59.5, 237284.15, 1));
+
+        //Configure mock object to return the test data when the topDailyMovers()
+        //method of the priceChangeService is invoked
+        when(priceChangeService.topDailyMovers()).thenReturn(histoDataDBs);
+
+        //Invoke an HTTP GET request to the /api/top/daily URI.
+        //DONT FORGET THE FIRST SLASH /
+        mockMvc.perform(get("/api/top/daily"))
+                //Verify that the HTTP status code is 200 (OK).
+                .andExpect(status().isOk())
+                //Verify that the content-type of the response is application/json and its character set is UTF-8.
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                //Verify that the collection contains 2 items.
+                .andExpect(jsonPath("$", hasSize(1)))
+                //Verify that the id attribute of the first element equals to 1.
+                .andExpect(jsonPath("$[0].id", is(1)))
+                //Verify that the opening price attribute of the first element equals to 423.423
+                .andExpect(jsonPath("$[0].open", is(423.423)));
+        //Verify that the topMinutelyMovers() method of the PriceChangeService is invoked exactly once.
+        verify(priceChangeService, times(1)).topDailyMovers();
+        //Verify that after the response, no more interactions are made to the PriceChangeService
+        verifyNoMoreInteractions(priceChangeService);
     }
 
 }

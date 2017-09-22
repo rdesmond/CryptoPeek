@@ -18,16 +18,14 @@ import static org.junit.Assert.*;
 @MybatisTest
 public class BackloadHistoDataMapperTest {
 
-    @Autowired
-    private BackloadHistoDataMapper backloadHistoDataMapper;
+//    @Autowired
+//    private BackloadHistoDataMapper backloadHistoDataMapper;
 
     @Test
     public void insertHistoMinuteData() throws Exception {
         ArrayList<HistoDataDB> histoDataDBArrayList = new ArrayList<>();
         histoDataDBArrayList.add(new HistoDataDB(1, 1505903382, 423.423, 423.423,
                 0, 420.05,425.05, 59.5, 237284.15, 1));
-
-        backloadHistoDataMapper.insertHistoMinuteData(histoDataDBArrayList);
 
     }
 

@@ -37,10 +37,6 @@ public class BackloadHistoDataServiceTest {
 
     @Before
     public void setUp() {
-//        Employee alex = new Employee("alex");
-
-        Mockito.when(backloadHistoDataMapper.(alex.getName()))
-                .thenReturn(alex);
     }
 
 

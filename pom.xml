@@ -65,7 +65,8 @@
             <!--<scope>provided</scope>-->
         <!--</dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+        <!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+         used for the email sending service-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -93,6 +94,7 @@
             <version>1.2.2</version>
         </dependency>
 
+        <!--JWTs security for REST API-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>

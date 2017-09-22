@@ -1,6 +1,9 @@
 package crypto.services;
 
+import crypto.model.tablePOJOs.HistoDataDB;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 
 /**
  * Created by tanerali on 11/09/2017.
@@ -18,7 +21,9 @@ public class PricePredictionService {
         continue and for how long before there is a reversal
         */
 
+        ArrayList<HistoDataDB> histoDataDBArrayList = priceChangeService.topMinutelyMovers();
 
+        
 
         return 0.0;
     }
