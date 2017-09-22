@@ -30,11 +30,12 @@ public class CryptoHistoService {
         try {
             historical = restTemplate.getForObject(url, HistoDay.class);
 
-            if (historical.getData().length < 1){
-                throw new APIUnavailableException();
-            }
+//            if (historical.getData().length < 1){
+//                throw new APIUnavailableException();
+//            }
 
         } catch (Exception e){
+            e.printStackTrace();
             throw new APIUnavailableException();
         }
         return historical;
