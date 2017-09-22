@@ -26,10 +26,10 @@ public class DaniCryptoController {
     }
 
     //populates all coins in database
-    @RequestMapping("/api/allcoins")
-    public Coins getAllCoins() throws APIUnavailableException {
-        return cryptoService.getAllCoins();
-    }
+//    @RequestMapping("/api/allcoins")
+//    public Coins getAllCoins() throws APIUnavailableException {
+//        return cryptoService.getAllCoins();
+//    }
 
     //gets the exchange prices of our top30 coins
     @RequestMapping("/api/allcoinsallexchanges")

@@ -34,8 +34,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.RoundingMode;
 import java.net.URL;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -86,6 +88,7 @@ public class CryptoService {
 
         return cryptoModel;
     }
+
 
     public CoinSnapshotFullByIdMain getCoinSnapshotFull(int id) throws APIUnavailableException {
         String url = "https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id=" + id;
@@ -242,6 +245,12 @@ public class CryptoService {
         }
     }
 
+    /**
+     * This method gets the current top30 coins from CoinMarketCap and returns them in JSON format
+     * @return An array of TopCoins objects
+     * @author Dani
+     * @throws ExchangeNotFoundException
+     */
     public TopCoins[] getTop30() throws ExchangeNotFoundException {
 
         String url = "https://api.coinmarketcap.com/v1/ticker/?limit=30";
@@ -257,6 +266,11 @@ public class CryptoService {
         }
     }
 
+    /**
+     * This method populates the top30 coins in the database
+     * @param topCoins an array of TopCoins objects that is passed on by the getTop30() method.
+     * @author Dani
+     */
     public void populateTop30ToDB(TopCoins[] topCoins) {
 
         for (int i = 0; i < topCoins.length; i++) {
@@ -283,8 +297,8 @@ public class CryptoService {
             double sum = 0;
             int count = 0;
             for (int i = 0; i < cryptoModel.getData().getExchanges().length; i++) {
-                System.out.println(Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice()));
-                if ((Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice())) < ((sum / i) * .5)) {
+                System.out.println(cryptoModel.getData().getExchanges()[i].getPrice());
+                if (Double.parseDouble(cryptoModel.getData().getExchanges()[i].getPrice()) < ((sum / i) * .5)) {
                     System.out.println("IN if - SUM = " + sum + "and sum/i is" + (sum / i));
                     count++;
                     continue;
@@ -366,25 +380,29 @@ public class CryptoService {
     }
 
 
-
-    //Method to populate all of the coins from CryptoCompare to our database.
-    public Coins getAllCoins() throws APIUnavailableException {
-        String url = "https://www.cryptocompare.com/api/data/coinlist/";
-        Coins coins = restTemplate.getForObject(url, Coins.class);
-        Field[] fields = coins.getData().getClass().getDeclaredFields();
-        for (Field f : fields) {
-            f.setAccessible(true);
-
-            try {
-                Coin c = (Coin) f.get(coins.getData());
-                coinsMapper.insertCoin(c);
-
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return coins;
-    }
+    /**
+     * Method designed to run only once and populate all of the coins on CryptoCompare into our database.
+     * @return A Coins object which contains a reference to all of the Coin objects created
+     * @author Dani
+     * @throws APIUnavailableException
+     */
+//    public Coins getAllCoins() throws APIUnavailableException {
+//        String url = "https://www.cryptocompare.com/api/data/coinlist/";
+//        Coins coins = restTemplate.getForObject(url, Coins.class);
+//        Field[] fields = coins.getData().getClass().getDeclaredFields();
+//        for (Field f : fields) {
+//            f.setAccessible(true);
+//
+//            try {
+//                Coin c = (Coin) f.get(coins.getData());
+//                coinsMapper.insertCoin(c);
+//
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return coins;
+//    }
 
     // Author: Nicola
     private boolean missing5Min() {
@@ -513,9 +531,14 @@ public class CryptoService {
         }return responses;
     }
 
-    //Dani
-    //This method gets the top30 coins from the database and creates a new CoinExchange object for each coin
-    //which contains the coin name and its prices in our top 5 exchanges
+
+    /**
+     * This method gets the top30 coins from the database and creates a new CoinExchange object for each coin
+     * which contains the coin name and its prices in our top 5 exchanges
+     * @author Dani
+     * @return an array of 30 CoinExchanges objects
+     */
+    @Cacheable("CryptoCache")
     public CoinExchanges[] getAllCoinsAllExchanges () {
         //get our top 30 coins (in reverse order)
         ArrayList<TopCoins> t = topCoinsMapper.getMostRecentTop();
@@ -543,23 +566,26 @@ public class CryptoService {
                 //some coins don't have any exchanges listed for them in the CryptoCompare API response
                 //in order to avoid nullpointer exceptions this if statements sets all of the prices to 0 if that's the case
                 if (cryptoModel.getData().getExchanges()==null){
-                    c.exchangeMissing(c);
                     coinExchanges[count]=c;
                     count--;
                     continue;
                 }
+
+                //Round all prices to 8 decimal places
+//                DecimalFormat df = new DecimalFormat("#.########");
+//                df.setRoundingMode(RoundingMode.CEILING);
                 //For every exchange in the Coin's Exchanges array, check for the following exchanges and set their prices
                 for (Exchanges e: cryptoModel.getData().getExchanges()) {
                     switch (e.getMarket()) {
-                        case "Coinbase": c.setCoinbase(Double.parseDouble(e.getPrice()));
+                        case "Coinbase": c.setCoinbase(e.getPrice());
                         break;
-                        case "Bitfinex": c.setBitfinex(Double.parseDouble(e.getPrice()));
+                        case "Bitfinex": c.setBitfinex(e.getPrice());
                         break;
-                        case "BitTrex": c.setBittrex(Double.parseDouble(e.getPrice()));
+                        case "BitTrex": c.setBittrex(e.getPrice());
                         break;
-                        case "Poloniex": c.setPoloniex(Double.parseDouble(e.getPrice()));
+                        case "Poloniex": c.setPoloniex(e.getPrice());
                         break;
-                        case "Kraken": c.setKraken(Double.parseDouble(e.getPrice()));
+                        case "Kraken": c.setKraken(e.getPrice());
                         break;
                     }
                 }

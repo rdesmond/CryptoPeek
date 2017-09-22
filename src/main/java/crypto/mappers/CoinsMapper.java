@@ -17,6 +17,8 @@ public interface CoinsMapper {
 
     String GET_COIN_ID_BY_NAME = "SELECT coin_id FROM coins WHERE coin_name=#{coin_name}";
 
+    String GET_COIN_BY_NAME = "SELECT * FROM coins  WHERE coin_name=#{coin_name}";
+
     @Insert(INSERT_COIN)
     public void insertCoin(Coin c);
 
@@ -25,6 +27,9 @@ public interface CoinsMapper {
 
     @Select(GET_COIN_ID_BY_NAME)
     public int getCoinIdByName(String coin_name);
+
+    @Select(GET_COIN_BY_NAME)
+    public Coin getCoinByName(String coin_name);
 
 
 }

@@ -8,29 +8,27 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>CryptoPeek - Home</title>
+    <title th:text="${coinobj.coin_name} + ' - CryptoPeek'">Coin Page -  CryptoPeek</title>
 
     <link rel="icon"
           type="image/png"
           th:href="@{/images/favicon.png}">
 
-    <!-- Bootstrap Core CSS -->
-    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link th:href="@{/vendor/metisMenu/metisMenu.min.css}" href="../static/vendor/metisMenu/metisMenu.min.css" rel="stylesheet" type="text/css">
-
-    <!-- DataTables CSS -->
-    <link th:href="@{/vendor/datatables-plugins/dataTables.bootstrap.css}" href="../static/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
-
-    <!-- DataTables Responsive CSS -->
-    <link th:href="@{/vendor/datatables-responsive/dataTables.responsive.css}" href="../static/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/metisMenu/metisMenu.min.css}" href="../static/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link th:href="@{/dist/css/sb-admin-2.css}" href="../static/dist/css/sb-admin-2.css" rel="stylesheet" type="text/css">
+    <link th:href="@{/dist/css/sb-admin-2.css}" href="../static/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link th:href="@{/vendor/morrisjs/morris.css}" href="../static/vendor/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" href="../static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" type="text/css">
+    <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" href="../static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
 </head>
 <body>
 
@@ -70,7 +68,7 @@
                     <li>
                         <a href="#">
                             <div>
-                                    <strong>John Smith</strong>
+                                <strong>John Smith</strong>
                                 <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
@@ -370,48 +368,25 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Home</h1>
+
+                <h1 class="page-header">
+                    <img th:src="${coinobj.image_url}" th:alt="${coinobj.coin_name}" style="width:33px;height:33px;">
+                     <label th:text="${coinobj.coin_name}">Coin</label>
+                </h1>
+
             </div>
             <!-- /.col-lg-12 -->
         </div>
-        <!-- /.row -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Our top coins on our top exchanges!
+                        Price Graph
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
-                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                            <thead>
-                            <tr>
-                                <th>Coin</th>
-                                <th>Coinbase</th>
-                                <th>Bitfinex</th>
-                                <th>BitTrex</th>
-                                <th>Poloniex</th>
-                                <th>Kraken</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <th:block th:each="CoinEx : ${coinExchanges}">
-                                <tr class="odd gradeX">
-                                    <td style="cursor: pointer" th:onclick="'javascript:goToCoinPage(\''+ ${CoinEx.coin_name} +'\');'" th:text="${CoinEx.coin_name}">Name</td>
-                                    <td th:text="${CoinEx.coinbase}">Coinbase Price</td>
-                                    <td th:text="${CoinEx.bitfinex}">Bitfinex Price</td>
-                                    <td th:text="${CoinEx.bittrex}">BitTrex Price</td>
-                                    <td th:text="${CoinEx.poloniex}">Poloniex Price</td>
-                                    <td th:text="${CoinEx.kraken}">Kraken Price</td>
-                                </tr>
-                            </th:block>
-                            </tbody>
-                        </table>
-                        <!-- /.table-responsive -->
-                        <div class="well">
-                            <h4>DataTables Usage Information</h4>
-                            <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
-                            <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-line-chart"></div>
                         </div>
                     </div>
                     <!-- /.panel-body -->
@@ -419,39 +394,145 @@
                 <!-- /.panel -->
             </div>
             <!-- /.col-lg-12 -->
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Pie Chart Example
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-pie-chart"></div>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Multiple Axes Line Chart Example
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-line-chart-multi"></div>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Moving Line Chart Example
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-line-chart-moving"></div>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Bar Chart Example
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-bar-chart"></div>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Flot Charts Usage
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <p>Flot is a pure JavaScript plotting library for jQuery, with a focus on simple usage, attractive looks, and interactive features. In SB Admin, we are using the most recent version of Flot along with a few plugins to enhance the user experience. The Flot plugins being used are the tooltip plugin for hoverable tooltips, and the resize plugin for fully responsive charts. The documentation for Flot Charts is available on their website, <a target="_blank" href="http://www.flotcharts.org/">http://www.flotcharts.org/</a>.</p>
+                        <a target="_blank" class="btn btn-default btn-lg btn-block" href="http://www.flotcharts.org/">View Flot Charts Documentation</a>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
         </div>
+        <!-- /.row -->
     </div>
+    <!-- /#page-wrapper -->
+
 </div>
-<script th:src="@{/vendor/jquery/jquery.min.js}" src="../vendor/jquery/jquery.min.js"></script>
+<!-- /#wrapper -->
+<script th:src="@{/vendor/jquery/jquery.min.js}" src="../static/vendor/jquery/jquery.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
-<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}" src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}" src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
 
 <!-- Metis Menu Plugin JavaScript -->
-<script th:src="@{/vendor/metisMenu/metisMenu.min.js}" src="../vendor/metisMenu/metisMenu.min.js"></script>
+<script th:src="@{/vendor/metisMenu/metisMenu.min.js}" src="../static/vendor/metisMenu/metisMenu.min.js"></script>
 
-<!-- DataTables JavaScript -->
-<!--<script th:src="@{/vendor/datatables/js/jquery.dataTables.min.js}" src="../vendor/datatables/js/jquery.dataTables.min.js"></script>-->
-<!--<script th:src="@{/vendor/datatables-plugins/dataTables.bootstrap.min.js}" src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>-->
-<!--<script th:src="@{/vendor/datatables-responsive/dataTables.responsive.js}" src="../vendor/datatables-responsive/dataTables.responsive.js"></script>-->
+<script th:src="@{/vendor/flot/excanvas.min.js}" src="../static/vendor/flot/excanvas.min.js"></script>
+<script th:src="@{/vendor/flot/jquery.flot.js}" src="../static/vendor/flot/jquery.flot.js"></script>
+<script th:src="@{/vendor/flot/jquery.flot.pie.js}" src="../static/vendor/flot/jquery.flot.pie.js"></script>
+<script th:src="@{/vendor/flot/jquery.flot.resize.js}" src="../static/vendor/flot/jquery.flot.resize.js"></script>
+<script th:src="@{/vendor/flot/jquery.flot.time.js}" src="../static/vendor/flot/jquery.flot.time.js"></script>
+<script th:src="@{/vendor/flot-tooltip/jquery.flot.tooltip.min.js}" src="../static/vendor/flot-tooltip/jquery.flot.tooltip.min.js"></script>
+<!--<script th:src="@{/data/flot-data.js}" src="../static/data/flot-data.js"></script>-->
 
 <!-- Custom Theme JavaScript -->
-<script th:src="@{/dist/js/sb-admin-2.js}" src="../dist/js/sb-admin-2.js"></script>
+<script th:src="@{/dist/js/sb-admin-2.js}" src="../static/dist/js/sb-admin-2.js"></script>
 
-<!-- Page-Level Demo Scripts - Tables - Use for reference -->
-<script>
-    $(document).ready(function() {
-        $('#dataTables-example').DataTable({
-            responsive: true
-        });
-    });
-    </script>
+<script th:inline="javascript">
+$(document).ready(function() {
 
-<script>
-    function goToCoinPage(value){
-    location = "/coin/"+value;
-}
+
+    var options = {
+            series: {
+                lines: {
+                    show: true
+                },
+                points: {
+                    show: true
+                }
+            },
+            grid: {
+                hoverable: true //IMPORTANT! this is needed for tooltip to work
+            },
+            yaxis: {
+                min: 0,
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "'%s' of %x.1 is %y.4",
+                shifts: {
+                    x: -60,
+                    y: 25
+                }
+            }
+        };
+
+    var plotObj = $.plot($("#flot-line-chart"), [[${data}]], options);
+
+});
 </script>
+
 
 </body>
 </html>

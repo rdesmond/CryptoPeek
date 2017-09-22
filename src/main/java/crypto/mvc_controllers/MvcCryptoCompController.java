@@ -2,14 +2,20 @@ package crypto.mvc_controllers;
 
 import crypto.exceptions.APIUnavailableException;
 import crypto.exceptions.ExchangeNotFoundException;
+import crypto.mappers.CoinsMapper;
+import crypto.model.coinList.Coin;
 import crypto.model.arbitrageModels.ArbitrageModel;
 import crypto.model.cryptoCompareModels.*;
+import crypto.model.historicalModels.HistoDay;
+import crypto.model.historicalModels.Data;
 import crypto.model.topCoins.CoinExchanges;
+import crypto.services.CryptoHistoService;
 import crypto.services.ArbitrageService;
 import crypto.services.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +31,12 @@ public class MvcCryptoCompController {
 
     @Autowired
     CryptoService cryptoService;
+
+    @Autowired
+    CoinsMapper coinsMapper;
+
+    @Autowired
+    CryptoHistoService cryptoHistoService;
 
     @Autowired
     ArbitrageService arbitrageService;
@@ -103,5 +115,36 @@ public class MvcCryptoCompController {
         CoinExchanges[] coinExchanges = cryptoService.getAllCoinsAllExchanges();
         model.addAttribute("coinExchanges", coinExchanges);
         return "homepage";
+    }
+
+    @RequestMapping("coin/{coin_name}")
+    public String getCoin (@PathVariable(value="coin_name") String coin_name, Model model) {
+        Coin c = coinsMapper.getCoinByName(coin_name);
+        c.setImage_url("https://www.cryptocompare.com"+c.getImage_url());
+        HistoDay hD = new HistoDay();
+        if (c.getCoin_name().equalsIgnoreCase("Bitcoin")) {
+            try {
+                hD = cryptoHistoService.getHistoricalDailyData("BTC", "USD", "CCCAGG");
+            } catch (APIUnavailableException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                hD = cryptoHistoService.getHistoricalDailyData(c.getSymbol(), "BTC", "CCCAGG");
+            } catch (APIUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        model.addAttribute("coinobj", c);
+
+        double[] data = new double[hD.getData().length];
+        int count=0;
+        for (Data d : hD.getData()){
+            data[count]=d.getClose();
+            count++;
+        }
+
+        model.addAttribute("data", data);
+        return "coin";
     }
 }

@@ -7,11 +7,19 @@ package crypto.model.topCoins;
 public class CoinExchanges {
 
     String coin_name;
-    double coinbase;
-    double bitfinex;
-    double bittrex;
-    double poloniex;
-    double kraken;
+    String Kraken;
+    String Poloniex;
+    String Bittrex;
+    String Bitfinex;
+    String Coinbase;
+
+    public CoinExchanges() {
+        Kraken="";
+        Poloniex="";
+        Bitfinex="";
+        Bittrex="";
+        Coinbase="";
+    }
 
     public String getCoin_name() {
         return coin_name;
@@ -21,51 +29,44 @@ public class CoinExchanges {
         this.coin_name = coin_name;
     }
 
-    public double getCoinbase() {
-        return coinbase;
+    public String getKraken() {
+        return Kraken;
     }
 
-    public void setCoinbase(double coinbase) {
-        this.coinbase = coinbase;
+    public void setKraken(String kraken) {
+        Kraken = kraken;
     }
 
-    public double getBitfinex() {
-        return bitfinex;
+    public String getPoloniex() {
+        return Poloniex;
     }
 
-    public void setBitfinex(double bitfinex) {
-        this.bitfinex = bitfinex;
+    public void setPoloniex(String poloniex) {
+        Poloniex = poloniex;
     }
 
-    public double getBittrex() {
-        return bittrex;
+    public String getBittrex() {
+        return Bittrex;
     }
 
-    public void setBittrex(double bittrex) {
-        this.bittrex = bittrex;
+    public void setBittrex(String bittrex) {
+        Bittrex = bittrex;
     }
 
-    public double getPoloniex() {
-        return poloniex;
+    public String getBitfinex() {
+        return Bitfinex;
     }
 
-    public void setPoloniex(double poloniex) {
-        this.poloniex = poloniex;
+    public void setBitfinex(String bitfinex) {
+        Bitfinex = bitfinex;
     }
 
-    public double getKraken() {
-        return kraken;
+    public String getCoinbase() {
+        return Coinbase;
     }
 
-    public void setKraken(double kraken) {
-        this.kraken = kraken;
+    public void setCoinbase(String coinbase) {
+        Coinbase = coinbase;
     }
 
-    public void exchangeMissing(CoinExchanges e) {
-        e.setKraken(0);
-        e.setPoloniex(0);
-        e.setBittrex(0);
-        e.setBitfinex(0);
-        e.setCoinbase(0);
-    }
 }
