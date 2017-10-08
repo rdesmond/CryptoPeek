@@ -2,7 +2,7 @@
 
 ### This is a final working project of CodingNomads Thailand 2018 Cohort 
 
-#### API + MVC application to monitor, predict and alert users on various CrytoCurrency prices
+#### API + MVC application to monitor, predict and alert users on various CryptoCurrency prices
 
 ##### Technologies Used:
 * Apache Tomcat
