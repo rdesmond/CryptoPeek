@@ -17,6 +17,7 @@
 ** Load balancers
 * AWS RDS
 * AWS Route53
+* Apache Gemfire (caching)
 
 ##### Deployment Instructions:
 * clone this repo
