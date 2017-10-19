@@ -1,4 +1,4 @@
-# Crypto-Compare (Work in Progress)
+# CryptoPeek (Work in Progress)
 
 ### This is a final working project of CodingNomads Thailand 2018 Cohort 
 
